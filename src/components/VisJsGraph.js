@@ -16,6 +16,11 @@ const VisNetworkGraph = ({ data }) => {
         color: getNodeColor(d.type), // Set color based on type
         size: getNodeSize(d.type),  // Set size based on type
         label: d.label || `Node ${d.id}`, // Ensure nodes have a label
+        font: {
+          size: 10,  // Reduced font size
+          color: 'rgba(0, 0, 0, 0.5)',  // Lighter color for text (semi-transparent black)
+          background: 'none',  // Make background transparent (optional)
+        },
       }))
     );
 
@@ -25,7 +30,11 @@ const VisNetworkGraph = ({ data }) => {
         from: link.src_node_id,
         to: link.dst_node_id,
         label: link.label || '', // Ensure edges have a label
-        arrows: link.bidirectional ? 'to,from' : 'to',
+        arrows: link.bidirectional ? 'to,from' : 'to', // Set arrow direction
+        width: 1,  // Adjust the width of the edge to make arrows smaller
+        font: {
+          color: 'rgba(0, 0, 0, 0.5)',  // Lighter color for text (semi-transparent black)
+        },
       }))
     );
 
@@ -40,17 +49,17 @@ const VisNetworkGraph = ({ data }) => {
         enabled: true,
         solver: 'barnesHut',
         barnesHut: {
-          gravitationalConstant: -1000,
+          gravitationalConstant: -500,
           centralGravity: 0.2,
-          springLength: 100,
-          springConstant: 0.04,
+          springLength: 50,  // Decrease this value to bring nodes closer together
+          springConstant: 0.05,  // Adjusting this can affect the stiffness of the spring
           damping: 0.1,
           avoidOverlap: 0.2,
         },
         timestep: 0.5,
         stabilization: {
-          iterations: 1000,  // Stabilization iterations for more uniform distribution
-          updateInterval: 25,
+          iterations: 100,  // Stabilization iterations for more uniform distribution
+          updateInterval: 10,
         },
       },
       interaction: {
@@ -59,7 +68,10 @@ const VisNetworkGraph = ({ data }) => {
       },
       edges: {
         color: '#ccc',
-        width: 2,
+        width: 2,  // Adjust the overall width of the edges
+        arrows: {
+          to: { scaleFactor: 0.5, type: 'arrow' }, // Adjust the scale of the arrow
+        },
       },
       layout: {
         randomSeed: 2, // This forces a "random" initial layout which can help nodes spread out
@@ -71,7 +83,8 @@ const VisNetworkGraph = ({ data }) => {
       nodes: {
         shape: 'dot', // Ensure nodes are displayed as circles (or you can change to another shape)
         font: {
-          size: 14, // Set a default font size for node labels if applicable
+          size: 10,  // Reduced font size to make text less prominent
+          color: 'rgba(0, 0, 0, 0.5)',  // Lighter font color (semi-transparent black)
         },
       },
       manipulation: {
@@ -107,6 +120,7 @@ const VisNetworkGraph = ({ data }) => {
           setEdgesData(newEdgesData);
         },
         editNode: (data, callback) => {
+          data.label = prompt("Enter new label for the node", data.label);
           const updatedNodesData = nodesData.map(node =>
             node.id === data.id ? { ...node, label: data.label || node.label } : node
           );
@@ -114,8 +128,10 @@ const VisNetworkGraph = ({ data }) => {
           callback(data);
         },
         editEdge: (data, callback) => {
+          data.label = prompt("Enter new label for the edge", data.label);
+
           const updatedEdgesData = edgesData.map(edge =>
-            edge.src_node_id === data.src_node_id && edge.dst_node_id === data.dst_node_id
+            edge.id === data.id
               ? { ...edge, label: data.label || edge.label }
               : edge
           );
@@ -131,8 +147,6 @@ const VisNetworkGraph = ({ data }) => {
     // Handle double-click event to edit node and edge labels
     network.on('doubleClick', (event) => {
       const { nodes, edges } = event;
-      console.log(nodes)
-      console.log(edges)
       if (nodes.length > 0) {
         // Edit node label
         const nodeId = nodes[0];
@@ -140,7 +154,7 @@ const VisNetworkGraph = ({ data }) => {
         if (node) {
           const newLabel = prompt('Edit node label:', node.label || '');
           if (newLabel !== null) {
-            const updatedNodesData = nodesData.map(n =>
+            const updatedNodesData = nodesData.map(n => 
               n.id === nodeId ? { ...n, label: newLabel } : n
             );
             setNodesData(updatedNodesData);
@@ -149,11 +163,13 @@ const VisNetworkGraph = ({ data }) => {
       } else if (edges.length > 0) {
         // Edit edge label (double-clicked edge)
         const edgeId = edges[0];
-        const edge = edgesData.find(e => e.id === edgeId);
+        const edge = edgesData.find(e => 
+          e.src_node_id === edgeId.src_node_id && e.dst_node_id === edgeId.dst_node_id
+        );
         if (edge) {
           const newLabel = prompt('Edit edge label:', edge.label || '');
           if (newLabel !== null) {
-            const updatedEdgesData = edgesData.map(e =>
+            const updatedEdgesData = edgesData.map(e => 
               e.src_node_id === edgeId.src_node_id && e.dst_node_id === edgeId.dst_node_id
                 ? { ...e, label: newLabel }
                 : e
@@ -176,13 +192,13 @@ const VisNetworkGraph = ({ data }) => {
       case 'subject':
         return 30; // Largest size for subject
       case 'general-topic':
-        return 25; // Slightly smaller for general topic
+        return 20; // Slightly smaller for general topic
       case 'topic':
-        return 20; // Smaller for topic
+        return 10; // Smaller for topic
       case 'concept':
-        return 15; // Smallest size for concept
+        return 5; // Smallest size for concept
       default:
-        return 10; // Default size if type is not recognized
+        return 5; // Default size if type is not recognized
     }
   };
 
