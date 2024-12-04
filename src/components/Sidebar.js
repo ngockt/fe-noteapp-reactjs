@@ -29,6 +29,7 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       <SidebarLink to="/">Home</SidebarLink>
+      <SidebarLink to="/newfeed">NewFeed</SidebarLink>
       <SidebarLink to="/about">About</SidebarLink>
       <SidebarLink to="/contact">Contact</SidebarLink>
       <SidebarLink to="/graph">Graph</SidebarLink>
