@@ -29,7 +29,12 @@ const Graph = () => {
         <div>
             <h1>Graph Visualization</h1>
             <div>
-                {<VisJsGraph data={data} />}
+                <button onClick={toggleGraphView}>
+                    {showZoomableGraph ? 'VisJsGraph' : 'D3Graph'}
+                </button>
+            </div>
+            <div>
+                {showZoomableGraph ? <VisJsGraph /> : <D3Graph data={data} />}
             </div>
         </div>
     );
