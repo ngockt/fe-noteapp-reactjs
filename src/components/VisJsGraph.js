@@ -1,13 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
+import axiosInstance from './axiosInstance'; // Adjust the import path accordingly
 
-const VisNetworkGraph = ({ data }) => {
+const VisNetworkGraph = () => {
     const networkRef = useRef(null);
-    const [nodesData, setNodesData] = useState(data ? data.nodes : []); // State to manage nodes
-    const [edgesData, setEdgesData] = useState(data ? data.links : []); // State to manage edges
+
+    // State to hold the fetched data
+    const [data, setData] = useState(null);
+
+    // State to manage nodes and edges
+    const [nodesData, setNodesData] = useState([]);
+    const [edgesData, setEdgesData] = useState([]);
+
+    // Fetch data from the API when the component mounts
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axiosInstance.get('/graph'); // API endpoint
+                setData(response.data); // Set the data in the state
+            } catch (error) {
+                console.error('Error fetching graph data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // Update nodesData and edgesData when data is fetched
+    useEffect(() => {
+        if (data) {
+            setNodesData(data.nodes || []);
+            setEdgesData(data.links || []);
+        }
+    }, [data]);
 
     useEffect(() => {
-        if (!data) return; // Wait until data is available
+        if (nodesData.length === 0 && edgesData.length === 0) return; // Wait until data is available
 
         // Create the DataSet for nodes, adding size and color based on node type
         const nodes = new DataSet(
@@ -52,45 +80,45 @@ const VisNetworkGraph = ({ data }) => {
                 barnesHut: {
                     gravitationalConstant: -500,
                     centralGravity: 0.2,
-                    springLength: 50,  // Decrease this value to bring nodes closer together
-                    springConstant: 0.05,  // Adjusting this can affect the stiffness of the spring
+                    springLength: 50,
+                    springConstant: 0.05,
                     damping: 0.1,
                     avoidOverlap: 0.2,
                 },
                 timestep: 0.5,
                 stabilization: {
-                    iterations: 100,  // Stabilization iterations for more uniform distribution
+                    iterations: 100,
                     updateInterval: 10,
                 },
             },
             interaction: {
-                dragNodes: true,   // Enable node dragging
-                zoomView: true,    // Enable zooming
+                dragNodes: true,
+                zoomView: true,
             },
             edges: {
                 color: '#ccc',
-                width: 2,  // Adjust the overall width of the edges
+                width: 2,
                 arrows: {
-                    to: { scaleFactor: 0.5, type: 'arrow' }, // Adjust the scale of the arrow
+                    to: { scaleFactor: 0.5, type: 'arrow' },
                 },
             },
             layout: {
-                randomSeed: 2, // This forces a "random" initial layout which can help nodes spread out
-                improvedLayout: true, // Tries to improve the layout (more balanced spread)
+                randomSeed: 2,
+                improvedLayout: true,
                 hierarchical: {
-                    enabled: false,  // Disable hierarchical layout (useful when nodes should spread in 2D space)
+                    enabled: false,
                 },
             },
             nodes: {
-                shape: 'dot', // Ensure nodes are displayed as circles (or you can change to another shape)
+                shape: 'dot',
                 font: {
-                    size: 10,  // Reduced font size to make text less prominent
-                    color: 'rgba(0, 0, 0, 0.5)',  // Lighter font color (semi-transparent black)
+                    size: 10,
+                    color: 'rgba(0, 0, 0, 0.5)',
                 },
             },
             manipulation: {
-                enabled: true, // Enable manipulation
-                initiallyActive: true, // The toolbox is initially active
+                enabled: true,
+                initiallyActive: true,
                 addNode: (data, callback) => {
                     const newNode = {
                         id: nodesData.length + 1, // Ensure a unique id
@@ -108,6 +136,7 @@ const VisNetworkGraph = ({ data }) => {
                 },
                 addEdge: (data, callback) => {
                     const newEdge = {
+                        id: edgesData.length + 1, // Ensure a unique id
                         src_node_id: data.from,
                         dst_node_id: data.to,
                         label: data.label || '',
@@ -117,7 +146,7 @@ const VisNetworkGraph = ({ data }) => {
                     callback(newEdge);
                 },
                 deleteEdge: (data) => {
-                    const newEdgesData = edgesData.filter(edge => !(edge.src_node_id === data.edges[0].src_node_id && edge.dst_node_id === data.edges[0].dst_node_id));
+                    const newEdgesData = edgesData.filter(edge => edge.id !== data.edges[0]);
                     setEdgesData(newEdgesData);
                 },
                 editNode: (data, callback) => {
@@ -145,15 +174,13 @@ const VisNetworkGraph = ({ data }) => {
         // Initialize the network
         const network = new Network(container, { nodes, edges }, options);
 
-        // Handle double-click event to edit node and edge labels
-        const nodeVisibility = Object.fromEntries(nodes.map(node => [node.id, node.hidden]))
+        // Handle double-click event to toggle node visibility
+        const nodeVisibility = Object.fromEntries(nodes.map(node => [node.id, node.hidden]));
         network.on('doubleClick', (event) => {
-            console.log(event)
-            const clickednodes = event.nodes
-            const clickededges = event.edges
-            if (clickednodes.length > 0) {
-                // Edit node label
-                const nodeId = clickednodes[0];
+            const clickedNodes = event.nodes;
+            const clickedEdges = event.edges;
+            if (clickedNodes.length > 0) {
+                const nodeId = clickedNodes[0];
                 const childNodes = edges.get().filter(edge => edge.from === nodeId).map(edge => edge.to);
                 childNodes.forEach((nodeid) => {
                     nodeVisibility[nodeid] = !nodeVisibility[nodeid];
@@ -164,17 +191,14 @@ const VisNetworkGraph = ({ data }) => {
                     hidden: nodeVisibility[cnodeId],
                 })));
 
-            } else if (clickededges.length > 0) {
-                // Edit edge label (double-clicked edge)
-                const edgeId = clickededges[0];
-                const edge = edgesData.find(e =>
-                    e.src_node_id === edgeId.src_node_id && e.dst_node_id === edgeId.dst_node_id
-                );
+            } else if (clickedEdges.length > 0) {
+                const edgeId = clickedEdges[0];
+                const edge = edgesData.find(e => e.id === edgeId);
                 if (edge) {
                     const newLabel = prompt('Edit edge label:', edge.label || '');
                     if (newLabel !== null) {
                         const updatedEdgesData = edgesData.map(e =>
-                            e.src_node_id === edgeId.src_node_id && e.dst_node_id === edgeId.dst_node_id
+                            e.id === edgeId
                                 ? { ...e, label: newLabel }
                                 : e
                         );
@@ -188,7 +212,8 @@ const VisNetworkGraph = ({ data }) => {
         return () => {
             network.destroy(); // Destroy the network instance
         };
-    }, [nodesData, edgesData, data]);
+
+    }, [nodesData, edgesData]);
 
     // Function to determine the node size based on type
     const getNodeSize = (type) => {
