@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import D3Graph from './D3Graph'; // Graph with zooming
 import VisJsGraph from './VisJsGraph'; // Graph without zooming
-import axiosInstance from './axiosInstance'; // Import axios instance
+import axiosInstance from '../../Hooks/axiosInstance'; // Import axios instance
 
 const Graph = () => {
     const [data, setData] = useState(null);
@@ -29,12 +29,12 @@ const Graph = () => {
         <div>
             <h1>Graph Visualization</h1>
             <div>
+                {showZoomableGraph ? <VisJsGraph /> : <D3Graph data={data} />}
+            </div>
+            <div>
                 <button onClick={toggleGraphView}>
                     {showZoomableGraph ? 'VisJsGraph' : 'D3Graph'}
                 </button>
-            </div>
-            <div>
-                {showZoomableGraph ? <VisJsGraph /> : <D3Graph data={data} />}
             </div>
         </div>
     );

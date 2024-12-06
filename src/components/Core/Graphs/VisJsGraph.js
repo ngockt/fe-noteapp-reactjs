@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
-import axiosInstance from './axiosInstance'; // Adjust the import path accordingly
+import axiosInstance from '../../Hooks/axiosInstance'; // Adjust the import path accordingly
 
 const VisNetworkGraph = () => {
     const networkRef = useRef(null);
@@ -11,6 +11,9 @@ const VisNetworkGraph = () => {
     // State to manage nodes and edges
     const [nodesData, setNodesData] = useState([]);
     const [edgesData, setEdgesData] = useState([]);
+
+    // State to toggle between static and interactive mode
+    const [isInteractive, setIsInteractive] = useState(true);
 
     // Fetch data from the API when the component mounts
     useEffect(() => {
@@ -62,6 +65,7 @@ const VisNetworkGraph = () => {
                 arrows: link.bidirectional ? 'to,from' : 'to', // Set arrow direction
                 width: 1,  // Adjust the width of the edge to make arrows smaller
                 font: {
+                    size: 8,  // Reduced font size
                     color: 'rgba(0, 0, 0, 0.5)',  // Lighter color for text (semi-transparent black)
                 },
             }))
@@ -74,8 +78,13 @@ const VisNetworkGraph = () => {
             autoResize: true,
             height: '100%',
             width: '100%',
-            physics: {
+            layout: {
                 enabled: true,
+                direction: "LR",
+                sortMethod: 'hubsize'
+            },
+            physics: {
+                enabled: isInteractive,
                 solver: 'barnesHut',
                 barnesHut: {
                     gravitationalConstant: -500,
@@ -92,8 +101,8 @@ const VisNetworkGraph = () => {
                 },
             },
             interaction: {
-                dragNodes: true,
-                zoomView: true,
+                dragNodes: isInteractive,
+                zoomView: isInteractive,
             },
             edges: {
                 color: '#ccc',
@@ -117,7 +126,7 @@ const VisNetworkGraph = () => {
                 },
             },
             manipulation: {
-                enabled: true,
+                enabled: isInteractive,
                 initiallyActive: true,
                 addNode: (data, callback) => {
                     const newNode = {
@@ -213,7 +222,7 @@ const VisNetworkGraph = () => {
             network.destroy(); // Destroy the network instance
         };
 
-    }, [nodesData, edgesData]);
+    }, [nodesData, edgesData, isInteractive]);
 
     // Function to determine the node size based on type
     const getNodeSize = (type) => {
@@ -247,8 +256,16 @@ const VisNetworkGraph = () => {
         }
     };
 
+    // Function to toggle between static and interactive mode
+    const toggleMode = () => {
+        setIsInteractive(!isInteractive);
+    };
+
     return (
         <div>
+            <button onClick={toggleMode}>
+                Switch to {isInteractive ? 'Static' : 'Interactive'} Mode
+            </button>
             <div ref={networkRef} style={{ height: '100vh', width: '100%' }}></div>
         </div>
     );

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import axiosInstance from './axiosInstance'; // Import axios instance
+import axiosInstance from '../../Hooks/axiosInstance'; // Import axios instance
 
 const D3Graph = ({ data }) => {
   const svgRef = useRef(null);

@@ -1,0 +1,52 @@
+/* Sidebar.css */
+
+.sidebar-container {
+    width: 250px;
+    height: 100vh;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    overflow-y: auto; /* Ensure scrollbar if content overflows */
+  }
+  
+  .sidebar-link {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  
+  .sidebar-link:hover {
+    background-color: #444;
+  }
+  
+  .submenu {
+    background-color: #444;
+  }
+  
+  .submenu-link {
+    display: block;
+    padding: 10px 40px; /* Indent submenu links */
+    color: white;
+    text-decoration: none;
+    margin-bottom: 5px;
+  }
+  
+  .submenu-link:hover {
+    background-color: #555;
+  }
+  
+  .toggle-icon {
+    float: right;
+    transition: transform 0.3s ease;
+  }
+  
+  .toggle-icon.open {
+    transform: rotate(90deg);
+  }
+  

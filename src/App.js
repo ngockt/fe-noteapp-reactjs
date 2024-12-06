@@ -1,13 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-
-import NewFeed from './components/NewFeed';
-import Home from './components/Home';
-import About from './components/About';
-import Contact from './components/Contact';
-import Graph from './components/Graph';
 import styled from 'styled-components';
+
+import Sidebar from './components/Sidebar/Sidebar';
+import Home from './pages/Home';
+import MyFeed from './pages/MyFeed';
+import Discover from './pages/Discover';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Projects from './pages/Projects';
+import Graph from './components/Core/Graphs/Graph';
 
 // Main content container, pushing it aside to make room for the sidebar
 const ContentContainer = styled.div`
@@ -22,7 +24,10 @@ const App = () => {
       <ContentContainer>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/newfeed" element={<NewFeed />} />
+          <Route path="/myfeed" element={<MyFeed />} />
+          <Route path="/dicovery" element={<Discover />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/linear-algebra" element={<Graph />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/graph" element={<Graph />} />
