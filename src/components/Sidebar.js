@@ -14,6 +14,7 @@ const Sidebar = () => {
       <Link to="/" className="sidebar-link">Home</Link>
       <Link to="/myfeed" className="sidebar-link">MyFeed</Link>
       <Link to="/discover" className="sidebar-link">Discover</Link>
+      <Link to="/the-maps" className="sidebar-link">The Maps</Link>
 
       {/* Projects Link with Toggle */}
       <div className="sidebar-link" onClick={toggleProjects}>
@@ -31,7 +32,6 @@ const Sidebar = () => {
         </div>
       )}
 
-      <Link to="/graph" className="sidebar-link">Graph</Link>
       <Link to="/contact" className="sidebar-link">Contact</Link>
       <Link to="/about" className="sidebar-link">About</Link>
     </div>

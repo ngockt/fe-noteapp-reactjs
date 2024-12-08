@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Algebra Topics Network</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@9.0.4/dist/vis-network.min.js"></script>
+  <style>
+    #network {
+      width: 100%;
+      height: 500px;
+      border: 1px solid lightgray;
+    }
+    .suggestions {
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      background: white;
+      position: absolute;
+      z-index: 10;
+      width: 200px;
+      display: none;
+    }
+    .suggestion-item {
+      padding: 5px;
+      cursor: pointer;
+    }
+    .suggestion-item:hover {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Linear Algebra Topics Network</h2>
+  <div style="position: relative;">
+    <input type="text" id="searchNodeInput" placeholder="Search for a topic" oninput="showSuggestions()" />
+    <div id="suggestions" class="suggestions"></div>
+  </div>
+  <button onclick="searchAndHighlightNode()">Search</button>
+  
+  <div id="network"></div>
+
+  <h3>Add New Node</h3>
+  <input type="text" id="newNodeLabel" placeholder="Node Label">
+  <button onclick="addNode()">Add Node</button>
+
+  <h3>Add New Edge</h3>
+  <input type="number" id="fromNodeId" placeholder="From Node ID">
+  <input type="number" id="toNodeId" placeholder="To Node ID">
+  <button onclick="addEdge()">Add Edge</button>
+
+  <script>
+    // Create an array of nodes with linear algebra topics
+    const nodes = new vis.DataSet([
+      { id: 1, label: '1\nMatrix Multiplication' },
+      { id: 2, label: '2\nDeterminants' },
+      { id: 3, label: '3\nEigenvalues and Eigenvectors' },
+      { id: 4, label: '4\nVector Spaces' },
+      { id: 5, label: '5\nLinear Transformations' },
+      { id: 6, label: '6\nOrthogonality' },
+      { id: 7, label: '7\nLU Decomposition' },
+      { id: 8, label: '8\nQR Factorization' },
+      { id: 9, label: '9\nGram-Schmidt Process' },
+      { id: 10, label: '10\nSingular Value Decomposition' },
+    ]);
+
+    // Create an array of edges (relationships between topics)
+    const edges = new vis.DataSet([
+      { from: 1, to: 2 },
+      { from: 2, to: 3 },
+      { from: 3, to: 4 },
+      { from: 4, to: 5 },
+      { from: 5, to: 6 },
+      { from: 6, to: 7 },
+      { from: 7, to: 8 },
+      { from: 8, to: 9 },
+      { from: 9, to: 10 },
+    ]);
+
+    // Create a network
+    const container = document.getElementById('network');
+    const data = { nodes: nodes, edges: edges };
+    const options = {
+      nodes: {
+        shape: 'dot',
+        size: 20,
+      },
+      interaction: {
+        hover: true,
+      },
+    };
+
+    const network = new vis.Network(container, data, options);
+
+    // Function to show live suggestions
+    function showSuggestions() {
+      const searchQuery = document.getElementById('searchNodeInput').value.trim().toLowerCase();
+      const suggestionsContainer = document.getElementById('suggestions');
+      suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+      if (searchQuery === '') {
+        suggestionsContainer.style.display = 'none';
+        return;
+      }
+
+      const matchedNodes = nodes.get({
+        filter: (n) => n.label.toLowerCase().includes(searchQuery),
+      });
+
+      if (matchedNodes.length > 0) {
+        suggestionsContainer.style.display = 'block';
+        matchedNodes.forEach((node) => {
+          const suggestionItem = document.createElement('div');
+          suggestionItem.classList.add('suggestion-item');
+          suggestionItem.textContent = node.label;
+          suggestionItem.onclick = () => {
+            document.getElementById('searchNodeInput').value = node.label;
+            suggestionsContainer.style.display = 'none';
+            searchAndHighlightNode();
+          };
+          suggestionsContainer.appendChild(suggestionItem);
+        });
+      } else {
+        suggestionsContainer.style.display = 'none';
+      }
+    }
+
+    // Function to search and highlight a node
+    function searchAndHighlightNode() {
+      const searchQuery = document.getElementById('searchNodeInput').value.trim();
+      const node = nodes.get({ filter: (n) => n.label === searchQuery });
+
+      if (node.length > 0) {
+        const nodeId = node[0].id;
+
+        // Highlight the node and its neighbors
+        network.selectNodes([nodeId]);
+        const connectedNodes = network.getConnectedNodes(nodeId);
+        network.selectNodes([nodeId, ...connectedNodes]);
+
+        // Zoom into the node for better visibility
+        network.focus(nodeId, { scale: 1.5 });
+      } else {
+        alert('Topic not found');
+      }
+    }
+
+    // Function to add a new node to the network
+    function addNode() {
+      const newNodeLabel = document.getElementById('newNodeLabel').value.trim();
+      if (newNodeLabel === '') {
+        alert('Please enter a valid node label.');
+        return;
+      }
+
+      // Get a new unique ID
+      const newId = nodes.length + 1;
+
+      // Add the node to the nodes dataset
+      nodes.add({ id: newId, label: `${newId}\n${newNodeLabel}` });
+
+      // Clear the input field
+      document.getElementById('newNodeLabel').value = '';
+    }
+
+    // Function to add a new edge to the network
+    function addEdge() {
+      const fromNodeId = parseInt(document.getElementById('fromNodeId').value);
+      const toNodeId = parseInt(document.getElementById('toNodeId').value);
+
+      if (isNaN(fromNodeId) || isNaN(toNodeId)) {
+        alert('Please enter valid node IDs for both fields.');
+        return;
+      }
+
+      // Check if nodes exist
+      if (!nodes.get(fromNodeId) || !nodes.get(toNodeId)) {
+        alert('One or both of the specified nodes do not exist.');
+        return;
+      }
+
+      // Add the edge to the edges dataset
+      edges.add({ from: fromNodeId, to: toNodeId });
+
+      // Clear the input fields
+      document.getElementById('fromNodeId').value = '';
+      document.getElementById('toNodeId').value = '';
+    }
+  </script>
+</body>
+</html>

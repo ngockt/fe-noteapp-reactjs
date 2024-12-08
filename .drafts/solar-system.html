@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>vis-network Example with Dropdown</title>
+  <!-- Load Vis Network CSS -->
+  <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+  <style>
+    #mynetwork {
+      width: 800px;
+      height: 500px;
+      border: 1px solid lightgray;
+      margin-bottom: 10px;
+    }
+    #controls {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label for="effectSelect">Choose a visualization effect:</label>
+    <select id="effectSelect">
+      <option value="default">Default (Spring Layout)</option>
+      <option value="hierarchical">Hierarchical Layout</option>
+      <option value="noPhysics">No Physics (Static)</option>
+      <option value="repulsion">Repulsion Physics</option>
+    </select>
+  </div>
+
+  <div id="mynetwork"></div>
+
+  <!-- Load Vis Network JS -->
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script>
+    // Define sample nodes
+    var nodes = new vis.DataSet([
+      { id: 1, label: "Node 1" },
+      { id: 2, label: "Node 2" },
+      { id: 3, label: "Node 3" },
+      { id: 4, label: "Node 4" },
+      { id: 5, label: "Node 5" }
+    ]);
+
+    // Define some edges
+    var edges = new vis.DataSet([
+      { from: 1, to: 3 },
+      { from: 1, to: 2 },
+      { from: 2, to: 4 },
+      { from: 2, to: 5 },
+      { from: 3, to: 5 }
+    ]);
+
+    // Create a network
+    var container = document.getElementById('mynetwork');
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+
+    // Default options
+    var options = {
+      physics: {
+        enabled: true,
+        solver: 'forceAtlas2Based', // a nice default solver for a "spring"-like layout
+      },
+      layout: {
+        improvedLayout: true
+      },
+      interaction: { hover: true }
+    };
+
+    var network = new vis.Network(container, data, options);
+
+    // Reference to the dropdown
+    var effectSelect = document.getElementById('effectSelect');
+
+    effectSelect.addEventListener('change', function() {
+      var value = effectSelect.value;
+
+      switch (value) {
+        case 'default':
+          network.setOptions({
+            layout: {
+              hierarchical: false,
+              improvedLayout: true
+            },
+            physics: {
+              enabled: true,
+              solver: 'forceAtlas2Based',
+            }
+          });
+          break;
+
+        case 'hierarchical':
+          // Use a hierarchical layout
+          network.setOptions({
+            layout: {
+              hierarchical: {
+                direction: 'UD', // up-down
+                levelSeparation: 150,
+                nodeSpacing: 100
+              }
+            },
+            physics: { enabled: false } // hierarchical often looks better static
+          });
+          break;
+
+        case 'noPhysics':
+          // Disable physics entirely for a static layout
+          network.setOptions({
+            physics: {
+              enabled: false
+            },
+            layout: {
+              hierarchical: false, // not hierarchical, just static
+              improvedLayout: true
+            }
+          });
+          break;
+
+        case 'repulsion':
+          // Emphasize repulsion-based physics for a spread-out network
+          network.setOptions({
+            layout: {
+              hierarchical: false
+            },
+            physics: {
+              enabled: true,
+              solver: 'repulsion',
+              repulsion: {
+                nodeDistance: 200, // increase distance for a more sparse layout
+                centralGravity: 0.2
+              }
+            }
+          });
+          break;
+      }
+
+      // Stabilize after changes for a smoother viewing experience if physics are enabled
+      if (value !== 'noPhysics' && value !== 'hierarchical') {
+        network.stabilize();
+      }
+    });
+  </script>
+</body>
+</html>

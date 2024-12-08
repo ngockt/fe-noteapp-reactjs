@@ -1,145 +1,108 @@
-/* Home.css */
-
-/* General Styles */
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    color: #333;
-}
-
 .home-container {
-    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    background: linear-gradient(to bottom, #87CEEB, #4682B4); /* Sky gradient */
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
-/* Navigation Bar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #007bff;
-    padding: 10px 20px;
-    color: white;
-}
-
-.navbar .logo {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 15px;
-}
-
-.nav-links li a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-}
-
-.nav-links li a:hover {
-    text-decoration: underline;
-}
-
-/* Hero Section */
 .hero {
-    background: #f4f4f4;
-    padding: 50px 20px;
+    text-align: center;
+    padding: 100px 20px;
+    background: url('https://example.com/forest-image.jpg') center/cover no-repeat; /* Replace with forest image URL */
+    color: #fff;
 }
 
 .hero h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .hero p {
-    font-size: 18px;
-    margin-bottom: 30px;
+    font-size: 1.2rem;
+    margin: 10px 0;
+    max-width: 600px;
+    margin: auto;
 }
 
 .cta-button {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #007bff;
-    color: white;
+    background-color: #228B22; /* Forest green */
     border: none;
-    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 25px;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .cta-button:hover {
-    background-color: #0056b3;
+    background-color: #006400; /* Darker green */
+    transform: scale(1.1);
 }
 
-/* Features Section */
 .features {
-    padding: 40px 20px;
-    background: #fff;
+    text-align: center;
+    padding: 50px 20px;
+    background: url('https://example.com/ocean-image.jpg') center/cover no-repeat; /* Replace with ocean image URL */
+    color: #fff;
 }
 
 .features h2 {
-    font-size: 28px;
+    font-size: 2.5rem;
     margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .feature {
     margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .feature h3 {
-    font-size: 22px;
+    font-size: 1.5rem;
+    color: #87CEEB; /* Sky blue */
 }
 
-.feature p {
-    font-size: 16px;
-    color: #666;
-}
-
-/* Testimonials Section */
 .testimonials {
-    padding: 40px 20px;
-    background: #f9f9f9;
+    text-align: center;
+    padding: 50px 20px;
+    background: linear-gradient(to top, #1e3c72, #2a5298); /* Ocean gradient */
+    color: #fff;
 }
 
 .testimonials h2 {
-    font-size: 28px;
+    font-size: 2.5rem;
     margin-bottom: 20px;
 }
 
 .testimonial {
     margin: 20px 0;
-    font-style: italic;
-    color: #555;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .testimonial span {
     display: block;
     margin-top: 10px;
-    font-size: 16px;
-    color: #333;
+    font-style: italic;
+    color: #B0E0E6; /* Powder blue */
 }
 
-/* Footer */
 .footer {
-    background: #007bff;
-    color: white;
-    padding: 20px 10px;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.social-links a {
-    color: white;
-    margin-left: 10px;
-    text-decoration: none;
-}
-
-.social-links a:hover {
-    text-decoration: underline;
+    text-align: center;
+    padding: 20px;
+    background: #2E8B57; /* Sea green */
+    color: #fff;
+    font-size: 0.9rem;
 }

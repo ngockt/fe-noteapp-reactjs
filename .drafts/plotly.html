@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vis Network Horizontal Layout</title>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style type="text/css">
+    #mynetwork {
+      width: 800px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+  // create an array with nodes
+  var nodes = new vis.DataSet([
+    { id: 1, label: 'Node 1' },
+    { id: 2, label: 'Node 2' },
+    { id: 3, label: 'Node 3' },
+    { id: 4, label: 'Node 4' },
+    { id: 5, label: 'Node 5' }
+  ]);
+
+  // create an array with edges
+  var edges = new vis.DataSet([
+    { from: 1, to: 2 },
+    { from: 1, to: 3 },
+    { from: 2, to: 4 },
+    { from: 2, to: 5 }
+  ]);
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  
+  var options = {
+    layout: {
+      hierarchical: {
+        enabled: true,
+        direction: 'LR', // LR stands for Left to Right for a horizontal layout
+        levelSeparation: 200, // Controls distance between levels of hierarchy
+        nodeSpacing: 150, // Controls spacing between nodes at the same level
+        treeSpacing: 200, // Spacing between different branches of the hierarchy
+        blockShifting: true,
+        edgeMinimization: true,
+        parentCentralization: true
+      }
+    },
+    physics: {
+      enabled: false // Disabling physics for a stable, fixed layout
+    }
+  };
+
+  var network = new vis.Network(container, data, options);
+
+  // To dynamically update the options, you can call setOptions like this:
+  var newOptions = {
+    layout: {
+      hierarchical: {
+        enabled: true,
+        direction: 'LR',
+        levelSeparation: 150,
+        nodeSpacing: 100,
+        treeSpacing: 150
+      }
+    },
+    physics: {
+      enabled: false
+    }
+  };
+  network.setOptions(newOptions);
+</script>
+
+</body>
+</html>

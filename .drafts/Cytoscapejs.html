@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cytoscape.js Interactive Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.21.1/dist/cytoscape.min.js"></script>
+  <style>
+    #cy { height: 500px; width: 100%; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <div id="cy"></div>
+  <script>
+    const cy = cytoscape({
+      container: document.getElementById('cy'),
+      elements: [
+        { data: { id: 'A' } },
+        { data: { id: 'B' } },
+        { data: { id: 'C' } },
+        { data: { source: 'A', target: 'B' } },
+        { data: { source: 'B', target: 'C' } }
+      ],
+      style: [
+        {
+          selector: 'node',
+          style: {
+            'background-color': 'steelblue',
+            'label': 'data(id)',
+            'width': 30,
+            'height': 30
+          }
+        },
+        {
+          selector: 'edge',
+          style: {
+            'width': 3,
+            'line-color': '#ccc'
+          }
+        }
+      ],
+      layout: {
+        name: 'circle',
+        animate: true
+      },
+      userZoomingEnabled: true,
+      userPanningEnabled: true,
+      boxSelectionEnabled: true
+    });
+  </script>
+</body>
+</html>

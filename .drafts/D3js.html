@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Radial Tree Layout with D3.js</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    text {
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    .node {
+      fill: #555;
+      cursor: pointer;
+    }
+
+    .leaf {
+      fill: #999;
+    }
+
+    .tooltip {
+      position: absolute;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border-radius: 5px;
+      pointer-events: none;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="chart-container"></div>
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    // Define the data for the hierarchical structure
+    const data = {
+      "name": "Root",
+      "children": [
+        {
+          "name": "A",
+          "children": [
+            { "name": "A1" },
+            { "name": "A2" },
+            { "name": "A3" }
+          ]
+        },
+        {
+          "name": "B",
+          "children": [
+            { "name": "B1" },
+            { "name": "B2" }
+          ]
+        },
+        {
+          "name": "C",
+          "children": [
+            { "name": "C1" },
+            { "name": "C2" }
+          ]
+        }
+      ]
+    };
+
+    // Specify the chart’s dimensions
+    const width = 928;
+    const height = width;
+    const cx = width * 0.5;
+    const cy = height * 0.54;
+    const radius = Math.min(width, height) / 2 - 80;
+
+    // Create a radial cluster layout.
+    const tree = d3.cluster()
+      .size([2 * Math.PI, radius])
+      .separation((a, b) => (a.parent === b.parent ? 1 : 2) / a.depth);
+
+    // Sort the tree and apply the layout.
+    const root = tree(d3.hierarchy(data)
+      .sort((a, b) => d3.ascending(a.data.name, b.data.name)));
+
+    // Create the SVG container
+    const svg = d3.create("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [-cx, -cy, width, height])
+      .attr("style", "width: 100%; height: auto; font: 10px sans-serif;");
+
+    // Tooltip for hovering over nodes
+    const tooltip = d3.select("#tooltip");
+
+    // Append links
+    const linkGroup = svg.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "#555")
+      .attr("stroke-opacity", 0.4)
+      .attr("stroke-width", 1.5);
+
+    const links = linkGroup.selectAll()
+      .data(root.links())
+      .join("path")
+      .attr("d", d3.linkRadial()
+        .angle(d => d.x)
+        .radius(d => d.y));
+
+    // Append nodes
+    const nodeGroup = svg.append("g");
+
+    const nodes = nodeGroup.selectAll()
+      .data(root.descendants())
+      .join("circle")
+      .attr("class", d => d.children ? "node" : "leaf")
+      .attr("r", 2.5)
+      .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`)
+      .on("mouseover", showTooltip)
+      .on("mouseout", hideTooltip)
+      .on("click", toggleChildren)
+      .call(d3.drag()
+        .on("start", dragStarted)
+        .on("drag", dragging)
+        .on("end", dragEnded));
+
+    // Append labels
+    svg.append("g")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-width", 3)
+      .selectAll()
+      .data(root.descendants())
+      .join("text")
+      .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0) rotate(${d.x >= Math.PI ? 180 : 0})`)
+      .attr("dy", "0.31em")
+      .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
+      .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
+      .attr("paint-order", "stroke")
+      .attr("stroke", "white")
+      .attr("fill", "currentColor")
+      .text(d => d.data.name);
+
+    // Append the SVG to the container in the HTML body
+    document.getElementById("chart-container").appendChild(svg.node());
+
+    // Tooltip functions
+    function showTooltip(event, d) {
+      tooltip.style("display", "block")
+        .html(`<strong>${d.data.name}</strong><br>ID: ${d.data.id}`)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 25) + "px");
+    }
+
+    function hideTooltip() {
+      tooltip.style("display", "none");
+    }
+
+    // Click event to toggle children visibility
+    function toggleChildren(event, d) {
+      if (d.children) {
+        d._children = d.children;
+        d.children = null; // Remove children on click
+      } else {
+        d.children = d._children;
+        d._children = null; // Restore children
+      }
+      update();
+    }
+
+    // Update the tree after clicking to expand/collapse
+    function update() {
+      const updatedRoot = tree(d3.hierarchy(data)
+        .sort((a, b) => d3.ascending(a.data.name, b.data.name)));
+
+      // Update links
+      links.data(updatedRoot.links())
+        .join("path")
+        .transition()
+        .duration(750)
+        .attr("d", d3.linkRadial()
+          .angle(d => d.x)
+          .radius(d => d.y));
+
+      // Update nodes
+      nodes.data(updatedRoot.descendants())
+        .join("circle")
+        .transition()
+        .duration(750)
+        .attr("class", d => d.children ? "node" : "leaf")
+        .attr("r", 2.5)
+        .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`);
+
+      // Update labels
+      svg.selectAll("text")
+        .data(updatedRoot.descendants())
+        .join("text")
+        .transition()
+        .duration(750)
+        .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0) rotate(${d.x >= Math.PI ? 180 : 0})`)
+        .attr("dy", "0.31em")
+        .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
+        .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
+        .text(d => d.data.name);
+    }
+
+    // Drag functions
+    function dragStarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragging(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragEnded(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+  </script>
+</body>
+</html>

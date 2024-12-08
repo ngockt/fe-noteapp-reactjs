@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma.js Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@2.0.0-alpha.15/dist/sigma.min.js"></script>
+    <style>
+        #sigma-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="sigma-container"></div>
+
+    <script>
+        const graph = {
+            nodes: [
+                { id: 'n0', label: 'Node 0', x: Math.random(), y: Math.random(), size: 10 },
+                { id: 'n1', label: 'Node 1', x: Math.random(), y: Math.random(), size: 10 },
+                { id: 'n2', label: 'Node 2', x: Math.random(), y: Math.random(), size: 10 },
+                { id: 'n3', label: 'Node 3', x: Math.random(), y: Math.random(), size: 10 }
+            ],
+            edges: [
+                { id: 'e0', source: 'n0', target: 'n1', label: 'Link A' },
+                { id: 'e1', source: 'n1', target: 'n2', label: 'Link B' },
+                { id: 'e2', source: 'n2', target: 'n3', label: 'Link C' },
+                { id: 'e3', source: 'n3', target: 'n0', label: 'Link D' }
+            ]
+        };
+
+        const container = document.getElementById('sigma-container');
+
+        const s = new sigma({
+            graph: graph,
+            container: container,
+            settings: {
+                defaultNodeColor: '#ff5733',
+                defaultEdgeColor: '#aaa',
+                edgeColor: 'default',
+                defaultEdgeType: 'arrow'
+            }
+        });
+    </script>
+</body>
+
+</html>

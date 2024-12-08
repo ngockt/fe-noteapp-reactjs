@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Sidebar from './components/Sidebar/Sidebar';
+import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import MyFeed from './pages/MyFeed';
 import Discover from './pages/Discover';
@@ -26,8 +26,10 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/myfeed" element={<MyFeed />} />
           <Route path="/dicovery" element={<Discover />} />
+          <Route path="/the-maps" element={<Graph url='/graph/fields' />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/linear-algebra" element={<Graph />} />
+          <Route path="/projects/linear-algebra" element={<Graph url='/graph/linear-algebra' />} />
+          <Route path="/projects/calculus" element={<Graph url='/graph/calculus' />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/graph" element={<Graph />} />

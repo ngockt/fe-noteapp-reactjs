@@ -1,35 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
-import axiosInstance from '../../Hooks/axiosInstance'; // Adjust the import path accordingly
 
-const VisNetworkGraph = () => {
+const VisNetworkGraph = ({ data }) => {
     const networkRef = useRef(null);
-
-    // State to hold the fetched data
-    const [data, setData] = useState(null);
-
-    // State to manage nodes and edges
     const [nodesData, setNodesData] = useState([]);
     const [edgesData, setEdgesData] = useState([]);
-
-    // State to toggle between static and interactive mode
     const [isInteractive, setIsInteractive] = useState(true);
 
-    // Fetch data from the API when the component mounts
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axiosInstance.get('/graph'); // API endpoint
-                setData(response.data); // Set the data in the state
-            } catch (error) {
-                console.error('Error fetching graph data:', error);
-            }
-        };
 
-        fetchData();
-    }, []);
-
-    // Update nodesData and edgesData when data is fetched
     useEffect(() => {
         if (data) {
             setNodesData(data.nodes || []);
@@ -49,10 +27,10 @@ const VisNetworkGraph = () => {
                 label: d.label || `Node ${d.id}`, // Ensure nodes have a label
                 font: {
                     size: 10,  // Reduced font size
-                    color: 'rgba(0, 0, 0, 0.5)',  // Lighter color for text (semi-transparent black)
+                    color: 'rgba(0, 0, 0, 1)',  // Lighter color for text (semi-transparent black)
                     background: 'none',  // Make background transparent (optional)
                 },
-                hidden: d.type === 'concept',
+                hidden: false,
             }))
         );
 
@@ -63,11 +41,12 @@ const VisNetworkGraph = () => {
                 to: link.dst_node_id,
                 label: link.label || '', // Ensure edges have a label
                 arrows: link.bidirectional ? 'to,from' : 'to', // Set arrow direction
-                width: 1,  // Adjust the width of the edge to make arrows smaller
+                width: 0.8,  // Adjust the width of the edge to make arrows smaller
                 font: {
                     size: 8,  // Reduced font size
-                    color: 'rgba(0, 0, 0, 0.5)',  // Lighter color for text (semi-transparent black)
+                    color: 'rgba(0, 0, 0, 0.3)',  // Lighter color for text (semi-transparent black)
                 },
+                length: getEdgeLength(nodesData.find(n => n.id == link.dst_node_id).type)
             }))
         );
 
@@ -89,15 +68,15 @@ const VisNetworkGraph = () => {
                 barnesHut: {
                     gravitationalConstant: -500,
                     centralGravity: 0.2,
-                    springLength: 50,
+                    springLength: 60,
                     springConstant: 0.05,
                     damping: 0.1,
-                    avoidOverlap: 0.2,
+                    avoidOverlap: 0.3,
                 },
-                timestep: 0.5,
+                timestep: 0.1,
                 stabilization: {
-                    iterations: 100,
-                    updateInterval: 10,
+                    iterations: 10,
+                    updateInterval: 1,
                 },
             },
             interaction: {
@@ -110,6 +89,7 @@ const VisNetworkGraph = () => {
                 arrows: {
                     to: { scaleFactor: 0.5, type: 'arrow' },
                 },
+                // smooth: false
             },
             layout: {
                 randomSeed: 2,
@@ -227,10 +207,12 @@ const VisNetworkGraph = () => {
     // Function to determine the node size based on type
     const getNodeSize = (type) => {
         switch (type) {
+            case 'field':
+                return 40; // Largest size for subject
             case 'subject':
                 return 30; // Largest size for subject
             case 'general-topic':
-                return 20; // Slightly smaller for general topic
+                return 15; // Slightly smaller for general topic
             case 'topic':
                 return 10; // Smaller for topic
             case 'concept':
@@ -243,9 +225,11 @@ const VisNetworkGraph = () => {
     // Function to determine the node color based on type
     const getNodeColor = (type) => {
         switch (type) {
+            case 'field':
+                return '#64B5CD'; // Blue for 'subject'
             case 'subject':
                 return '#0077cc'; // Blue for 'subject'
-            case 'general topic':
+            case 'general-topic':
                 return '#ff5722'; // Orange for 'general topic'
             case 'topic':
                 return '#8bc34a'; // Green for 'topic'
@@ -253,6 +237,23 @@ const VisNetworkGraph = () => {
                 return '#9c27b0'; // Purple for 'concept'
             default:
                 return '#9e9e9e'; // Gray for any unrecognized type
+        }
+    };
+    const getEdgeLength = (type) => {
+        console.log(type)
+        switch (type) {
+            case 'field':
+                return 300; // Largest size for subject
+            case 'subject':
+                return 300; // Largest size for subject
+            case 'general-topic':
+                return 300; // Slightly smaller for general topic
+            case 'topic':
+                return 50; // Smaller for topic
+            case 'concept':
+                return 15; // Smallest size for concept
+            default:
+                return 5; // Default size if type is not recognized
         }
     };
 

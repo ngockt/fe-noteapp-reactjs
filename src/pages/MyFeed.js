@@ -67,15 +67,15 @@ const MyFeed = () => {
           }}
         >
           {editingNote === note.id ? (
-            <div>
+            <div style={{ display: 'flex', gap: '20px' }}>
               {/* Live Preview */}
               <div
                 style={{
+                  flex: 1,
                   border: '1px solid #ddd',
                   borderRadius: '8px',
                   padding: '10px',
                   backgroundColor: '#f9f9f9',
-                  marginBottom: '10px',
                 }}
               >
                 <h3>Live Preview:</h3>
@@ -88,51 +88,53 @@ const MyFeed = () => {
               </div>
 
               {/* Editor */}
-              <textarea
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                style={{
-                  width: '100%',
-                  height: '100px',
-                  padding: '10px',
-                  fontSize: '16px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                  marginBottom: '10px',
-                }}
-              />
+              <div style={{ flex: 1 }}>
+                <textarea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  style={{
+                    width: '100%',
+                    height: '200px',
+                    padding: '10px',
+                    fontSize: '16px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    marginBottom: '10px',
+                  }}
+                />
 
-              {/* Buttons */}
-              <div>
-                <button
-                  onClick={handleSave}
-                  style={{
-                    marginRight: '10px',
-                    padding: '8px 16px',
-                    backgroundColor: '#28a745',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <FiSave style={{ marginRight: '5px' }} />
-                  Save
-                </button>
-                <button
-                  onClick={handleCancel}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#6c757d',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <FiArrowLeft style={{ marginRight: '5px' }} />
-                  Cancel
-                </button>
+                {/* Buttons */}
+                <div>
+                  <button
+                    onClick={handleSave}
+                    style={{
+                      marginRight: '10px',
+                      padding: '8px 16px',
+                      backgroundColor: '#28a745',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <FiSave style={{ marginRight: '5px' }} />
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: '#6c757d',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <FiArrowLeft style={{ marginRight: '5px' }} />
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           ) : (

@@ -3,14 +3,15 @@ import D3Graph from './D3Graph'; // Graph with zooming
 import VisJsGraph from './VisJsGraph'; // Graph without zooming
 import axiosInstance from '../../Hooks/axiosInstance'; // Import axios instance
 
-const Graph = () => {
+const Graph = ({ url }) => {
     const [data, setData] = useState(null);
     const [showZoomableGraph, setShowZoomableGraph] = useState(true);
-
+    console.log(url)
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axiosInstance.get('/graph'); // API endpoint
+                const response = await axiosInstance.get(url); // API endpoint
+                console.log(response.data)
                 setData(response.data); // Set the data in the state
             } catch (error) {
                 console.error('Error fetching graph data:', error);
@@ -29,7 +30,7 @@ const Graph = () => {
         <div>
             <h1>Graph Visualization</h1>
             <div>
-                {showZoomableGraph ? <VisJsGraph /> : <D3Graph data={data} />}
+                {showZoomableGraph ? <VisJsGraph data={data} /> : <D3Graph data={data} />}
             </div>
             <div>
                 <button onClick={toggleGraphView}>

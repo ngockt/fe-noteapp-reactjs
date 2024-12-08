@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vis-Network Mark as Done</title>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    #mynetwork {
+      width: 100%;
+      height: 500px;
+      border: 1px solid lightgray;
+    }
+    .context-menu {
+      display: none;
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    .context-menu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .context-menu li {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .context-menu li:hover {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="mynetwork"></div>
+  <div id="contextMenu" class="context-menu">
+    <ul id="menuOptions"></ul>
+  </div>
+  <script>
+    // Create a network
+    const container = document.getElementById('mynetwork');
+    const nodes = new vis.DataSet([
+      { id: 1, label: 'Node 1', color: { background: '#97C2FC' } },
+      { id: 2, label: 'Node 2', color: { background: '#97C2FC' } },
+      { id: 3, label: 'Node 3', color: { background: '#97C2FC' } },
+      { id: 4, label: 'Node 4', color: { background: '#97C2FC' } },
+      { id: 5, label: 'Node 5', color: { background: '#97C2FC' } }
+    ]);
+    const edges = new vis.DataSet([
+      { from: 1, to: 2 },
+      { from: 1, to: 3 },
+      { from: 2, to: 4 },
+      { from: 2, to: 5 }
+    ]);
+    const data = { nodes, edges };
+    const options = {
+      nodes: {
+        shape: 'dot',
+        size: 15,
+      },
+    };
+    const network = new vis.Network(container, data, options);
+
+    // Handle right-click context menu
+    const contextMenu = document.getElementById('contextMenu');
+    const menuOptions = document.getElementById('menuOptions');
+
+    container.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+
+      const pointer = { x: event.offsetX, y: event.offsetY };
+      const nodeId = network.getNodeAt(pointer);
+
+      // Populate menu based on context
+      menuOptions.innerHTML = ''; // Clear previous options
+      if (nodeId) {
+        // Options for nodes
+        const nodeOptions = `
+          <li onclick="markNodeAsDone(${nodeId})">Mark Node ${nodeId} as Done</li>
+        `;
+        menuOptions.innerHTML = nodeOptions;
+      } else {
+        // Options for empty space (can add more later)
+        const emptyOptions = `<li onclick="alert('Right-clicked empty space')">No Actions Available</li>`;
+        menuOptions.innerHTML = emptyOptions;
+      }
+
+      // Show context menu
+      contextMenu.style.top = event.pageY + 'px';
+      contextMenu.style.left = event.pageX + 'px';
+      contextMenu.style.display = 'block';
+    });
+
+    // Hide context menu on click elsewhere
+    document.addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+    });
+
+    // Mark node as done
+    function markNodeAsDone(nodeId) {
+      nodes.update({ id: nodeId, color: { background: 'lightgreen' } });
+      alert(`Node ${nodeId} marked as done!`);
+      contextMenu.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

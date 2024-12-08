@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Hierarchy with Filters</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #0078d4;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .filter-bar button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #0078d4;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .filter-bar button:hover {
+            background: #005fa3;
+        }
+        .filter-bar button.active {
+            background: #ffa500;
+            color: black;
+        }
+        .search-bar {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            margin-top: 5px;
+        }
+        .suggestions li {
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .suggestions li:hover {
+            background: #f0f0f0;
+        }
+        .hierarchy {
+            list-style: none;
+            padding: 0;
+        }
+        .hierarchy li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fafafa;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .hierarchy li:hover {
+            background: #f0f0f0;
+        }
+        .nested {
+            margin-left: 20px;
+            display: none;
+        }
+        .nested.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Content Hierarchy with Filters</h1>
+    </header>
+    <div class="container">
+        <div class="filter-bar">
+            <button class="filter-button" data-type="all">All</button>
+            <button class="filter-button" data-type="domain">Domain</button>
+            <button class="filter-button" data-type="field">Field</button>
+            <button class="filter-button" data-type="branch">Branch</button>
+            <button class="filter-button" data-type="subject">Subject</button>
+            <button class="filter-button" data-type="topic">Topic</button>
+            <button class="filter-button" data-type="concept">Concept</button>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
+            <ul class="suggestions" id="suggestionsList"></ul>
+        </div>
+        <ul class="hierarchy" id="hierarchyList">
+            <li data-type="domain">
+                Domain 1
+                <ul class="nested">
+                    <li data-type="field">
+                        Field 1
+                        <ul class="nested">
+                            <li data-type="branch">
+                                Branch 1
+                                <ul class="nested">
+                                    <li data-type="subject">
+                                        Subject 1
+                                        <ul class="nested">
+                                            <li data-type="topic">
+                                                Topic 1
+                                                <ul class="nested">
+                                                    <li data-type="concept">Concept 1</li>
+                                                    <li data-type="concept">Concept 2</li>
+                                                </ul>
+                                            </li>
+                                            <li data-type="topic">Topic 2</li>
+                                        </ul>
+                                    </li>
+                                    <li data-type="subject">Subject 2</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li data-type="domain">
+                Domain 2
+                <ul class="nested">
+                    <li data-type="field">Field 2</li>
+                    <li data-type="field">Field 3</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        const data = [
+            { name: "Domain 1", type: "domain" },
+            { name: "Field 1", type: "field" },
+            { name: "Branch 1", type: "branch" },
+            { name: "Subject 1", type: "subject" },
+            { name: "Topic 1", type: "topic" },
+            { name: "Concept 1", type: "concept" },
+            { name: "Concept 2", type: "concept" },
+            { name: "Topic 2", type: "topic" },
+            { name: "Subject 2", type: "subject" },
+            { name: "Domain 2", type: "domain" },
+            { name: "Field 2", type: "field" },
+            { name: "Field 3", type: "field" }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsList = document.getElementById('suggestionsList');
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const hierarchyItems = document.querySelectorAll('.hierarchy li');
+
+        let activeFilter = 'all';
+
+        // Show suggestions based on search input
+        searchInput.addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            suggestionsList.innerHTML = '';
+            if (query) {
+                const suggestions = data.filter(item => 
+                    item.name.toLowerCase().includes(query) && 
+                    (activeFilter === 'all' || item.type === activeFilter)
+                );
+                suggestions.forEach(suggestion => {
+                    const li = document.createElement('li');
+                    li.textContent = suggestion.name;
+                    li.addEventListener('click', () => {
+                        searchInput.value = suggestion.name;
+                        suggestionsList.innerHTML = '';
+                    });
+                    suggestionsList.appendChild(li);
+                });
+            }
+        });
+
+        // Filter hierarchy items based on content type
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                activeFilter = this.dataset.type;
+
+                hierarchyItems.forEach(item => {
+                    if (activeFilter === 'all' || item.dataset.type === activeFilter) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
