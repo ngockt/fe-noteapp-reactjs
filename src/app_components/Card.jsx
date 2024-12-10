@@ -6,6 +6,7 @@ import Mermaid from './Mermaid'; // Import the Mermaid component
 import 'katex/dist/katex.min.css';
 import { FiEdit, FiSave, FiArrowLeft } from 'react-icons/fi';
 import './Card.css';
+import PlantUML from './PlantUML';
 
 const Card = ({ note, onSave }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -31,6 +32,8 @@ const Card = ({ note, onSave }) => {
             const match = /language-(\w+)/.exec(className || '');
             if (match && match[1] === 'mermaid') {
                 return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+            }else if (match && match[1] === 'plantuml') {
+                return <PlantUML content={String(children).replace(/\n$/, '')} />;
             }
             return (
                 <code className={className} {...props}>
@@ -66,7 +69,6 @@ const Card = ({ note, onSave }) => {
 
                     {/* Preview Section */}
                     <div className="preview-container">
-                        <h3>Live Preview:</h3>
                         <div className="preview-content">
                             <ReactMarkdown
                                 components={MarkdownComponents}

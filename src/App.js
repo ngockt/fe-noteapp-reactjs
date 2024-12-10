@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -18,7 +18,6 @@ const ContentContainer = styled.div`
 `;
 
 const App = () => {
-  console.log('initApp')
   return (
     <Router>
       <Sidebar />
