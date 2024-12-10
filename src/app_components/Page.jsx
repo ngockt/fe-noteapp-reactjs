@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import './Page.css';
+import { FiEdit } from 'react-icons/fi';
+
 
 const Page = ({ notes }) => {
     const [currentNotes, setCurrentNotes] = useState(notes);
@@ -35,7 +37,8 @@ const Page = ({ notes }) => {
         <div className="page">
             <div>
                 <button onClick={handleAddCard} className="new-card-button">
-                    New Card
+                    <FiEdit className="icon" />
+                     New Card
                 </button>
             </div>
             {currentNotes.map((note) => (

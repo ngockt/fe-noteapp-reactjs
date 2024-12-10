@@ -18,6 +18,7 @@ const ContentContainer = styled.div`
 `;
 
 const App = () => {
+  console.log("Init app")
   return (
     <Router>
       <Sidebar />
