@@ -46,7 +46,7 @@ const VisNetworkGraph = ({ data }) => {
                     size: 8,  // Reduced font size
                     color: 'rgba(0, 0, 0, 0.3)',  // Lighter color for text (semi-transparent black)
                 },
-                length: getEdgeLength(nodesData.find(n => n.id == link.dst_node_id).type)
+                length: getEdgeLength(nodesData.find(n => n.id === link.dst_node_id).type)
             }))
         );
 

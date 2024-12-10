@@ -42,6 +42,7 @@ const Card = ({ note, onSave }) => {
 
     return (
         <div className="card">
+            <h3>A Card</h3>
             {isEditing ? (
                 <div className="editor-preview-container">
                     {/* Editor Section */}

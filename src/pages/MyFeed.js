@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Page from '../app_components/Page'; // Import the Page component
+import axiosInstance from '../components/Hooks/axiosInstance'; // Import axios instance
 
 const MyFeed = () => {
-    const [notes, setNotes] = useState([
-        { id: 1, content: 'This is a sample note. $E = mc^2$' },
-        { id: 2, content: '# Hello World\nThis is another note with **markdown**.' },
-        {
-            id: 3,
-            content: '```mermaid\ngraph LR;\nA-->B;\nB-->C;\nC-->D;\n```',
-        },
-    ]);
+    console.log('Init MyFeed')
+    const [notes, setNotes] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axiosInstance.get('/content/myfeed'); // API endpoint
+                setNotes(response.data); // Set the data in the state
+            } catch (error) {
+                console.error('Error fetching graph data:', error);
+            }
+        };
+    
+        fetchData();
+    }, []);
+
+
 
     const handleSave = (id, updatedContent) => {
         setNotes(
@@ -17,6 +26,7 @@ const MyFeed = () => {
                 note.id === id ? { ...note, content: updatedContent } : note
             )
         );
+        console.log('handelsaveevnent')
     };
 
     return (
