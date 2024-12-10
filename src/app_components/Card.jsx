@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import Mermaid from './Mermaid'; // Import the Mermaid component
+import Mermaid from './Mermaid';
 import 'katex/dist/katex.min.css';
 import { FiEdit, FiSave, FiArrowLeft } from 'react-icons/fi';
 import './Card.css';
 import PlantUML from './PlantUML';
 
-const Card = ({ note, onSave }) => {
-    const [isEditing, setIsEditing] = useState(false);
+const Card = ({ note, onSave, isNew, onCloseEditor }) => {
+    const [isEditing, setIsEditing] = useState(isNew || false); // Open editor if isNew is true
     const [content, setContent] = useState(note.content);
+
+    useEffect(() => {
+        if (isNew) {
+            setIsEditing(true);
+        }
+    }, [isNew]);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -19,20 +25,21 @@ const Card = ({ note, onSave }) => {
     const handleSave = () => {
         setIsEditing(false);
         onSave(note.id, content);
+        if (onCloseEditor) onCloseEditor(); // Notify parent to close editor for a new card
     };
 
     const handleCancel = () => {
         setIsEditing(false);
         setContent(note.content);
+        if (onCloseEditor) onCloseEditor(); // Notify parent to close editor for a new card
     };
 
-    // Custom renderers for Markdown components
     const MarkdownComponents = {
         code({ node, inline, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
             if (match && match[1] === 'mermaid') {
                 return <Mermaid chart={String(children).replace(/\n$/, '')} />;
-            }else if (match && match[1] === 'plantuml') {
+            } else if (match && match[1] === 'plantuml') {
                 return <PlantUML content={String(children).replace(/\n$/, '')} />;
             }
             return (
@@ -45,10 +52,8 @@ const Card = ({ note, onSave }) => {
 
     return (
         <div className="card">
-            <h3>A Card</h3>
             {isEditing ? (
                 <div className="editor-preview-container">
-                    {/* Editor Section */}
                     <div className="editor-container">
                         <textarea
                             value={content}
@@ -67,7 +72,6 @@ const Card = ({ note, onSave }) => {
                         </div>
                     </div>
 
-                    {/* Preview Section */}
                     <div className="preview-container">
                         <div className="preview-content">
                             <ReactMarkdown
@@ -81,7 +85,6 @@ const Card = ({ note, onSave }) => {
                 </div>
             ) : (
                 <>
-                    {/* Display Content */}
                     <ReactMarkdown
                         components={MarkdownComponents}
                         children={note.content}
