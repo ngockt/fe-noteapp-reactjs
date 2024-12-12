@@ -1,12 +1,15 @@
+import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import D3Graph from './D3Graph'; // Graph with zooming
 import VisJsGraph from './VisJsGraph'; // Graph without zooming
 import axiosInstance from '../../Hooks/axiosInstance'; // Import axios instance
 
-const Graph = ({ url }) => {
+const Graph = () => {
+    const location = useLocation();
+    const url = location.pathname + location.search;
+
     const [data, setData] = useState(null);
     const [showZoomableGraph, setShowZoomableGraph] = useState(true);
-    console.log(url)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -19,7 +22,7 @@ const Graph = ({ url }) => {
         };
 
         fetchData();
-    }, []);
+    }, [url]);
 
 
     const toggleGraphView = () => {

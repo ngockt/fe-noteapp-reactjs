@@ -14,7 +14,7 @@ const Sidebar = () => {
       <Link to="/" className="sidebar-link">Home</Link>
       <Link to="/myfeed" className="sidebar-link">MyFeed</Link>
       <Link to="/discover" className="sidebar-link">Discover</Link>
-      <Link to="/the-maps" className="sidebar-link">The Maps</Link>
+      <Link to="/maps" className="sidebar-link">Maps</Link>
 
       {/* Projects Link with Toggle */}
       <div className="sidebar-link" onClick={toggleProjects}>
@@ -26,7 +26,7 @@ const Sidebar = () => {
       {isProjectsOpen && (
         <div className="submenu">
           <Link to="/projects/more" className="submenu-link">New Project ...</Link>
-          <Link to="/projects/linear-algebra" className="submenu-link">Study Linear Algebra</Link>
+          <Link to="/maps?subject=linear-algebra" className="submenu-link">Study Linear Algebra</Link>
           <Link to="/projects/calculus" className="submenu-link">Study Calculus</Link>
           <Link to="/projects/more" className="submenu-link">More ...</Link>
         </div>

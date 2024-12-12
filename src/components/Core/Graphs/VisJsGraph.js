@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
+import getVisProperties from './VisJsGraph.properties';
 
 const VisNetworkGraph = ({ data }) => {
     const networkRef = useRef(null);
@@ -11,20 +12,19 @@ const VisNetworkGraph = ({ data }) => {
     useEffect(() => {
         if (data) {
             setNodesData(data.nodes || []);
-            setEdgesData(data.links || []);
+            setEdgesData(data.edges || []);
         }
     }, [data]);
 
     useEffect(() => {
         if (nodesData.length === 0 && edgesData.length === 0) return; // Wait until data is available
 
-        // Create the DataSet for nodes, adding size and color based on node type
         const nodes = new DataSet(
             nodesData.map(d => ({
                 id: d.id,
-                color: getNodeColor(d.type), // Set color based on type
-                size: getNodeSize(d.type),  // Set size based on type
-                label: d.label || `Node ${d.id}`, // Ensure nodes have a label
+                color: getVisProperties(d.category).node.color, // Set color based on type
+                size: getVisProperties(d.category).node.size,  // Set size based on type
+                label: d.name || `Node ${d.id}`, // Ensure nodes have a label
                 font: {
                     size: 10,  // Reduced font size
                     color: 'rgba(0, 0, 0, 1)',  // Lighter color for text (semi-transparent black)
@@ -35,18 +35,18 @@ const VisNetworkGraph = ({ data }) => {
         );
 
         const edges = new DataSet(
-            edgesData.map(link => ({
-                id: link.id,
-                from: link.src_node_id,
-                to: link.dst_node_id,
-                label: link.label || '', // Ensure edges have a label
-                arrows: link.bidirectional ? 'to,from' : 'to', // Set arrow direction
+            edgesData.map(edge => ({
+                id: edge.id,
+                from: edge.src_node_id,
+                to: edge.dst_node_id,
+                label: edge.name || '', // Ensure edges have a label
+                arrows: edge.category=='related' ? 'to,from' : 'to', // Set arrow direction
                 width: 0.8,  // Adjust the width of the edge to make arrows smaller
                 font: {
                     size: 8,  // Reduced font size
                     color: 'rgba(0, 0, 0, 0.3)',  // Lighter color for text (semi-transparent black)
                 },
-                length: getEdgeLength(nodesData.find(n => n.id === link.dst_node_id).type)
+                length: getVisProperties(nodesData.find(n => n.id === edge.dst_node_id).category).edge.length
             }))
         );
 
@@ -204,58 +204,6 @@ const VisNetworkGraph = ({ data }) => {
 
     }, [nodesData, edgesData, isInteractive]);
 
-    // Function to determine the node size based on type
-    const getNodeSize = (type) => {
-        switch (type) {
-            case 'field':
-                return 40; // Largest size for subject
-            case 'subject':
-                return 30; // Largest size for subject
-            case 'general-topic':
-                return 15; // Slightly smaller for general topic
-            case 'topic':
-                return 10; // Smaller for topic
-            case 'concept':
-                return 5; // Smallest size for concept
-            default:
-                return 5; // Default size if type is not recognized
-        }
-    };
-
-    // Function to determine the node color based on type
-    const getNodeColor = (type) => {
-        switch (type) {
-            case 'field':
-                return '#64B5CD'; // Blue for 'subject'
-            case 'subject':
-                return '#0077cc'; // Blue for 'subject'
-            case 'general-topic':
-                return '#ff5722'; // Orange for 'general topic'
-            case 'topic':
-                return '#8bc34a'; // Green for 'topic'
-            case 'concept':
-                return '#9c27b0'; // Purple for 'concept'
-            default:
-                return '#9e9e9e'; // Gray for any unrecognized type
-        }
-    };
-    const getEdgeLength = (type) => {
-        console.log(type)
-        switch (type) {
-            case 'field':
-                return 300; // Largest size for subject
-            case 'subject':
-                return 300; // Largest size for subject
-            case 'general-topic':
-                return 300; // Slightly smaller for general topic
-            case 'topic':
-                return 50; // Smaller for topic
-            case 'concept':
-                return 15; // Smallest size for concept
-            default:
-                return 5; // Default size if type is not recognized
-        }
-    };
 
     // Function to toggle between static and interactive mode
     const toggleMode = () => {

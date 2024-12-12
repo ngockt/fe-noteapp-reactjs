@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -27,10 +27,10 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/myfeed" element={<MyFeed />} />
           <Route path="/dicovery" element={<Discover />} />
-          <Route path="/the-maps" element={<Graph url='/graph/fields' />} />
+          <Route path="/maps" element={<Graph />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/linear-algebra" element={<Graph url='/graph/linear-algebra' />} />
-          <Route path="/projects/calculus" element={<Graph url='/graph/calculus' />} />
+          <Route path="/maps?subject=linear-algebra" element={<Graph url='/maps?subject=linear-algebra' />} />
+          <Route path="/projects/calculus" element={<Graph url='/maps?branch=calculus' />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/graph" element={<Graph />} />
