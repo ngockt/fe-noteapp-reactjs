@@ -20,18 +20,21 @@ const VisNetworkGraph = ({ data }) => {
         if (nodesData.length === 0 && edgesData.length === 0) return; // Wait until data is available
 
         const nodes = new DataSet(
-            nodesData.map(d => ({
-                id: d.id,
-                color: getVisProperties(d.category).node.color, // Set color based on type
-                size: getVisProperties(d.category).node.size,  // Set size based on type
-                label: d.name || `Node ${d.id}`, // Ensure nodes have a label
-                font: {
-                    size: 10,  // Reduced font size
-                    color: 'rgba(0, 0, 0, 1)',  // Lighter color for text (semi-transparent black)
-                    background: 'none',  // Make background transparent (optional)
-                },
-                hidden: false,
-            }))
+            nodesData.map(d => {
+                const visProperties = getVisProperties(d.category)
+                return {
+                    id: d.id,
+                    color: visProperties.node.color, // Set color based on type
+                    size: visProperties.node.size,  // Set size based on type
+                    label: d.name || `Node ${d.id}`, // Ensure nodes have a label
+                    font: {
+                        size: visProperties.node.fontsize,  // Reduced font size
+                        color: 'rgba(0, 0, 0, 1)',  // Lighter color for text (semi-transparent black)
+                        background: 'none',  // Make background transparent (optional)
+                    },
+                    hidden: false,
+                }
+            })
         );
 
         const edges = new DataSet(
@@ -40,13 +43,13 @@ const VisNetworkGraph = ({ data }) => {
                 from: edge.src_node_id,
                 to: edge.dst_node_id,
                 label: edge.name || '', // Ensure edges have a label
-                arrows: edge.category=='related' ? 'to,from' : 'to', // Set arrow direction
+                arrows: edge.category === 'related' ? 'to,from' : 'to', // Set arrow direction
                 width: 0.8,  // Adjust the width of the edge to make arrows smaller
                 font: {
                     size: 8,  // Reduced font size
                     color: 'rgba(0, 0, 0, 0.3)',  // Lighter color for text (semi-transparent black)
                 },
-                length: getVisProperties(nodesData.find(n => n.id === edge.dst_node_id).category).edge.length
+                // length: getVisProperties(nodesData.find(n => n.id === edge.dst_node_id).category).edge.length
             }))
         );
 
@@ -57,11 +60,6 @@ const VisNetworkGraph = ({ data }) => {
             autoResize: true,
             height: '100%',
             width: '100%',
-            layout: {
-                enabled: true,
-                direction: "LR",
-                sortMethod: 'hubsize'
-            },
             physics: {
                 enabled: isInteractive,
                 solver: 'barnesHut',
@@ -76,7 +74,7 @@ const VisNetworkGraph = ({ data }) => {
                 timestep: 0.1,
                 stabilization: {
                     iterations: 10,
-                    updateInterval: 1,
+                    updateInterval: 0.005,
                 },
             },
             interaction: {
@@ -92,11 +90,11 @@ const VisNetworkGraph = ({ data }) => {
                 // smooth: false
             },
             layout: {
-                randomSeed: 2,
+                // randomSeed: 2,
                 improvedLayout: true,
-                hierarchical: {
-                    enabled: false,
-                },
+                // hierarchical: {
+                //     enabled: false,
+                // },
             },
             nodes: {
                 shape: 'dot',
@@ -105,6 +103,7 @@ const VisNetworkGraph = ({ data }) => {
                     color: 'rgba(0, 0, 0, 0.5)',
                 },
             },
+
             manipulation: {
                 enabled: isInteractive,
                 initiallyActive: true,
@@ -212,10 +211,10 @@ const VisNetworkGraph = ({ data }) => {
 
     return (
         <div>
+            <div ref={networkRef} style={{ height: '100vh', width: '100%' }}></div>
             <button onClick={toggleMode}>
                 Switch to {isInteractive ? 'Static' : 'Interactive'} Mode
             </button>
-            <div ref={networkRef} style={{ height: '100vh', width: '100%' }}></div>
         </div>
     );
 };

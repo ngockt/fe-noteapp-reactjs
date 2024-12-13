@@ -27,7 +27,7 @@ const Sidebar = () => {
         <div className="submenu">
           <Link to="/projects/more" className="submenu-link">New Project ...</Link>
           <Link to="/maps?subject=linear-algebra" className="submenu-link">Study Linear Algebra</Link>
-          <Link to="/projects/calculus" className="submenu-link">Study Calculus</Link>
+          <Link to="/maps?branch=calculus" className="submenu-link">Study Calculus</Link>
           <Link to="/projects/more" className="submenu-link">More ...</Link>
         </div>
       )}

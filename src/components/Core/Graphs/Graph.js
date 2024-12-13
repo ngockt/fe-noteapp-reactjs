@@ -31,7 +31,6 @@ const Graph = () => {
 
     return (
         <div>
-            <h1>Graph Visualization</h1>
             <div>
                 {showZoomableGraph ? <VisJsGraph data={data} /> : <D3Graph data={data} />}
             </div>
