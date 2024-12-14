@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Card from './Card';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './Page.css';
 import { FiEdit } from 'react-icons/fi';
-
 
 const Page = ({ notes }) => {
     const [currentNotes, setCurrentNotes] = useState(notes);
@@ -34,22 +34,25 @@ const Page = ({ notes }) => {
     };
 
     return (
-        <div className="page">
-            <div>
-                <button onClick={handleAddCard} className="new-card-button">
-                    <FiEdit className="icon" />
-                     New Card
+        <div className="container mt-4">
+            <div className="d-flex justify-content-end mb-3">
+                <button onClick={handleAddCard} className="btn btn-primary d-flex align-items-center">
+                    <FiEdit className="me-2" />
+                    New Card
                 </button>
             </div>
-            {currentNotes.map((note) => (
-                <Card
-                    key={note.id}
-                    note={note}
-                    onSave={handleSave}
-                    isNew={newCardId === note.id} // Open editor if it's a new card
-                    onCloseEditor={handleEditorClose}
-                />
-            ))}
+            <div className="row">
+                {currentNotes.map((note) => (
+                    <div className="col-md-4 mb-3" key={note.id}>
+                        <Card
+                            note={note}
+                            onSave={handleSave}
+                            isNew={newCardId === note.id} // Open editor if it's a new card
+                            onCloseEditor={handleEditorClose}
+                        />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
