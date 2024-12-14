@@ -27,7 +27,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/myfeed" element={<MyFeed />} />
-          <Route path="/dicovery" element={<Discover />} />
+          <Route path="/discover" element={<Discover />} />
           <Route path="/maps" element={<Graph />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/maps?subject=linear-algebra" element={<Graph url='/maps?subject=linear-algebra' />} />
