@@ -5,13 +5,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Header = () => {
     return (
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar bg="dark" variant="dark" expand="lg" className="mb-4"> {/* Add margin-bottom */}
             <Navbar.Brand as={Link} to="/">
                 Laboratory
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="ms-auto"> {/* Use ms-auto to align to the right */}
+                <Nav className="ms-auto">
                     <Nav.Link as={Link} to="/">
                         Home
                     </Nav.Link>

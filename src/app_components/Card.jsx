@@ -70,7 +70,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     };
 
     return (
-        <div className="card border-primary my-3 shadow">
+        <div className="card border-primary my-0 shadow">
             {isEditing ? (
                 <div className="card-body">
                     <div className="mt-4 border-top pt-3">
