@@ -25,10 +25,10 @@ const D3Graph = ({ data }) => {
     const nodeMap = new Map(data.nodes.map(d => [d.id, d]));
 
     // Create links using nodeMap to ensure correct source/target reference
-    const links = data.links.map(link => ({
+    const links = data.edges.map(link => ({
       source: nodeMap.get(link.src_node_id),
       target: nodeMap.get(link.dst_node_id),
-      label: link.label,
+      label: link.category,
       bidirectional: link.bidirectional
     }));
 
@@ -68,7 +68,7 @@ const D3Graph = ({ data }) => {
       .attr('class', 'label')
       .attr('dx', 25)
       .attr('dy', '.35em')
-      .text(d => d.label);
+      .text(d => d.name);
 
     // Update positions on each simulation tick
     simulation.on('tick', () => {

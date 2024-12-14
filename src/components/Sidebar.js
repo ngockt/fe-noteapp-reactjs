@@ -31,7 +31,7 @@ const Sidebar = () => {
             <Link to="/" className="sidebar-link">Home</Link>
             <Link to="/myfeed" className="sidebar-link">MyFeed</Link>
             <Link to="/discover" className="sidebar-link">Discover</Link>
-            <Link to="/maps" className="sidebar-link">Maps</Link>
+            <Link to="/maps?depth=3" className="sidebar-link">Maps</Link>
 
             {/* Projects Link with Toggle */}
             <div className="sidebar-link" onClick={toggleProjects}>
@@ -44,8 +44,8 @@ const Sidebar = () => {
               <div className="submenu">
                 {/* "New Project ..." link (add button) can stay or be hidden conditionally if needed */}
                 <Link to="/projects/more" className="submenu-link">New Project ...</Link>
-                <Link to="/maps?subject=linear-algebra" className="submenu-link">Study Linear Algebra</Link>
-                <Link to="/maps?branch=calculus" className="submenu-link">Study Calculus</Link>
+                <Link to="/maps?subject=linear-algebra&depth=2" className="submenu-link">Study Linear Algebra</Link>
+                <Link to="/maps?branch=calculus&depth=2" className="submenu-link">Study Calculus</Link>
                 <Link to="/projects/more" className="submenu-link">More ...</Link>
               </div>
             )}

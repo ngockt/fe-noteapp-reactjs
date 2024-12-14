@@ -29,7 +29,7 @@ const VisNetworkGraph = ({ data }) => {
                     label: d.name || `Node ${d.id}`, // Ensure nodes have a label
                     font: {
                         size: visProperties.node.fontsize,  // Reduced font size
-                        color: 'rgba(0, 0, 0, 1)',  // Lighter color for text (semi-transparent black)
+                        color: 'rgba(0, 0, 0, 0.7)',  // Lighter color for text (semi-transparent black)
                         background: 'none',  // Make background transparent (optional)
                     },
                     hidden: false,
@@ -65,16 +65,16 @@ const VisNetworkGraph = ({ data }) => {
                 solver: 'barnesHut',
                 barnesHut: {
                     gravitationalConstant: -500,
-                    centralGravity: 0.2,
-                    springLength: 60,
+                    centralGravity: 0.3,
+                    springLength: 50,
                     springConstant: 0.05,
                     damping: 0.1,
                     avoidOverlap: 0.3,
                 },
-                timestep: 0.1,
+                timestep: 0.5,
                 stabilization: {
                     iterations: 10,
-                    updateInterval: 0.005,
+                    updateInterval: 0.01,
                 },
             },
             interaction: {
