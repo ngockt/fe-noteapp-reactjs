@@ -30,6 +30,8 @@ const defaultConfig = {
   edge: { length: 100 }
 };
 
+
+
 const getVisProperties = (type) => {
   return typeConfigs[type] || defaultConfig;
 };

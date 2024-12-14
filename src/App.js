@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import MyFeed from './pages/MyFeed';
 import Discover from './pages/Discover';
@@ -10,21 +9,21 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Projects from './pages/Projects';
 import Graph from './components/Core/Graphs/Graph';
+import Header from './components/Header';
 
 // Adjust content margin based on the sidebar's state
 const ContentContainer = styled.div`
-  margin-left: ${({ isCollapsed }) => (isCollapsed ? '50px' : '150px')};
-  padding: 20px;
+  padding: 5px;
   transition: margin-left 0.3s ease;
 `;
 
 const App = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
     <Router>
-      <Sidebar setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} />
-      <ContentContainer isCollapsed={isCollapsed}>
+      <Header />
+      {/* <Sidebar setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} /> */}
+      <ContentContainer >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/myfeed" element={<MyFeed />} />
