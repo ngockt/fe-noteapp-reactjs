@@ -1,53 +1,95 @@
-/* Sidebar.css */
-
 .sidebar-container {
-    width: 250px;
-    height: 100vh;
-    background-color: #333;
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 20px;
-    overflow-y: auto; /* Ensure scrollbar if content overflows */
-    font-size: 0.9rem;
-  }
-  
-  .sidebar-link {
-    display: block;
-    padding: 15px 20px;
-    color: white;
-    text-decoration: none;
-    margin-bottom: 5px;
-    cursor: pointer;
-  }
-  
-  .sidebar-link:hover {
-    background-color: #444;
-  }
-  
-  .submenu {
-    background-color: #444;
-  }
-  
-  .submenu-link {
-    display: block;
-    padding: 10px 40px; /* Indent submenu links */
-    color: white;
-    text-decoration: none;
-    margin-bottom: 5px;
-  }
-  
-  .submenu-link:hover {
-    background-color: #555;
-  }
-  
-  .toggle-icon {
-    float: right;
-    transition: transform 0.3s ease;
-  }
-  
-  .toggle-icon.open {
-    transform: rotate(90deg);
-  }
-  
+  width: 250px;
+  height: 100vh;
+  background-color: #333;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 0;
+  overflow-y: auto; /* Ensure scrollbar if content overflows */
+  font-size: 0.9rem;
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-container.collapsed {
+  width: 50px;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 10px;
+  background-color: #222;
+}
+
+.toggle-button {
+  margin-right: 10px;
+}
+
+.sidebar-title {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 5px;
+  cursor: pointer;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+.sidebar-link:hover {
+  background-color: #444;
+}
+
+.submenu {
+  background-color: #444;
+}
+
+.submenu-link {
+  display: block;
+  padding: 10px 40px;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 5px;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+.submenu-link:hover {
+  background-color: #555;
+}
+
+.toggle-icon {
+  float: right;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.open {
+  transform: rotate(90deg);
+}
+
+/* Hide text when collapsed */
+.sidebar-container.collapsed .sidebar-link {
+  padding: 15px 10px; /* less padding so icon is visible */
+  text-indent: -9999px; 
+}
+
+.sidebar-container.collapsed .submenu-link {
+  padding: 10px 10px;
+  text-indent: -9999px;
+}
+
+/* Show icon if you use icons next to links - if needed */
+/* If you had icons for your links, you could still show them in collapsed mode
+   by giving them a background image and adjusting CSS accordingly. */
