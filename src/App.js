@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -11,18 +11,20 @@ import Contact from './pages/Contact';
 import Projects from './pages/Projects';
 import Graph from './components/Core/Graphs/Graph';
 
-// Main content container, pushing it aside to make room for the sidebar
+// Adjust content margin based on the sidebar's state
 const ContentContainer = styled.div`
-  margin-left: 250px;
+  margin-left: ${({ isCollapsed }) => (isCollapsed ? '50px' : '150px')};
   padding: 20px;
+  transition: margin-left 0.3s ease;
 `;
 
 const App = () => {
-  console.log("Init app")
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   return (
     <Router>
-      <Sidebar />
-      <ContentContainer>
+      <Sidebar setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} />
+      <ContentContainer isCollapsed={isCollapsed}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/myfeed" element={<MyFeed />} />

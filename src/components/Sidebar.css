@@ -1,95 +1,69 @@
 .sidebar-container {
-  width: 250px;
+  width: 150px;
   height: 100vh;
   background-color: #333;
   color: white;
   position: fixed;
   top: 0;
   left: 0;
-  padding-top: 0;
-  overflow-y: auto; /* Ensure scrollbar if content overflows */
+  overflow-y: auto;
   font-size: 0.9rem;
   transition: width 0.3s ease;
   display: flex;
   flex-direction: column;
+  z-index: 1000; /* Ensure it stays on top of content */
 }
 
 .sidebar-container.collapsed {
   width: 50px;
-  overflow: hidden;
 }
 
 .sidebar-header {
   display: flex;
   align-items: center;
-  padding: 10px 10px;
+  justify-content: center;
+  padding: 10px;
   background-color: #222;
 }
 
 .toggle-button {
-  margin-right: 10px;
-}
-
-.sidebar-title {
-  font-size: 1.2rem;
-  margin: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .sidebar-link {
-  display: block;
-  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  padding: 15px;
   color: white;
   text-decoration: none;
   margin-bottom: 5px;
   cursor: pointer;
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis;
+}
+
+.sidebar-link .icon {
+  margin-right: 10px;
 }
 
 .sidebar-link:hover {
   background-color: #444;
 }
 
-.submenu {
-  background-color: #444;
-}
-
-.submenu-link {
-  display: block;
-  padding: 10px 40px;
-  color: white;
-  text-decoration: none;
-  margin-bottom: 5px;
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis;
-}
-
-.submenu-link:hover {
-  background-color: #555;
-}
-
-.toggle-icon {
-  float: right;
-  transition: transform 0.3s ease;
-}
-
-.toggle-icon.open {
-  transform: rotate(90deg);
-}
-
-/* Hide text when collapsed */
 .sidebar-container.collapsed .sidebar-link {
-  padding: 15px 10px; /* less padding so icon is visible */
-  text-indent: -9999px; 
+  justify-content: center;
 }
 
-.sidebar-container.collapsed .submenu-link {
-  padding: 10px 10px;
-  text-indent: -9999px;
+.sidebar-container.collapsed .icon {
+  margin-right: 0;
 }
 
-/* Show icon if you use icons next to links - if needed */
-/* If you had icons for your links, you could still show them in collapsed mode
-   by giving them a background image and adjusting CSS accordingly. */
+.sidebar-container.collapsed .sidebar-link span {
+  display: block; /* Ensure icons are visible */
+}
+
+.sidebar-container.collapsed .sidebar-link span + span {
+  display: none; /* Hide text in collapsed state */
+}

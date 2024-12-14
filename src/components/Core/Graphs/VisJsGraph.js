@@ -66,14 +66,14 @@ const VisNetworkGraph = ({ data }) => {
                 barnesHut: {
                     gravitationalConstant: -500,
                     centralGravity: 0.3,
-                    springLength: 50,
+                    springLength: 60,
                     springConstant: 0.05,
                     damping: 0.1,
                     avoidOverlap: 0.3,
                 },
                 timestep: 0.5,
                 stabilization: {
-                    iterations: 10,
+                    iterations: 100,
                     updateInterval: 0.01,
                 },
             },
@@ -90,11 +90,8 @@ const VisNetworkGraph = ({ data }) => {
                 // smooth: false
             },
             layout: {
-                // randomSeed: 2,
+                randomSeed: 2,
                 improvedLayout: true,
-                // hierarchical: {
-                //     enabled: false,
-                // },
             },
             nodes: {
                 shape: 'dot',
