@@ -3,6 +3,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Ensure Bootstrap JS is included
 import { FiEdit, FiSave, FiArrowLeft } from 'react-icons/fi';
 import './Card.css';
 import Mermaid from './Mermaid';
@@ -35,7 +37,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     };
 
     const preprocessContent = (text) => {
-        // Convert \( and \[ to $ and $$ for compatibility with remark-math
         return text
             .replace(/\\\(/g, '$')
             .replace(/\\\)/g, '$')
@@ -69,30 +70,12 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     };
 
     return (
-        <div className="card">
+        <div className="card border-primary my-3 shadow">
             {isEditing ? (
-                <div className="editor-preview-container">
-                    <div className="editor-container">
-                        <textarea
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            className="editor-textarea"
-                            placeholder="Enter your Markdown with LaTeX, Mermaid, or PlantUML here..."
-                        />
-                        <div className="editor-buttons">
-                            <button onClick={handleSave} className="save-button">
-                                <FiSave className="icon" />
-                                Save
-                            </button>
-                            <button onClick={handleCancel} className="cancel-button">
-                                <FiArrowLeft className="icon" />
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="preview-container">
-                        <div className="preview-content">
+                <div className="card-body">
+                    <div className="mt-4 border-top pt-3">
+                        <h6 className="text-primary">Preview</h6>
+                        <div className="border rounded p-3 bg-light">
                             <ReactMarkdown
                                 components={MarkdownComponents}
                                 remarkPlugins={[remarkMath]}
@@ -102,9 +85,28 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             </ReactMarkdown>
                         </div>
                     </div>
+                    <h5 className="card-title">Edit Note</h5>
+                    <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        className="form-control mb-3"
+                        rows="3"
+                        placeholder="Enter your Markdown with LaTeX, Mermaid, or PlantUML here..."
+                    />
+                    <div className="d-flex justify-content-start align-items-center gap-2">
+                        <button onClick={handleSave} className="btn btn-success btn-sm">
+                            <FiSave className="me-1" />
+                            Save
+                        </button>
+                        <button onClick={handleCancel} className="btn btn-secondary btn-sm">
+                            <FiArrowLeft className="me-1" />
+                            Cancel
+                        </button>
+                    </div>
+
                 </div>
             ) : (
-                <>
+                <div className="card-body">
                     <ReactMarkdown
                         components={MarkdownComponents}
                         remarkPlugins={[remarkMath]}
@@ -112,11 +114,11 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                     >
                         {preprocessContent(note.content)}
                     </ReactMarkdown>
-                    <button onClick={handleEdit} className="edit-button">
-                        <FiEdit className="icon" />
+                    <button onClick={handleEdit} className="btn btn-primary mt-3">
+                        <FiEdit className="me-2" />
                         Edit
                     </button>
-                </>
+                </div>
             )}
         </div>
     );

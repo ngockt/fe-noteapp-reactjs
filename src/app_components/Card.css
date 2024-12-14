@@ -67,3 +67,10 @@
 .preview-content {
     white-space: pre-wrap;
 }
+
+.d-flex {
+    display: flex;
+    flex-direction: row; 
+}
+
+
