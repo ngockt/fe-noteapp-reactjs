@@ -5,7 +5,7 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Ensure Bootstrap JS is included
-import { FiEdit, FiSave, FiArrowLeft } from 'react-icons/fi';
+import { FiEdit, FiSave, FiArrowLeft, FiMaximize, FiMinimize } from 'react-icons/fi';
 import './Card.css';
 import Mermaid from './Mermaid';
 import PlantUML from './PlantUML';
@@ -13,6 +13,7 @@ import PlantUML from './PlantUML';
 const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [isEditing, setIsEditing] = useState(isNew || false);
     const [content, setContent] = useState(note.content);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     useEffect(() => {
         if (isNew) {
@@ -34,6 +35,10 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
         setIsEditing(false);
         setContent(note.content);
         if (onCloseEditor) onCloseEditor();
+    };
+
+    const handleFullScreenToggle = () => {
+        setIsFullScreen(!isFullScreen);
     };
 
     const preprocessContent = (text) => {
@@ -69,11 +74,24 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
         },
     };
 
+    // Determine the title, default to "Title" if empty
+    const cardTitle = note.title && note.title.trim() !== '' ? note.title : 'Title';
+
     return (
-        <div className="card border-primary my-0 shadow">
+        <div className={`card border-primary my-0 shadow ${isFullScreen ? 'fullscreen-card' : ''}`}>
+            <div className="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
+                <h5 className="mb-0">{cardTitle}</h5>
+                <button
+                    onClick={handleFullScreenToggle}
+                    className="btn btn-light btn-sm p-1"
+                    aria-label="Toggle Fullscreen"
+                >
+                    {isFullScreen ? <FiMinimize /> : <FiMaximize />}
+                </button>
+            </div>
             {isEditing ? (
                 <div className="card-body">
-                    <div className="mt-4 border-top pt-3">
+                    {/* <div className="mt-4 border-top pt-3"> */}
                         <h6 className="text-primary">Preview</h6>
                         <div className="border rounded p-3 bg-light">
                             <ReactMarkdown
@@ -84,8 +102,8 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                                 {preprocessContent(content)}
                             </ReactMarkdown>
                         </div>
-                    </div>
-                    <h5 className="card-title">Edit Note</h5>
+                    {/* </div> */}
+                    <h5 className="card-title mt-4">Edit Note</h5>
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
@@ -103,7 +121,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             Cancel
                         </button>
                     </div>
-
                 </div>
             ) : (
                 <div className="card-body">

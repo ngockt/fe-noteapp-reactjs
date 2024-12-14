@@ -1,0 +1,28 @@
+.fullscreen-card {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    background-color: #fff;
+    z-index: 9999;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen-card .card-body {
+    overflow: auto;
+    flex: 1;
+}
+
+.fullscreen-card .card-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.card-body {
+    padding-top: 0.5rem; /* adjust as needed */
+}
