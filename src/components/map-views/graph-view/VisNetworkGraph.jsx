@@ -96,6 +96,59 @@ const VisNetworkGraph = ({ data, selectedNode }) => {
                     color: 'rgba(0, 0, 0, 0.5)',
                 },
             },
+            manipulation: {
+                enabled: true,
+                initiallyActive: false,
+                addNode: (data, callback) => {
+                    const newNode = {
+                        id: nodesData.length + 1, // Ensure a unique id
+                        label: `Node ${nodesData.length + 1}`,
+                        type: 'topic', // Default node type
+                    };
+                    setNodesData([...nodesData, newNode]);
+                    callback(newNode);
+                },
+                deleteNode: (data) => {
+                    const newNodesData = nodesData.filter(node => node.id !== data.nodes[0]);
+                    const newEdgesData = edgesData.filter(edge => edge.from !== data.nodes[0] && edge.to !== data.nodes[0]);
+                    setNodesData(newNodesData);
+                    setEdgesData(newEdgesData);
+                },
+                addEdge: (data, callback) => {
+                    const newEdge = {
+                        id: edgesData.length + 1, // Ensure a unique id
+                        src_node_id: data.from,
+                        dst_node_id: data.to,
+                        label: data.label || '',
+                        bidirectional: false, // Default to unidirectional
+                    };
+                    setEdgesData([...edgesData, newEdge]);
+                    callback(newEdge);
+                },
+                deleteEdge: (data) => {
+                    const newEdgesData = edgesData.filter(edge => edge.id !== data.edges[0]);
+                    setEdgesData(newEdgesData);
+                },
+                editNode: (data, callback) => {
+                    data.label = prompt("Enter new label for the node", data.label);
+                    const updatedNodesData = nodesData.map(node =>
+                        node.id === data.id ? { ...node, label: data.label || node.label } : node
+                    );
+                    setNodesData(updatedNodesData);
+                    callback(data);
+                },
+                editEdge: (data, callback) => {
+                    data.label = prompt("Enter new label for the edge", data.label);
+
+                    const updatedEdgesData = edgesData.map(edge =>
+                        edge.id === data.id
+                            ? { ...edge, label: data.label || edge.label }
+                            : edge
+                    );
+                    setEdgesData(updatedEdgesData);
+                    callback(data);
+                }
+            }
         };
 
         const network = new Network(container, { nodes, edges }, options);

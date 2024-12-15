@@ -58,7 +58,7 @@ const Maps = () => {
     return (
         <div className="container mt-4" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
             {/* Fixed Search Bar */}
-            <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '10px' }}>
+            <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '0px'}}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h1 className="mb-0">The Maps</h1>
                     <div className="btn-group" role="group" aria-label="View Toggle">
@@ -78,7 +78,7 @@ const Maps = () => {
                 </div>
 
                 {/* Search Bar */}
-                <div className="mb-3 position-relative">
+                <div className="mb-1 position-relative">
                     <input 
                         type="text" 
                         className="form-control" 
@@ -98,7 +98,7 @@ const Maps = () => {
                                     className="list-group-item list-group-item-action" 
                                     onClick={() => handleSelect(suggestion.name)}
                                 >
-                                    <strong>{suggestion.name}</strong> - <span className="text-muted">{suggestion.category}</span>
+                                    <strong>{suggestion.name}</strong> - <span >{suggestion.category}</span>
                                 </li>
                             ))}
                         </ul>
