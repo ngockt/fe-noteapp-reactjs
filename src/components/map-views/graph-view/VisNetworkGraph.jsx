@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
 import getVisProperties from './VisNetworkGraph.properties';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const VisNetworkGraph = ({ data, selectedNode }) => {
     const networkRef = useRef(null);
@@ -199,7 +201,7 @@ const VisNetworkGraph = ({ data, selectedNode }) => {
         // Focus on the selected node if the parameter has a value
         if (selectedNode?.id && networkInstanceRef.current) {
             const network = networkInstanceRef.current;
-    
+
             // Focus on the selected node
             network.focus(selectedNode.id, {
                 scale: 1.5, // Zoom scale for focus
@@ -208,7 +210,7 @@ const VisNetworkGraph = ({ data, selectedNode }) => {
                     easingFunction: 'easeInOutQuad',
                 },
             });
-    
+
             // Select the node
             network.selectNodes([selectedNode.id]);
         }
@@ -216,7 +218,7 @@ const VisNetworkGraph = ({ data, selectedNode }) => {
 
     return (
         <div>
-            <div ref={networkRef} style={{ height: '90vh', width: '100%' }}></div>
+            <div ref={networkRef} style={{ height: '84vh', width: '100%' }} className='border rounded'></div>
         </div>
     );
 };
