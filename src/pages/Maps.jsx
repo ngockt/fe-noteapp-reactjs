@@ -58,19 +58,19 @@ const Maps = () => {
     return (
         <div className="container mt-2" style={{ height: '100vh', display: 'flex', flexDirection: 'column', maxWidth: '90%', margin: '0 auto' }}>
             {/* Fixed Search Bar */}
-            <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '0px'}}>
+            <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '0px' }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h1 className="mb-0">The Maps</h1>
                     <div className="btn-group" role="group" aria-label="View Toggle">
-                        <button 
-                            type="button" 
-                            className={`btn ${isPageView ? 'btn-primary' : 'btn-outline-primary'}`} 
+                        <button
+                            type="button"
+                            className={`btn ${isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
                             onClick={() => setIsPageView(true)}>
                             Page View
                         </button>
-                        <button 
-                            type="button" 
-                            className={`btn ${!isPageView ? 'btn-primary' : 'btn-outline-primary'}`} 
+                        <button
+                            type="button"
+                            className={`btn ${!isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
                             onClick={() => setIsPageView(false)}>
                             Graph View
                         </button>
@@ -79,26 +79,26 @@ const Maps = () => {
 
                 {/* Search Bar */}
                 <div className="mb-1 position-relative">
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        placeholder="Search for a node..." 
-                        value={searchQuery} 
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search for a node..."
+                        value={searchQuery}
                         onChange={(e) => {
                             setSearchQuery(e.target.value);
                             setShowSuggestions(true); // Show suggestions while typing
-                        }} 
+                        }}
                         onFocus={() => setShowSuggestions(true)} // Show suggestions on focus
                     />
                     {showSuggestions && suggestions.length > 0 && (
                         <ul className="list-group position-absolute" style={{ zIndex: 10 }}>
                             {suggestions.map((suggestion, index) => (
-                                <li 
-                                    key={index} 
-                                    className="list-group-item list-group-item-action" 
+                                <li
+                                    key={index}
+                                    className="list-group-item list-group-item-action"
                                     onClick={() => handleSelect(suggestion.name)}
                                 >
-                                    <strong>{suggestion.name}</strong> - <span >{suggestion.category}</span>
+                                    <strong>{suggestion.name}</strong> - <span className="text-muted" >{suggestion.category}</span>
                                 </li>
                             ))}
                         </ul>
