@@ -11,15 +11,49 @@ const Maps = () => {
 
     const [mapData, setMapData] = useState(null);
     const [isPageView, setIsPageView] = useState(true); // State to toggle views
+    const [searchQuery, setSearchQuery] = useState(""); // State for search input
+    const [suggestions, setSuggestions] = useState([]); // State for suggestions
+    const [showSuggestions, setShowSuggestions] = useState(false); // State to control suggestion box visibility
+    const [selectedNode, setSelectedNode] = useState(null); // Selected node
 
     useEffect(() => {
         const setData = async () => {
             const data = await FetchData(url);
-            console.log(data);
             setMapData(data); // Set the data in the state
         };
         setData();
     }, [url]);
+
+    // Handle search suggestions
+    useEffect(() => {
+        if (mapData && mapData.nodes && searchQuery && showSuggestions) {
+            const filteredSuggestions = mapData.nodes
+                .filter(node => node.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map(node => ({
+                    name: node.name,
+                    category: node.category, // Include category in suggestions
+                }));
+            setSuggestions(filteredSuggestions);
+        } else {
+            setSuggestions([]);
+        }
+    }, [searchQuery, mapData, showSuggestions]);
+
+    // Handle search selection
+    const handleSelect = (nodeName) => {
+        const node = mapData.nodes.find(n => n.name === nodeName);
+
+        // Clear suggestions and hide the suggestion box
+        setShowSuggestions(false);
+        setSuggestions([]);
+
+        // Update search query and selected node
+        setSearchQuery(nodeName);
+        setSelectedNode(null); // Reset selectedNode to trigger focus effect
+        setTimeout(() => {
+            setSelectedNode(node);
+        }, 0); // Allow React to reset the state before setting it again
+    };
 
     return (
         <div className="container mt-4">
@@ -42,11 +76,39 @@ const Maps = () => {
                 </div>
             </div>
 
+            {/* Search Bar */}
+            <div className="mb-3 position-relative">
+                <input 
+                    type="text" 
+                    className="form-control" 
+                    placeholder="Search for a node..." 
+                    value={searchQuery} 
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setShowSuggestions(true); // Show suggestions while typing
+                    }} 
+                    onFocus={() => setShowSuggestions(true)} // Show suggestions on focus
+                />
+                {showSuggestions && suggestions.length > 0 && (
+                    <ul className="list-group position-absolute" style={{ zIndex: 10 }}>
+                        {suggestions.map((suggestion, index) => (
+                            <li 
+                                key={index} 
+                                className="list-group-item list-group-item-action" 
+                                onClick={() => handleSelect(suggestion.name)}
+                            >
+                                <strong>{suggestion.name}</strong> - <span className="text-muted">{suggestion.category}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+
             {/* Conditional Rendering */}
             {isPageView ? (
-                <PageView data={mapData} />
+                <PageView data={mapData} selectedNode={selectedNode} />
             ) : (
-                <VisNetworkGraph data={mapData} />
+                <VisNetworkGraph data={mapData} selectedNode={selectedNode} />
             )}
         </div>
     );
