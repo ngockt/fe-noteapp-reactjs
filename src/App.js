@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -8,8 +7,8 @@ import Discover from './pages/Discover';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Projects from './pages/Projects';
-import Graph from './components/Core/Graphs/Graph';
-import Header from './components/Header';
+import Graph from './components/map-views/graph-view/Graph';
+import Header from './pages/sub-components/Header';
 
 // Adjust content margin based on the sidebar's state
 const ContentContainer = styled.div`

@@ -7,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Ensure Bootstrap JS is included
 import { FiEdit, FiSave, FiArrowLeft, FiMaximize, FiMinimize } from 'react-icons/fi';
 import './Card.css';
-import Mermaid from './Mermaid';
-import PlantUML from './PlantUML';
+import Mermaid from './rendering/Mermaid';
+import PlantUML from './rendering/PlantUML';
 
 const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [isEditing, setIsEditing] = useState(isNew || false);

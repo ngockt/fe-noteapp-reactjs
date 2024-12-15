@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
-import getVisProperties from './VisJsGraph.properties';
+import getVisProperties from './VisNetworkGraph.properties';
 
 const VisNetworkGraph = ({ data }) => {
     const networkRef = useRef(null);

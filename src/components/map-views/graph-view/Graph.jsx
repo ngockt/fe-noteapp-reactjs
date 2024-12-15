@@ -1,9 +1,8 @@
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import D3Graph from './D3Graph'; // Graph with zooming
-import VisJsGraph from './VisJsGraph'; // Graph without zooming
-import axiosInstance from '../../Hooks/axiosInstance'; // Import axios instance
-
+import VisJsGraph from './VisNetworkGraph'; // Graph without zooming
+import AxiosInstance from 'AxiosInstance'; // Import axios instance
 const Graph = () => {
     const location = useLocation();
     const url = location.pathname + location.search;
@@ -13,7 +12,7 @@ const Graph = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axiosInstance.get(url); // API endpoint
+                const response = await AxiosInstance.get(url); // API endpoint
                 console.log(response.data)
                 setData(response.data); // Set the data in the state
             } catch (error) {

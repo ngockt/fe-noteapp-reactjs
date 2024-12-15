@@ -1,6 +1,0 @@
-.vis-manipulation {
-    position: absolute !important;
-    left: 1000px; /* Distance from the left */
-    top: 10px; /* Distance from the top */
-    z-index: 1000; /* Keep it on top of other elements */
-}

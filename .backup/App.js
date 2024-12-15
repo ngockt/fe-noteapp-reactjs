@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import D3Graph from './components/D3Graph'; // Graph with zooming
 import VisJsGraph from './components/VisJsGraph'; // Graph without zooming
-import axiosInstance from './components/axiosInstance'; // Import axios instance
+import AxiosInstance from './components/AxiosInstance'; // Import axios instance
 
 const App = () => {
   const [data, setData] = useState(null);
@@ -10,7 +10,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get('/graph'); // API endpoint
+        const response = await AxiosInstance.get('/graph'); // API endpoint
         setData(response.data); // Set the data in the state
       } catch (error) {
         console.error('Error fetching graph data:', error);

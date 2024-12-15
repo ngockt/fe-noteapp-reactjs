@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Page from '../app_components/Page'; // Import the Page component
-import axiosInstance from '../components/Hooks/axiosInstance'; // Import axios instance
+import Page from '../components/contents/Page'; // Import the Page component
+import AxiosInstance from 'AxiosInstance'; // Import axios instance
 
 const Discover = () => {
     console.log('Init MyFeed')
@@ -8,7 +8,7 @@ const Discover = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axiosInstance.get('/content/discover'); // API endpoint
+                const response = await AxiosInstance.get('/content/discover'); // API endpoint
                 setNotes(response.data); // Set the data in the state
             } catch (error) {
                 console.error('Error fetching graph data:', error);
