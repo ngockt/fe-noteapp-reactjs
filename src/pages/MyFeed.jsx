@@ -8,26 +8,18 @@ const MyFeed = () => {
     const [notes, setNotes] = useState([]);
     useEffect(() => {
         const setData = async () => {
-            const data =  await FetchData('/content/myfeed')
+            const data = await FetchData('/content/myfeed')
             console.log(data)
             setNotes(data)
         }
         setData();
     }, []);
 
-    const handleSave = (id, updatedContent) => {
-        setNotes(
-            notes.map((note) =>
-                note.id === id ? { ...note, content: updatedContent } : note
-            )
-        );
-        console.log('handle save event')
-    };
 
     return (
         <div>
             <h1>My Notes</h1>
-            <Page notes={notes} onSave={handleSave} />
+            <Page notes={notes} />
         </div>
     );
 };

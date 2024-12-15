@@ -13,22 +13,10 @@ const Discover = () => {
         setData();
     }, []);
 
-
-
-    const handleSave = (id, updatedContent) => {
-        setNotes(
-            notes.map((note) =>
-                note.id === id ? { ...note, content: updatedContent } : note
-            )
-        );
-        console.log('handle save event')
-
-    };
-
     return (
         <div>
             <h1>My Notes</h1>
-            <Page notes={notes} onSave={handleSave} />
+            <Page notes={notes}/>
         </div>
     );
 };
