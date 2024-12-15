@@ -1,0 +1,10 @@
+details {
+	margin-bottom: 8px;
+}
+details summary {
+	cursor: pointer;
+	font-size: 16px;
+}
+details summary:hover {
+	text-decoration: underline;
+}

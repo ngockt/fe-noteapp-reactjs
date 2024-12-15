@@ -10,6 +10,7 @@ import Header from 'pages/sub-components/Header';
 import StudySets from 'pages/StudySets';
 import Maps from 'pages/Maps';
 
+
 // Adjust content margin based on the sidebar's state
 const ContentContainer = styled.div`
   padding: 5px;
