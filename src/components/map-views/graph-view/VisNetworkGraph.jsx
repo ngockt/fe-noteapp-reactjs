@@ -6,7 +6,6 @@ const VisNetworkGraph = ({ data }) => {
     const networkRef = useRef(null);
     const [nodesData, setNodesData] = useState([]);
     const [edgesData, setEdgesData] = useState([]);
-    const [isInteractive, setIsInteractive] = useState(true);
 
 
     useEffect(() => {
@@ -61,7 +60,7 @@ const VisNetworkGraph = ({ data }) => {
             height: '100%',
             width: '100%',
             physics: {
-                enabled: isInteractive,
+                enabled: true,
                 solver: 'barnesHut',
                 barnesHut: {
                     gravitationalConstant: -500,
@@ -78,8 +77,8 @@ const VisNetworkGraph = ({ data }) => {
                 },
             },
             interaction: {
-                dragNodes: isInteractive,
-                zoomView: isInteractive,
+                dragNodes: true,
+                zoomView: true,
             },
             edges: {
                 color: '#ccc',
@@ -102,7 +101,7 @@ const VisNetworkGraph = ({ data }) => {
             },
 
             manipulation: {
-                enabled: isInteractive,
+                enabled: true,
                 initiallyActive: true,
                 addNode: (data, callback) => {
                     const newNode = {
@@ -198,20 +197,11 @@ const VisNetworkGraph = ({ data }) => {
             network.destroy(); // Destroy the network instance
         };
 
-    }, [nodesData, edgesData, isInteractive]);
-
-
-    // Function to toggle between static and interactive mode
-    const toggleMode = () => {
-        setIsInteractive(!isInteractive);
-    };
+    }, [nodesData, edgesData]);
 
     return (
         <div>
-            <div ref={networkRef} style={{ height: '100vh', width: '100%' }}></div>
-            <button onClick={toggleMode}>
-                Switch to {isInteractive ? 'Static' : 'Interactive'} Mode
-            </button>
+            <div ref={networkRef} style={{ height: '95vh', width: '100%' }}></div>
         </div>
     );
 };
