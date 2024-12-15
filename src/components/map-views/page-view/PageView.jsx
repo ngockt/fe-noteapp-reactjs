@@ -88,7 +88,7 @@ const PageView = ({ data, selectedNode }) => {
     );
 
     return (
-        <div className="container mt-3 ps-0">
+        <div className="container-fluid mt-3">
             {hierarchy.length > 0 ? (
                 renderTree(hierarchy)
             ) : (

@@ -216,7 +216,7 @@ const VisNetworkGraph = ({ data, selectedNode }) => {
 
     return (
         <div>
-            <div ref={networkRef} style={{ height: '95vh', width: '100%' }}></div>
+            <div ref={networkRef} style={{ height: '90vh', width: '100%' }}></div>
         </div>
     );
 };

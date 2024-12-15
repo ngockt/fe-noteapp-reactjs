@@ -9,6 +9,7 @@ import Contact from 'pages/Contact';
 import Header from 'pages/sub-components/Header';
 import StudySets from 'pages/StudySets';
 import Maps from 'pages/Maps';
+import Footer from 'pages/sub-components/Footer';
 
 
 // Adjust content margin based on the sidebar's state
@@ -22,7 +23,6 @@ const App = () => {
   return (
     <Router>
       <Header />
-      {/* <Sidebar setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} /> */}
       <ContentContainer >
         <Routes>
           <Route path="/" element={<Home />} />
@@ -35,7 +35,9 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </ContentContainer>
+      <Footer />
     </Router>
+
   );
 };
 

@@ -1,6 +1,5 @@
 import React from "react";
 import "./Home.css";
-import Footer from "./sub-components/Footer";
 
 const Home = () => {
     return (
@@ -43,8 +42,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Footer */}
-            <Footer />
         </div>
     );
 };
