@@ -56,7 +56,7 @@ const Maps = () => {
     };
 
     return (
-        <div className="container mt-4" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div className="container mt-2" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
             {/* Fixed Search Bar */}
             <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '0px'}}>
                 <div className="d-flex justify-content-between align-items-center mb-3">

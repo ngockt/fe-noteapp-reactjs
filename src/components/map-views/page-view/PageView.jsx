@@ -62,12 +62,12 @@ const PageView = ({ data, selectedNode }) => {
     };
 
     const renderTree = (items) => (
-        <ul className="list-group list-group-flush">
+        <ul className="list-group list-group-flush ps-0">
             {items.map(item => (
                 <li
                     key={item.id}
                     ref={el => (nodeRefs.current[item.id] = el)}
-                    className={`list-group-item ${
+                    className={`list-group-item ps-4${
                         item.id === selectedNode?.id ? 'bg-warning text-dark' : ''
                     }`}
                 >
@@ -88,7 +88,7 @@ const PageView = ({ data, selectedNode }) => {
     );
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-3 ps-0">
             {hierarchy.length > 0 ? (
                 renderTree(hierarchy)
             ) : (
