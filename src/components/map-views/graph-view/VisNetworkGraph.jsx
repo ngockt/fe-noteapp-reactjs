@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
 import getVisProperties from './VisNetworkGraph.properties';
 
-const VisNetworkGraph = ({ data }) => {
+const VisNetworkGraph = ({ data, selectedNode }) => {
     const networkRef = useRef(null);
     const [nodesData, setNodesData] = useState([]);
     const [edgesData, setEdgesData] = useState([]);
-
+    const networkInstanceRef = useRef(null); // Reference to store the network instance
 
     useEffect(() => {
         if (data) {
@@ -20,19 +20,19 @@ const VisNetworkGraph = ({ data }) => {
 
         const nodes = new DataSet(
             nodesData.map(d => {
-                const visProperties = getVisProperties(d.category)
+                const visProperties = getVisProperties(d.category);
                 return {
                     id: d.id,
-                    color: visProperties.node.color, // Set color based on type
-                    size: visProperties.node.size,  // Set size based on type
-                    label: d.name || `Node ${d.id}`, // Ensure nodes have a label
+                    color: visProperties.node.color,
+                    size: visProperties.node.size,
+                    label: d.name || `Node ${d.id}`,
                     font: {
-                        size: visProperties.node.fontsize,  // Reduced font size
-                        color: 'rgba(0, 0, 0, 0.7)',  // Lighter color for text (semi-transparent black)
-                        background: 'none',  // Make background transparent (optional)
+                        size: visProperties.node.fontsize,
+                        color: 'rgba(0, 0, 0, 0.7)',
+                        background: 'none',
                     },
                     hidden: false,
-                }
+                };
             })
         );
 
@@ -41,20 +41,18 @@ const VisNetworkGraph = ({ data }) => {
                 id: edge.id,
                 from: edge.src_node_id,
                 to: edge.dst_node_id,
-                label: edge.name || '', // Ensure edges have a label
-                arrows: edge.category === 'related' ? 'to,from' : 'to', // Set arrow direction
-                width: 0.8,  // Adjust the width of the edge to make arrows smaller
+                label: edge.name || '',
+                arrows: edge.category === 'related' ? 'to,from' : 'to',
+                width: 0.8,
                 font: {
-                    size: 8,  // Reduced font size
-                    color: 'rgba(0, 0, 0, 0.3)',  // Lighter color for text (semi-transparent black)
+                    size: 8,
+                    color: 'rgba(0, 0, 0, 0.3)',
                 },
-                // length: getVisProperties(nodesData.find(n => n.id === edge.dst_node_id).category).edge.length
             }))
         );
 
         const container = networkRef.current;
 
-        // Set network options (for zoom and pan behaviors, etc.)
         const options = {
             autoResize: true,
             height: '100%',
@@ -86,7 +84,6 @@ const VisNetworkGraph = ({ data }) => {
                 arrows: {
                     to: { scaleFactor: 0.5, type: 'arrow' },
                 },
-                // smooth: false
             },
             layout: {
                 randomSeed: 2,
@@ -99,64 +96,10 @@ const VisNetworkGraph = ({ data }) => {
                     color: 'rgba(0, 0, 0, 0.5)',
                 },
             },
-
-            manipulation: {
-                enabled: true,
-                initiallyActive: true,
-                addNode: (data, callback) => {
-                    const newNode = {
-                        id: nodesData.length + 1, // Ensure a unique id
-                        label: `Node ${nodesData.length + 1}`,
-                        type: 'topic', // Default node type
-                    };
-                    setNodesData([...nodesData, newNode]);
-                    callback(newNode);
-                },
-                deleteNode: (data) => {
-                    const newNodesData = nodesData.filter(node => node.id !== data.nodes[0]);
-                    const newEdgesData = edgesData.filter(edge => edge.from !== data.nodes[0] && edge.to !== data.nodes[0]);
-                    setNodesData(newNodesData);
-                    setEdgesData(newEdgesData);
-                },
-                addEdge: (data, callback) => {
-                    const newEdge = {
-                        id: edgesData.length + 1, // Ensure a unique id
-                        src_node_id: data.from,
-                        dst_node_id: data.to,
-                        label: data.label || '',
-                        bidirectional: false, // Default to unidirectional
-                    };
-                    setEdgesData([...edgesData, newEdge]);
-                    callback(newEdge);
-                },
-                deleteEdge: (data) => {
-                    const newEdgesData = edgesData.filter(edge => edge.id !== data.edges[0]);
-                    setEdgesData(newEdgesData);
-                },
-                editNode: (data, callback) => {
-                    data.label = prompt("Enter new label for the node", data.label);
-                    const updatedNodesData = nodesData.map(node =>
-                        node.id === data.id ? { ...node, label: data.label || node.label } : node
-                    );
-                    setNodesData(updatedNodesData);
-                    callback(data);
-                },
-                editEdge: (data, callback) => {
-                    data.label = prompt("Enter new label for the edge", data.label);
-
-                    const updatedEdgesData = edgesData.map(edge =>
-                        edge.id === data.id
-                            ? { ...edge, label: data.label || edge.label }
-                            : edge
-                    );
-                    setEdgesData(updatedEdgesData);
-                    callback(data);
-                }
-            }
         };
 
-        // Initialize the network
         const network = new Network(container, { nodes, edges }, options);
+        networkInstanceRef.current = network; // Store the network instance for later use
 
         // Handle double-click event to toggle node visibility
         const nodeVisibility = Object.fromEntries(nodes.map(node => [node.id, node.hidden]));
@@ -194,10 +137,29 @@ const VisNetworkGraph = ({ data }) => {
 
         // Clean up when the component unmounts
         return () => {
-            network.destroy(); // Destroy the network instance
+            network.destroy();
         };
 
     }, [nodesData, edgesData]);
+
+    useEffect(() => {
+        // Focus on the selected node if the parameter has a value
+        if (selectedNode?.id && networkInstanceRef.current) {
+            const network = networkInstanceRef.current;
+    
+            // Focus on the selected node
+            network.focus(selectedNode.id, {
+                scale: 1.5, // Zoom scale for focus
+                animation: {
+                    duration: 500,
+                    easingFunction: 'easeInOutQuad',
+                },
+            });
+    
+            // Select the node
+            network.selectNodes([selectedNode.id]);
+        }
+    }, [selectedNode]);
 
     return (
         <div>
