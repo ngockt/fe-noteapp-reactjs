@@ -17,7 +17,6 @@ const PageView = ({ data, selectedNode }) => {
     useEffect(() => {
         if (selectedNode) {
             expandToNode(selectedNode); // Expand path to the selected node
-            scrollToNode(selectedNode.id); // Scroll to the selected node
         }
     }, [selectedNode]);
 
@@ -49,9 +48,13 @@ const PageView = ({ data, selectedNode }) => {
                 traverseUp(parentEdge.src_node_id, edges);
             }
         };
+
         traverseUp(node.id, data.edges);
         nodesToExpand.add(node.id);
-        setExpandedNodes(nodesToExpand);
+        setExpandedNodes(new Set(nodesToExpand));
+
+        // Delay the scroll slightly to ensure the DOM updates
+        setTimeout(() => scrollToNode(node.id), 0);
     };
 
     const scrollToNode = (nodeId) => {
@@ -67,11 +70,23 @@ const PageView = ({ data, selectedNode }) => {
                 <li
                     key={item.id}
                     ref={el => (nodeRefs.current[item.id] = el)}
-                    className={`list-group-item ps-4${
-                        item.id === selectedNode?.id ? 'bg-warning text-dark' : ''
-                    }`}
+                    className={`list-group-item ps-4${item.id === selectedNode?.id ? ' border border-primary text-dark' : ''
+                        }`}
                 >
-                    <details open={expandedNodes.has(item.id)}>
+                    <details
+                        open={expandedNodes.has(item.id)}
+                        onToggle={(e) => {
+                            if (e.target.open) {
+                                setExpandedNodes((prev) => new Set(prev).add(item.id));
+                            } else {
+                                setExpandedNodes((prev) => {
+                                    const updated = new Set(prev);
+                                    updated.delete(item.id);
+                                    return updated;
+                                });
+                            }
+                        }}
+                    >
                         <summary>
                             <strong
                                 className={item.id === selectedNode?.id ? 'text-primary' : ''}
