@@ -70,7 +70,7 @@ const PageView = ({ data, selectedNode }) => {
                 <li
                     key={item.id}
                     ref={el => (nodeRefs.current[item.id] = el)}
-                    className={`list-group-item ps-4${item.id === selectedNode?.id ? ' border border-primary text-dark' : ''
+                    className={`list-group-item ps-4${item.id === selectedNode?.id ? ' border rounded text-dark' : ''
                         }`}
                 >
                     <details
