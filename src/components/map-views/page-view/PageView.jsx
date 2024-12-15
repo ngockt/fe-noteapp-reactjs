@@ -77,8 +77,8 @@ const PageView = ({ data, selectedNode }) => {
                                 className={item.id === selectedNode?.id ? 'text-primary' : ''}
                             >
                                 {item.name}
-                            </strong>{' '}
-                            <span className="text-muted">({item.category})</span>
+                            </strong>{' - '}
+                            <span className="text-muted">{item.category}</span>
                         </summary>
                         {item.children && item.children.length > 0 && renderTree(item.children)}
                     </details>
