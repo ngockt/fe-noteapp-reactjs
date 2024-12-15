@@ -7,7 +7,6 @@ import { FiEdit } from 'react-icons/fi';
 const Page = ({ notes }) => {
     const [currentNotes, setCurrentNotes] = useState(notes);
     const [newCardId, setNewCardId] = useState(null); // Track the newly created card ID
-
     useEffect(() => {
         if (notes) {
             setCurrentNotes(notes || []);
