@@ -1,30 +1,5 @@
-/* Footer Styles */
-.footer {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-}
-
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.social-links {
-    display: flex;
-    gap: 15px;
-}
-
-.social-links a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 1rem;
-    transition: color 0.3s;
-}
-
-.social-links a:hover {
-    color: #f4a261;
+.custom-footer {
+    padding-top: 0.5rem; /* Adjust top padding */
+    padding-bottom: 0.5rem; /* Adjust bottom padding */
+    font-size: 0.9rem; /* Optionally reduce font size */
 }

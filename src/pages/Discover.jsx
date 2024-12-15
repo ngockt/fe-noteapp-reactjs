@@ -15,7 +15,7 @@ const Discover = () => {
 
     return (
         <div>
-            <h1>My Notes</h1>
+            <h2>Discover</h2>
             <Page notes={notes}/>
         </div>
     );

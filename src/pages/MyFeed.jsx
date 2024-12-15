@@ -18,7 +18,7 @@ const MyFeed = () => {
 
     return (
         <div>
-            <h1>My Notes</h1>
+            <h2>My Notes</h2>
             <Page notes={notes} />
         </div>
     );

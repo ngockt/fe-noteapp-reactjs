@@ -1,9 +1,10 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./Footer.css"; // Add this for additional custom styles if needed.
 
 const Footer = () => {
     return (
-        <footer className="bg-dark text-white py-3">
+        <footer className="bg-dark text-white custom-footer">
             <div className="container">
                 <div className="row align-items-center justify-content-between">
                     <div className="col-md-6 text-md-start text-center">
