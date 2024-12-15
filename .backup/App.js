@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import D3Graph from './components/D3Graph'; // Graph with zooming
-import VisJsGraph from './components/VisJsGraph'; // Graph without zooming
-import AxiosInstance from './components/AxiosInstance'; // Import axios instance
+import D3Graph from 'components/D3Graph'; // Graph with zooming
+import VisJsGraph from 'components/VisJsGraph'; // Graph without zooming
+import AxiosInstance from 'components/AxiosInstance'; // Import axios instance
 
 const App = () => {
   const [data, setData] = useState(null);

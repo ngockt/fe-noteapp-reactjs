@@ -24,8 +24,8 @@ const Header = () => {
                     <Nav.Link as={Link} to="/maps?depth=2">
                         Maps
                     </Nav.Link>
-                    <Nav.Link as={Link} to="/projects">
-                        Projects
+                    <Nav.Link as={Link} to="/study-sets">
+                        Study Sets
                     </Nav.Link>
                     <Nav.Link as={Link} to="/contact">
                         Contact

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Page from '../components/contents/Page'; // Import the Page component
+import Page from 'components/contents/Page'; // Import the Page component
 import FetchData from "components/apis/FetchData"
 
 
