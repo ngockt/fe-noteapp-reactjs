@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Header = () => {
     return (
-        <Navbar bg="dark" variant="dark" expand="sm" className="mb-0"> {/* Add margin-bottom */}
+        <Navbar bg="dark" variant="dark" expand="sm" className="mb-0 ps-2"> {/* Add margin-bottom */}
             <Navbar.Brand as={Link} to="/">
                 Laboratory
             </Navbar.Brand>
