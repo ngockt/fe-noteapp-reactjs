@@ -50,7 +50,7 @@ const StudySetPage = () => {
             {/* Study Sets Grid */}
             <div className="row">
                 {studySets.map((s) => (
-                    <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={s.id}>
+                    <div className="col-lg-3 col-md-3 col-sm-3 mb-2" key={s.id}>
                         <StudySetOverview id={s.id} title={s.title} category={s.category} tag={s.tag} />
                     </div>
                 ))}
