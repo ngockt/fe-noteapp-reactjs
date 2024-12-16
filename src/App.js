@@ -6,7 +6,7 @@ import About from 'pages/About';
 import Contact from 'pages/Contact';
 import Header from 'pages/sub-components/Header';
 import StudySets from 'pages/StudySetPage'; // The page that lists study sets
-import Maps from 'pages/Maps';
+import Maps from 'pages/MapPage';
 import Footer from 'pages/sub-components/Footer';
 import StudySetDetail from 'components/study-set/StudySetDetail';
 import './App.css'; // Import the CSS file
