@@ -38,20 +38,25 @@ const StudySetPage = () => {
     };
 
     return (
-        <div>
-            <h2>Study Sets</h2>
-            <button className="btn btn-primary mb-3" onClick={handleAddNewSet}>
-                Add New Study Set
-            </button>
-            <div className="container">
-                <div className="row">
-                    {studySets.map((s) => (
-                        <div className="col-md-4 mb-3" key={s.id}>
-                            <StudySetOverview id={s.id} title={s.title} category={s.category} tag={s.tag} />
-                        </div>
-                    ))}
-                </div>
+        <div className="container mt-4">
+            {/* Header Section */}
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h2 className="mb-0">Study Sets</h2>
+                <button className="btn btn-primary" onClick={handleAddNewSet}>
+                    Add New Study Set
+                </button>
             </div>
+
+            {/* Study Sets Grid */}
+            <div className="row">
+                {studySets.map((s) => (
+                    <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={s.id}>
+                        <StudySetOverview id={s.id} title={s.title} category={s.category} tag={s.tag} />
+                    </div>
+                ))}
+            </div>
+
+            {/* Modal */}
             {isModalOpen && <NewStudySet onClose={closeModal} onRefreshData={handleRefreshData} />}
         </div>
     );
