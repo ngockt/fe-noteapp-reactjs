@@ -60,8 +60,23 @@ const PageView = ({ data, selectedNode }) => {
     const scrollToNode = (nodeId) => {
         const nodeElement = nodeRefs.current[nodeId];
         if (nodeElement) {
-            nodeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            nodeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+                window.scrollBy(0, -100); // Adjust this value to scroll more or less
+            }, 300);
         }
+    };
+
+    const handleToggleExpand = (item) => {
+        setExpandedNodes(prev => {
+            const updated = new Set(prev);
+            if (updated.has(item.id)) {
+                updated.delete(item.id);
+            } else {
+                updated.add(item.id);
+            }
+            return updated;
+        });
     };
 
     const renderTree = (items) => (
@@ -70,37 +85,46 @@ const PageView = ({ data, selectedNode }) => {
                 <li
                     key={item.id}
                     ref={el => (nodeRefs.current[item.id] = el)}
-                    className={`list-group-item ps-4${item.id === selectedNode?.id ? ' border rounded text-dark' : ''
+                    className={`list-group-item ps-0${item.id === selectedNode?.id ? ' text-dark' : ''
+                        }${expandedNodes.has(item.id) ? ' border rounded' : ''
                         }`}
                 >
-                    <details
-                        open={expandedNodes.has(item.id)}
-                        onToggle={(e) => {
-                            if (e.target.open) {
-                                setExpandedNodes((prev) => new Set(prev).add(item.id));
-                            } else {
-                                setExpandedNodes((prev) => {
-                                    const updated = new Set(prev);
-                                    updated.delete(item.id);
-                                    return updated;
-                                });
-                            }
-                        }}
-                    >
-                        <summary>
-                            <strong
-                                className={item.id === selectedNode?.id ? 'text-primary' : ''}
-                            >
-                                {item.name}
-                            </strong>{' - '}
-                            <span className="text-muted">{item.category}</span>
-                        </summary>
-                        {item.children && item.children.length > 0 && renderTree(item.children)}
-                    </details>
+                    <div className="d-flex align-items-center">
+                        <button
+                            className="btn btn-sm me-2"
+                            onClick={() => handleToggleExpand(item)}
+                            style={{
+                                border: 'none',
+                                background: 'transparent',
+                                cursor: 'pointer',
+                                fontSize: '18px',
+                            }}
+                            aria-label={expandedNodes.has(item.id) ? 'Collapse' : 'Expand'}
+                        >
+                            {expandedNodes.has(item.id) ? '−' : '+'}
+                        </button>
+                        <button
+                            onClick={() => handleToggleExpand(item)}
+                            className={`btn btn-link p-0 ${item.id === selectedNode?.id ? 'text-primary fw-bold' : 'text-decoration-none text-dark'}`}
+                            aria-pressed={expandedNodes.has(item.id)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {item.name}
+                        </button>
+                        {' '} - <span className="text-muted">{item.category}</span>
+                    </div>
+                    {expandedNodes.has(item.id) && (
+                        item.children && item.children.length > 0 ? (
+                            <div className="ps-3">{renderTree(item.children)}</div>
+                        ) : (
+                            <div className="ps-4 text-muted">&lt;empty&gt;</div>
+                        )
+                    )}
                 </li>
             ))}
         </ul>
     );
+
 
     return (
         <div className="container-fluid mt-3">
