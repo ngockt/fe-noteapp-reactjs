@@ -4,23 +4,23 @@ const typeConfigs = {
     edge: { length: 100 }
   },
   field: {
-    node: { size: 15, color: '#64B5CD', fontsize: 15 },
+    node: { size: 18, color: '#64B5CD', fontsize: 15 },
     edge: { length: 100 }
   },
   branch: {
-    node: { size: 10, color: '#ff5722', fontsize: 10 },
+    node: { size: 15, color: '#ff5722', fontsize: 10 },
     edge: { length: 100 }
   },
   subject: {
-    node: { size: 8, color: '#0077cc', fontsize: 8 },
+    node: { size: 13, color: '#0077cc', fontsize: 8 },
     edge: { length: 100 }
   },
   topic: {
-    node: { size: 5, color: '#8bc34a', fontsize: 5 },
+    node: { size: 10, color: '#8bc34a', fontsize: 5 },
     edge: { length: 100 }
   },
   concept: {
-    node: { size: 3, color: '#64B5CD', fontsize: 3 },
+    node: { size: 9, color: '#64B5CD', fontsize: 3 },
     edge: { length: 100 }
   }
 };

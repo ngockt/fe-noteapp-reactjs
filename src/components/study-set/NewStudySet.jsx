@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FetchData from 'components/apis/FetchData';
+import AxiosInstance from 'AxiosInstance'; // Import AxiosInstance
 
-const NewStudySet = ({ onClose }) => {
+const NewStudySet = ({ onClose, onRefreshData }) => {
     const [nodes, setNodes] = useState([]);
     const [title, setTitle] = useState('');
     const [selectedNode, setSelectedNode] = useState('');
@@ -17,9 +18,16 @@ const NewStudySet = ({ onClose }) => {
 
     const handleSave = async () => {
         if (title && selectedNode) {
-            const newStudySet = { title, nodeId: selectedNode };
-            // await FetchData('/study-sets', 'POST', newStudySet);
-            onClose(); // Close the modal after saving
+            const newStudySet = { title, node_id: selectedNode };
+            try {
+                console.log('Saving new study set:', newStudySet);
+                await AxiosInstance.post('/study-sets', newStudySet);
+                await onRefreshData(); // Refresh data after saving
+                onClose(); // Close the modal after successful save
+            } catch (error) {
+                console.error('Error saving study set:', error);
+                alert('Failed to save the study set. Please try again.');
+            }
         } else {
             alert('Please fill in all fields');
         }
