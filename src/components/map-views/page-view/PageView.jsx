@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FiArrowUpRight } from 'react-icons/fi';
 
 const PageView = ({ data, selectedNode }) => {
     const [hierarchy, setHierarchy] = useState([]);
@@ -111,14 +112,18 @@ const PageView = ({ data, selectedNode }) => {
                         >
                             {item.name}
                         </button>
-                        {' '} - <span className="text-muted">{item.category}</span>
+                        <span className="badge bg-light text-dark ms-1">{item.category}</span>
+                        {/* <FiArrowUpRight /> */}
+                        <button className="btn btn-secondary btn-sm">
+                            <FiArrowUpRight />
+                            Open Cards
+                        </button>
                     </div>
+
                     {expandedNodes.has(item.id) && (
                         item.children && item.children.length > 0 ? (
                             <div className="ps-3">{renderTree(item.children)}</div>
-                        ) : (
-                            <div className="ps-4 text-muted">&lt;empty&gt;</div>
-                        )
+                        ) : <></>
                     )}
                 </li>
             ))}

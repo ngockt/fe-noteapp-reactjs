@@ -106,7 +106,7 @@ const Maps = () => {
             <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '0px' }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h1 className="mb-0">The Maps</h1>
-                    
+
                     {/* Replaced div with fieldset for better accessibility */}
                     <fieldset className="btn-group" aria-label="View Toggle">
                         {/* Visually hidden legend for accessibility */}
@@ -165,7 +165,8 @@ const Maps = () => {
                                     role="option"
                                     aria-selected={index === activeSuggestionIndex}
                                 >
-                                    <strong>{suggestion.name}</strong> - <span className="text-muted">{suggestion.category}</span>
+                                    <strong>{suggestion.name}</strong>
+                                    <span className="badge bg-light text-dark ms-1">{suggestion.category}</span>
                                 </li>
                             ))}
                         </ul>
