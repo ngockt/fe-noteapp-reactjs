@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from 'pages/Home';
-import Feed from 'pages/NewsFeedPage';
+import Home from 'pages/HomePage';
+import DashBoardPage from 'pages/DashboardPage';
 import Explore from 'pages/ExplorePage';
-import About from 'pages/About';
-import Contact from 'pages/Contact';
+import About from 'pages/AboutPage';
+import Contact from 'pages/ContactPage';
 import Header from 'pages/sub-components/Header';
 import Maps from 'pages/MapPage';
 import Footer from 'pages/sub-components/Footer';
@@ -21,10 +21,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/newsfeed" element={<Feed />} />
+            <Route path="/dashboard" element={<DashBoardPage />} />
             <Route path="/explore" element={<Explore />} />
-            <Route path="/maps" element={<Maps />} />
-            <Route path="/cards" element={<CardPage />} />
             <Route path="/projects" element={<ProjectPage />} />
             <Route path="/projects/:id" element={<StudySetDetail />} />
             <Route path="/about" element={<About />} />
