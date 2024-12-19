@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Page from 'components/contents/Page'; // Import the Page component
+import CardList from 'components/contents/CardList'; // Import the Page component
 import FetchData from "components/apis/FetchData"
 
 
@@ -19,7 +19,7 @@ const DashBoardPage = () => {
     return (
         <div>
             <h2>My Notes</h2>
-            <Page notes={notes} />
+            <CardList notes={notes} />
         </div>
     );
 };

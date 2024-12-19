@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Page.css';
+import './CardList.css';
 import { FiEdit } from 'react-icons/fi';
 
-const Page = ({ notes }) => {
+const CardList = ({ notes }) => {
     const [currentNotes, setCurrentNotes] = useState(notes);
     const [newCardId, setNewCardId] = useState(null); // Track the newly created card ID
     useEffect(() => {
@@ -56,4 +56,4 @@ const Page = ({ notes }) => {
     );
 };
 
-export default Page;
+export default CardList;

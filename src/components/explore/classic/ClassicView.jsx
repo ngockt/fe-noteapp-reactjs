@@ -113,11 +113,6 @@ const PageView = ({ data, selectedNode }) => {
                             {item.name}
                         </button>
                         <span className="badge bg-light text-dark ms-1">{item.category}</span>
-                        {/* <FiArrowUpRight /> */}
-                        <button className="btn btn-secondary btn-sm">
-                            <FiArrowUpRight />
-                            Open Cards
-                        </button>
                     </div>
 
                     {expandedNodes.has(item.id) && (
