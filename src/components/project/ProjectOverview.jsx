@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const StudySet = ({ id, title, category, tag }) => {
+const ProjectOverview = ({ id, title, category, tag }) => {
     return (
         <Link
             to={`/projects/${id}`}
@@ -27,11 +27,11 @@ const StudySet = ({ id, title, category, tag }) => {
     );
 };
 
-StudySet.propTypes = {
+ProjectOverview.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     tag: PropTypes.string.isRequired,
 };
 
-export default StudySet;
+export default ProjectOverview;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FetchData from 'components/apis/FetchData';
-import StudySetOverview from 'components/project/ProjectOverview';
-import NewStudySet from 'components/project/NewProject';
+import ProjectOverview from 'components/project/ProjectOverview';
+import NewProject from 'components/project/ProjectNew';
 
 const ProjectPage = () => {
     const [studySets, setStudySets] = useState([]);
@@ -51,13 +51,13 @@ const ProjectPage = () => {
             <div className="row">
                 {studySets.map((s) => (
                     <div className="col-lg-3 col-md-3 col-sm-3 mb-2" key={s.id}>
-                        <StudySetOverview id={s.id} title={s.title} category={s.category} tag={s.tag} />
+                        <ProjectOverview id={s.id} title={s.title} category={s.category} tag={s.tag} />
                     </div>
                 ))}
             </div>
 
             {/* Modal */}
-            {isModalOpen && <NewStudySet onClose={closeModal} onRefreshData={handleRefreshData} />}
+            {isModalOpen && <NewProject onClose={closeModal} onRefreshData={handleRefreshData} />}
         </div>
     );
 };

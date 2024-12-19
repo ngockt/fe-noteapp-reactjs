@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FetchData from 'components/apis/FetchData';
 import AxiosInstance from 'AxiosInstance'; // Import AxiosInstance
 
-const NewStudySet = ({ onClose, onRefreshData }) => {
+const NewProject = ({ onClose, onRefreshData }) => {
     const [nodes, setNodes] = useState([]);
     const [title, setTitle] = useState('');
     const [selectedNode, setSelectedNode] = useState('');
@@ -83,4 +83,4 @@ const NewStudySet = ({ onClose, onRefreshData }) => {
     );
 };
 
-export default NewStudySet;
+export default NewProject;

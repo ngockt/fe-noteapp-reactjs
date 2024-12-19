@@ -4,7 +4,7 @@ import getVisProperties from './VisNetworkGraph.properties';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-const VisNetworkGraph = ({ data }) => {
+const VisNetworkGraph = ({ data, selectedNode }) => {
     const networkRef = useRef(null);
     const [nodesData, setNodesData] = useState([]);
     const [edgesData, setEdgesData] = useState([]);
@@ -197,6 +197,24 @@ const VisNetworkGraph = ({ data }) => {
 
     }, [nodesData, edgesData]);
 
+    useEffect(() => {
+        // Focus on the selected node if the parameter has a value
+        if (selectedNode?.id && networkInstanceRef.current) {
+            const network = networkInstanceRef.current;
+
+            // Focus on the selected node
+            network.focus(selectedNode.id, {
+                scale: 1.5, // Zoom scale for focus
+                animation: {
+                    duration: 500,
+                    easingFunction: 'easeInOutQuad',
+                },
+            });
+
+            // Select the node
+            network.selectNodes([selectedNode.id]);
+        }
+    }, [selectedNode]);
 
     return (
         <div>

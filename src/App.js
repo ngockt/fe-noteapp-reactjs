@@ -9,7 +9,8 @@ import Header from 'pages/sub-components/Header';
 import Footer from 'pages/sub-components/Footer';
 import StudySetDetail from 'components/project/ProjectDetail';
 import ProjectPage from 'pages/ProjectPage';
-import ContributePage from 'pages/ContributePage';
+import ContributionPage from 'pages/ContributionPage';
+import ExploreDetail from 'components/explore/content/ExploreDetail';
 
 const App = () => {
   return (
@@ -22,7 +23,8 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/dashboard" element={<DashBoardPage />} />
             <Route path="/explore" element={<Explore />} />
-            <Route path="/contribute" element={<ContributePage />} />
+            <Route path="/explore/:nodeId" element={<ExploreDetail />} />
+            <Route path="/contribute" element={<ContributionPage />} />
             <Route path="/projects" element={<ProjectPage />} />
             <Route path="/projects/:id" element={<StudySetDetail />} />
             <Route path="/about" element={<About />} />

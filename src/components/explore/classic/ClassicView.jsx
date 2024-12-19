@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom'; // For navigation
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FiArrowUpRight } from 'react-icons/fi';
 
 const PageView = ({ data, selectedNode }) => {
     const [hierarchy, setHierarchy] = useState([]);
     const [expandedNodes, setExpandedNodes] = useState(new Set());
-    const nodeRefs = useRef({}); // Store references to node elements
+    const nodeRefs = useRef({});
+    const navigate = useNavigate(); // Initialize navigation hook
 
     useEffect(() => {
         if (data) {
@@ -17,7 +18,7 @@ const PageView = ({ data, selectedNode }) => {
 
     useEffect(() => {
         if (selectedNode) {
-            expandToNode(selectedNode); // Expand path to the selected node
+            expandToNode(selectedNode);
         }
     }, [selectedNode]);
 
@@ -80,14 +81,17 @@ const PageView = ({ data, selectedNode }) => {
         });
     };
 
+    const handleNodeClick = (nodeId) => {
+        navigate(`/explore/${nodeId}`);
+    };
+
     const renderTree = (items) => (
         <ul className="list-group list-group-flush ps-0">
             {items.map(item => (
                 <li
                     key={item.id}
                     ref={el => (nodeRefs.current[item.id] = el)}
-                    className={`list-group-item ps-0${item.id === selectedNode?.id ? ' text-dark' : ''
-                        }${expandedNodes.has(item.id) ? ' border rounded' : ''
+                    className={`list-group-item ps-0${expandedNodes.has(item.id) ? ' border rounded' : ''
                         }`}
                 >
                     <div className="d-flex align-items-center">
@@ -105,9 +109,8 @@ const PageView = ({ data, selectedNode }) => {
                             {expandedNodes.has(item.id) ? '−' : '+'}
                         </button>
                         <button
-                            onClick={() => handleToggleExpand(item)}
-                            className={`btn btn-link p-0 ${item.id === selectedNode?.id ? 'text-primary fw-bold' : 'text-decoration-none text-dark'}`}
-                            aria-pressed={expandedNodes.has(item.id)}
+                            onClick={() => handleNodeClick(item.id)}
+                            className="btn btn-link p-0 text-decoration-none text-dark"
                             style={{ cursor: 'pointer' }}
                         >
                             {item.name}
@@ -124,7 +127,6 @@ const PageView = ({ data, selectedNode }) => {
             ))}
         </ul>
     );
-
 
     return (
         <div className="container-fluid mt-3">

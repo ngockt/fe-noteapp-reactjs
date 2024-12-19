@@ -43,7 +43,7 @@ const Explore = () => {
                             onClick={() => setIsPageView(true)}
                             aria-pressed={isPageView}
                         >
-                            Classic View
+                            Classic
                         </button>
                         <button
                             type="button"
@@ -51,7 +51,7 @@ const Explore = () => {
                             onClick={() => setIsPageView(false)}
                             aria-pressed={!isPageView}
                         >
-                            Graph View
+                            Graph
                         </button>
                     </fieldset>
                 </div>
