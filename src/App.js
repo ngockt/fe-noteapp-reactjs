@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from 'pages/Home';
-import MyFeed from 'pages/MyFeed';
-import Discover from 'pages/Discover';
+import Feed from 'pages/NewsFeedPage';
+import Explore from 'pages/ExplorePage';
 import About from 'pages/About';
 import Contact from 'pages/Contact';
 import Header from 'pages/sub-components/Header';
-import StudySets from 'pages/StudySetPage'; // The page that lists study sets
 import Maps from 'pages/MapPage';
 import Footer from 'pages/sub-components/Footer';
 import StudySetDetail from 'components/study-set/StudySetDetail';
 import './App.css'; // Import the CSS file
+import CardPage from 'pages/CardPage';
+import ProjectPage from 'pages/ProjectPage';
 
 const App = () => {
   return (
@@ -20,11 +21,12 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/myfeed" element={<MyFeed />} />
-            <Route path="/discover" element={<Discover />} />
+            <Route path="/newsfeed" element={<Feed />} />
+            <Route path="/explore" element={<Explore />} />
             <Route path="/maps" element={<Maps />} />
-            <Route path="/study-sets" element={<StudySets />} />
-            <Route path="/study-sets/:id" element={<StudySetDetail />} />
+            <Route path="/cards" element={<CardPage />} />
+            <Route path="/projects" element={<ProjectPage />} />
+            <Route path="/projects/:id" element={<StudySetDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>

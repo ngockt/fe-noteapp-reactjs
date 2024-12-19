@@ -4,13 +4,13 @@ import FetchData from 'components/apis/FetchData';
 import StudySetOverview from 'components/study-set/StudySetOverview';
 import NewStudySet from 'components/study-set/NewStudySet';
 
-const StudySetPage = () => {
+const ProjectPage = () => {
     const [studySets, setStudySets] = useState([]);
     const [nodes, setNodes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchStudySets = async () => {
-        const data = await FetchData('/study-sets');
+        const data = await FetchData('/projects');
         setStudySets(data);
     };
 
@@ -62,4 +62,4 @@ const StudySetPage = () => {
     );
 };
 
-export default StudySetPage;
+export default ProjectPage;

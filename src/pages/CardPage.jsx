@@ -3,19 +3,17 @@ import Page from 'components/contents/Page'; // Import the Page component
 import FetchData from "components/apis/FetchData"
 
 
-const MyFeed = () => {
-    console.log('Init MyFeed')
+const CardPage = () => {
+    console.log('Cards')
     const [notes, setNotes] = useState([]);
     useEffect(() => {
         const setData = async () => {
-            const data = await FetchData('/content/myfeed')
+            const data = await FetchData('/content')
             console.log(data)
             setNotes(data)
         }
         setData();
     }, []);
-
-
     return (
         <div>
             <h2>My Notes</h2>
@@ -24,4 +22,4 @@ const MyFeed = () => {
     );
 };
 
-export default MyFeed;
+export default CardPage;

@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const StudySet = ({ id, title, category, tag }) => {
     return (
         <Link
-            to={`/study-sets/${id}`}
+            to={`/projects/${id}`}
             className="text-decoration-none"
             style={{ cursor: 'pointer' }}
         >

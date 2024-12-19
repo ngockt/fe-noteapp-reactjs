@@ -21,7 +21,7 @@ const NewStudySet = ({ onClose, onRefreshData }) => {
             const newStudySet = { title, node_id: selectedNode };
             try {
                 console.log('Saving new study set:', newStudySet);
-                await AxiosInstance.post('/study-sets', newStudySet);
+                await AxiosInstance.post('/projects', newStudySet);
                 await onRefreshData(); // Refresh data after saving
                 onClose(); // Close the modal after successful save
             } catch (error) {

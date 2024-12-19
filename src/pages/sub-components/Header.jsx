@@ -12,20 +12,14 @@ const Header = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ms-auto">
-                    <Nav.Link as={Link} to="/">
-                        Home
+                    <Nav.Link as={Link} to="/newsfeed">
+                        Dashboard
                     </Nav.Link>
-                    <Nav.Link as={Link} to="/myfeed">
-                        MyFeed
+                    <Nav.Link as={Link} to="/explore">
+                        Explore
                     </Nav.Link>
-                    <Nav.Link as={Link} to="/discover">
-                        Discover
-                    </Nav.Link>
-                    <Nav.Link as={Link} to="/maps?depth=10">
-                        Maps
-                    </Nav.Link>
-                    <Nav.Link as={Link} to="/study-sets">
-                        Study Sets
+                    <Nav.Link as={Link} to="/projects">
+                        Projects
                     </Nav.Link>
                     <Nav.Link as={Link} to="/contact">
                         Contact
