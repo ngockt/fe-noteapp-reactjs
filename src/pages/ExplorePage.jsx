@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import VisNetworkGraph from 'components/map-views/graph-view/VisNetworkGraph';
+import VisNetworkGraph from 'components/explore/graph/VisNetworkGraph';
 import FetchData from 'components/apis/FetchData';
-import PageView from 'components/map-views/page-view/PageView';
+import PageView from 'components/explore/classic/ClassicView';
 import SearchBar from 'components/SearchBar'; // Import the new SearchBar component
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -43,7 +43,7 @@ const Explore = () => {
                             onClick={() => setIsPageView(true)}
                             aria-pressed={isPageView}
                         >
-                            Page View
+                            Classic View
                         </button>
                         <button
                             type="button"

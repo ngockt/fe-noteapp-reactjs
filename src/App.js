@@ -7,7 +7,7 @@ import About from 'pages/AboutPage';
 import Contact from 'pages/ContactPage';
 import Header from 'pages/sub-components/Header';
 import Footer from 'pages/sub-components/Footer';
-import StudySetDetail from 'components/study-set/StudySetDetail';
+import StudySetDetail from 'components/project/ProjectDetail';
 import ProjectPage from 'pages/ProjectPage';
 import ContributePage from 'pages/ContributePage';
 

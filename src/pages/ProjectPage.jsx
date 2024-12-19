@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FetchData from 'components/apis/FetchData';
-import StudySetOverview from 'components/study-set/StudySetOverview';
-import NewStudySet from 'components/study-set/NewStudySet';
+import StudySetOverview from 'components/project/ProjectOverview';
+import NewStudySet from 'components/project/NewProject';
 
 const ProjectPage = () => {
     const [studySets, setStudySets] = useState([]);
