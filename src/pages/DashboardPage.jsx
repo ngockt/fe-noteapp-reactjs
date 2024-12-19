@@ -18,8 +18,6 @@ const DashBoardPage = () => {
 
     return (
         <div className="container mt-4">
-            <h2>My Notes</h2>
-            
             {/* Bootstrap Tabs */}
             <ul className="nav nav-tabs">
                 <li className="nav-item">

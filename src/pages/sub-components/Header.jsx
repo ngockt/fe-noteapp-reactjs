@@ -30,8 +30,8 @@ const Header = () => {
                     </Nav.Link>
                     <Nav.Link
                         as={Link}
-                        to="/contribute"
-                        active={location.pathname === "/contribute"}
+                        to="/contribution"
+                        active={location.pathname === "/contribution"}
                     >
                         Contribution
                     </Nav.Link>
