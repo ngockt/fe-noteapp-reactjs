@@ -19,7 +19,7 @@ const Header = () => {
                         Explore
                     </Nav.Link>
                     <Nav.Link as={Link} to="/contribute">
-                        Contribute
+                        Contribution
                     </Nav.Link>
                     <Nav.Link as={Link} to="/projects">
                         Projects
