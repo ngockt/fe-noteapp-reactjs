@@ -1,25 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import CardList from 'components/contents/CardList'; // Import the Page component
-import FetchData from "components/apis/FetchData"
-
+import FetchData from 'components/apis/FetchData';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 
 const DashBoardPage = () => {
-    console.log('Init DashBoardPage')
     const [notes, setNotes] = useState([]);
+    const [activeTab, setActiveTab] = useState('Me'); // State to manage active tab
+
     useEffect(() => {
         const setData = async () => {
-            const data = await FetchData('/content')
-            console.log(data)
-            setNotes(data)
-        }
+            const endpoint = activeTab === 'Me' ? '/content/me' : '/content/community';
+            const data = await FetchData(endpoint);
+            setNotes(data);
+        };
         setData();
-    }, []);
-
+    }, [activeTab]); // Refetch data when activeTab changes
 
     return (
-        <div>
+        <div className="container mt-4">
             <h2>My Notes</h2>
-            <CardList notes={notes} />
+            
+            {/* Bootstrap Tabs */}
+            <ul className="nav nav-tabs">
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'Me' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('Me')}
+                    >
+                        Me
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'Community' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('Community')}
+                    >
+                        Community
+                    </button>
+                </li>
+            </ul>
+
+            {/* Content */}
+            <div className="mt-3">
+                <CardList notes={notes} />
+            </div>
         </div>
     );
 };
