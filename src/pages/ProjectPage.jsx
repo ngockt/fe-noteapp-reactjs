@@ -41,13 +41,13 @@ const ProjectPage = () => {
         <div className="container mt-4">
             {/* Header Section */}
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="mb-0">Study Sets</h2>
+                <h2 className="mb-0">Projects</h2>
                 <button className="btn btn-primary" onClick={handleAddNewSet}>
-                    Add New Study Set
+                    New Project
                 </button>
             </div>
 
-            {/* Study Sets Grid */}
+            {/* Projects Grid */}
             <div className="row">
                 {studySets.map((s) => (
                     <div className="col-lg-3 col-md-3 col-sm-3 mb-2" key={s.id}>

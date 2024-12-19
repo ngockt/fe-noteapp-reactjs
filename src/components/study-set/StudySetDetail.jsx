@@ -6,8 +6,8 @@ const StudySetDetails = () => {
 
   return (
     <div>
-      <h1>Study Set Details</h1>
-      <p>Study Set ID: {id}</p>
+      <h1>Project Details</h1>
+      <p>Project ID: {id}</p>
       {/* Add logic to fetch and display study set details based on the ID */}
     </div>
   );
