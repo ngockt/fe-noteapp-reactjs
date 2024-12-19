@@ -12,51 +12,75 @@ const ExploreDetail = () => {
                 <li className="nav-item" role="presentation">
                     <button
                         className="nav-link active"
-                        id="my-cards-tab"
+                        id="me-tab"
                         data-bs-toggle="tab"
-                        data-bs-target="#my-cards"
+                        data-bs-target="#me"
                         type="button"
                         role="tab"
-                        aria-controls="my-cards"
+                        aria-controls="me"
                         aria-selected="true"
                     >
-                        My Cards
+                        Me
                     </button>
                 </li>
                 <li className="nav-item" role="presentation">
                     <button
                         className="nav-link"
-                        id="community-cards-tab"
+                        id="group-tab"
                         data-bs-toggle="tab"
-                        data-bs-target="#community-cards"
+                        data-bs-target="#group"
                         type="button"
                         role="tab"
-                        aria-controls="community-cards"
+                        aria-controls="group"
                         aria-selected="false"
                     >
-                        Community Cards
+                        Group
+                    </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                    <button
+                        className="nav-link"
+                        id="community-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#community"
+                        type="button"
+                        role="tab"
+                        aria-controls="community"
+                        aria-selected="false"
+                    >
+                        Community
                     </button>
                 </li>
             </ul>
             <div className="tab-content mt-3" id="myTabContent">
                 <div
                     className="tab-pane fade show active"
-                    id="my-cards"
+                    id="me"
                     role="tabpanel"
-                    aria-labelledby="my-cards-tab"
+                    aria-labelledby="me-tab"
                 >
                     <div className="alert alert-primary">
-                        My Cards content goes here.
+                        Me content goes here.
                     </div>
                 </div>
                 <div
                     className="tab-pane fade"
-                    id="community-cards"
+                    id="group"
                     role="tabpanel"
-                    aria-labelledby="community-cards-tab"
+                    aria-labelledby="group-tab"
+                >
+                    <div className="alert alert-warning">
+                        Group content goes here.
+                    </div>
+                </div>
+                <div
+                    className="tab-pane fade"
+                    id="community"
+                    role="tabpanel"
+                    aria-labelledby="community-tab"
                 >
                     <div className="alert alert-secondary">
-                        Community Cards content goes here.
+                        Community content goes here.
                     </div>
                 </div>
             </div>

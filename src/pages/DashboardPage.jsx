@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import CardList from 'components/contents/CardList'; // Import the Page component
+import CardList from 'components/contents/CardList'; // Import the CardList component
 import FetchData from 'components/apis/FetchData';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 
@@ -9,7 +9,20 @@ const DashBoardPage = () => {
 
     useEffect(() => {
         const setData = async () => {
-            const endpoint = activeTab === 'Me' ? '/content/me' : '/content/community';
+            let endpoint;
+            switch (activeTab) {
+                case 'Me':
+                    endpoint = '/content/me';
+                    break;
+                case 'Community':
+                    endpoint = '/content/community';
+                    break;
+                case 'Group':
+                    endpoint = '/content/group';
+                    break;
+                default:
+                    endpoint = '/content/me';
+            }
             const data = await FetchData(endpoint);
             setNotes(data);
         };
@@ -26,6 +39,14 @@ const DashBoardPage = () => {
                         onClick={() => setActiveTab('Me')}
                     >
                         Me
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'Group' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('Group')}
+                    >
+                        Group
                     </button>
                 </li>
                 <li className="nav-item">
