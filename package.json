@@ -26,6 +26,7 @@
     "react-markdown": "^9.0.1",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
+    "react-select": "^5.9.0",
     "react-sigma": "^1.2.35",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import Select from 'react-select'; // For searchable dropdown
 import 'katex/dist/katex.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -9,6 +10,7 @@ import { FiEdit, FiSave, FiArrowLeft, FiMaximize, FiMinimize } from 'react-icons
 import './Card.css';
 import Mermaid from './rendering/Mermaid';
 import PlantUML from './rendering/PlantUML';
+import languages from './languages.json'; // Import JSON file containing all languages
 
 const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [isEditing, setIsEditing] = useState(isNew || false);
@@ -21,6 +23,20 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     });
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [activeTab, setActiveTab] = useState('en');
+    const [tabOrder, setTabOrder] = useState(['en']); // Default tabs
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [dropdownOptions, setDropdownOptions] = useState([]);
+
+    useEffect(() => {
+        // Populate the searchable dropdown with remaining languages
+        const options = languages
+            .filter((lang) => !tabOrder.includes(lang.code)) // Exclude already added languages
+            .map((lang) => ({
+                value: lang.code,
+                label: `${lang.name} (${lang.code.toUpperCase()})`,
+            }));
+        setDropdownOptions(options);
+    }, [tabOrder]);
 
     useEffect(() => {
         if (isNew) {
@@ -84,17 +100,27 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
         },
     };
 
-    // Determine the title, default to "Title" if empty
-    const cardTitle = note.title && note.title.trim() !== '' ? note.title : 'Title';
-
     const handleTabChange = (tab) => {
+        setDropdownVisible(false); // Hide the dropdown when switching tabs
         setActiveTab(tab);
+    };
+
+    const handleAddLanguage = (selectedOption) => {
+        const langCode = selectedOption.value;
+        if (!tabOrder.includes(langCode)) {
+            setTabOrder([...tabOrder, langCode]);
+            setContent((prev) => ({
+                ...prev,
+                [langCode]: '', // Initialize the new language content as empty
+            }));
+        }
+        setDropdownVisible(false); // Hide the dropdown after selecting a language
     };
 
     return (
         <div className={`card border-primary my-0 shadow ${isFullScreen ? 'fullscreen-card' : ''}`}>
             <div className="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
-                <h5 className="mb-0">{cardTitle}</h5>
+                <h5 className="mb-0">{note.title || 'Title'}</h5>
                 <button
                     onClick={handleFullScreenToggle}
                     className="btn btn-light btn-sm p-1"
@@ -104,25 +130,42 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                 </button>
             </div>
             <div className="card-body">
-                <ul className="nav nav-tabs">
-                    {['en', 'cn', 'jp', 'kr', 'vi'].map((lang) => (
-                        <li className="nav-item" key={lang}>
+                <ul className="nav nav-tabs d-flex align-items-center">
+                    {tabOrder.map((lang) => (
+                        <li key={lang} className="nav-item">
                             <button
                                 className={`nav-link ${activeTab === lang ? 'active' : ''}`}
                                 onClick={() => handleTabChange(lang)}
                             >
-                                {lang.toUpperCase()}
+                                {languages.find((l) => l.code === lang)?.name || lang.toUpperCase()}
                             </button>
                         </li>
                     ))}
+                    <li key="add-language" className="nav-item">
+                        <button
+                            className={`nav-link ${dropdownVisible ? 'active' : ''}`}
+                            onClick={() => setDropdownVisible((prev) => !prev)}
+                        >
+                            +
+                        </button>
+                    </li>
                 </ul>
+                {dropdownVisible && (
+                    <div className="mt-2">
+                        <Select
+                            options={dropdownOptions} // Populate the dropdown with remaining languages
+                            onChange={handleAddLanguage} // Add selected language to tabs
+                            placeholder="Select Language"
+                            isSearchable
+                            menuPlacement="auto"
+                        />
+                    </div>
+                )}
                 <div className="tab-content mt-3">
-                    {['en', 'cn', 'jp', 'kr', 'vi'].map((lang) => (
+                    {tabOrder.map((lang) => (
                         <div
                             key={lang}
-                            className={`tab-pane fade ${
-                                activeTab === lang ? 'show active' : ''
-                            }`}
+                            className={`tab-pane fade ${activeTab === lang ? 'show active' : ''}`}
                         >
                             {isEditing ? (
                                 <>
