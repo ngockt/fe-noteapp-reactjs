@@ -11,6 +11,8 @@ import StudySetDetail from 'components/project/ProjectDetail';
 import ProjectPage from 'pages/ProjectPage';
 import ContributionPage from 'pages/ContributionPage';
 import ExploreDetail from 'components/explore/content/ExploreDetail';
+import LoginPage from 'pages/LoginPage'; 
+import ProfilePage from 'pages/ProfilePage';
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
         <div className="content-container">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/home" element={<Home />} />
             <Route path="/dashboard" element={<DashBoardPage />} />
             <Route path="/explore" element={<Explore />} />
