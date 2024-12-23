@@ -36,24 +36,27 @@ const Explore = () => {
             <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '0px' }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h1 className="mb-0">Explore Community Contents</h1>
-                    <fieldset className="btn-group" aria-label="View Toggle">
-                        <button
-                            type="button"
-                            className={`btn ${isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
-                            onClick={() => setIsPageView(true)}
-                            aria-pressed={isPageView}
-                        >
-                            Classic
-                        </button>
-                        <button
-                            type="button"
-                            className={`btn ${!isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
-                            onClick={() => setIsPageView(false)}
-                            aria-pressed={!isPageView}
-                        >
-                            Graph
-                        </button>
-                    </fieldset>
+
+                    <div  >
+                        <fieldset className="btn-group" aria-label="View Toggle">
+                            <button
+                                type="button"
+                                className={`btn ${isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
+                                onClick={() => setIsPageView(true)}
+                                aria-pressed={isPageView}
+                            >
+                                Classic
+                            </button>
+                            <button
+                                type="button"
+                                className={`btn ${!isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
+                                onClick={() => setIsPageView(false)}
+                                aria-pressed={!isPageView}
+                            >
+                                Graph
+                            </button>
+                        </fieldset>
+                    </div>
                 </div>
 
                 {/* Search Bar */}
