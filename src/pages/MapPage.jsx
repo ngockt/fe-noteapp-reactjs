@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import VisNetworkGraph from 'components/explore/graph/VisNetworkGraph';
 import FetchData from 'components/apis/FetchData';
-import PageView from 'components/explore/classic/ClassicView';
+import ClassicView from 'components/explore/classic/ClassicView';
 import SearchBar from 'components/SearchBar'; // Import the new SearchBar component
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -66,7 +66,7 @@ const Maps = () => {
             {/* Scrollable Results Container */}
             <div style={{ flex: 1, overflowY: 'auto' }}>
                 {isPageView ? (
-                    <PageView data={mapData} selectedNode={selectedNode} />
+                    <ClassicView data={mapData} selectedNode={selectedNode} />
                 ) : (
                     <VisNetworkGraph data={mapData} selectedNode={selectedNode} />
                 )}

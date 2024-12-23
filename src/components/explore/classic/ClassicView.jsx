@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const PageView = ({ data, selectedNode }) => {
+const ClassicView = ({ data, selectedNode }) => {
     const [hierarchy, setHierarchy] = useState([]);
     const [expandedNodes, setExpandedNodes] = useState(new Set());
     const nodeRefs = useRef({});
@@ -10,17 +10,39 @@ const PageView = ({ data, selectedNode }) => {
 
     useEffect(() => {
         if (data) {
-            const { nodes, edges } = data;
-            const builtHierarchy = buildHierarchy(nodes, edges);
+            const builtHierarchy = buildHierarchy(data.nodes, data.edges);
             setHierarchy(builtHierarchy);
         }
     }, [data]);
+
+    const expandToNode = useCallback(
+        (node) => {
+            if (!node || !data) return;
+
+            const nodesToExpand = new Set();
+            const traverseUp = (nodeId, edges) => {
+                const parentEdge = edges.find(edge => edge.dst_node_id === nodeId);
+                if (parentEdge) {
+                    nodesToExpand.add(parentEdge.src_node_id);
+                    traverseUp(parentEdge.src_node_id, edges);
+                }
+            };
+
+            traverseUp(node.id, data.edges);
+            nodesToExpand.add(node.id);
+            setExpandedNodes(new Set(nodesToExpand));
+
+            // Delay the scroll slightly to ensure the DOM updates
+            setTimeout(() => scrollToNode(node.id), 0);
+        },
+        [data]
+    );
 
     useEffect(() => {
         if (selectedNode) {
             expandToNode(selectedNode);
         }
-    }, [selectedNode]);
+    }, [selectedNode, expandToNode]);
 
     const buildHierarchy = (nodes, edges) => {
         const nodeMap = new Map();
@@ -39,24 +61,6 @@ const PageView = ({ data, selectedNode }) => {
         return nodes
             .filter(node => !edges.some(edge => edge.dst_node_id === node.id))
             .map(node => nodeMap.get(node.id));
-    };
-
-    const expandToNode = (node) => {
-        const nodesToExpand = new Set();
-        const traverseUp = (nodeId, edges) => {
-            const parentEdge = edges.find(edge => edge.dst_node_id === nodeId);
-            if (parentEdge) {
-                nodesToExpand.add(parentEdge.src_node_id);
-                traverseUp(parentEdge.src_node_id, edges);
-            }
-        };
-
-        traverseUp(node.id, data.edges);
-        nodesToExpand.add(node.id);
-        setExpandedNodes(new Set(nodesToExpand));
-
-        // Delay the scroll slightly to ensure the DOM updates
-        setTimeout(() => scrollToNode(node.id), 0);
     };
 
     const scrollToNode = (nodeId) => {
@@ -139,4 +143,4 @@ const PageView = ({ data, selectedNode }) => {
     );
 };
 
-export default PageView;
+export default ClassicView;
