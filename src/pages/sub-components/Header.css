@@ -1,0 +1,17 @@
+/* Header.css */
+
+/* Style for the Nav.Link wrapper that holds the user profile image */
+.user-profile-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 1rem;
+}
+
+/* Style for the user profile image */
+.user-profile-image {
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	object-fit: cover;
+}

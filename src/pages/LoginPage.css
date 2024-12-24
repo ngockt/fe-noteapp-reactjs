@@ -1,0 +1,20 @@
+.login-page-container {
+	margin-top: 50px;
+	text-align: center;
+	font-family: Arial, sans-serif;
+}
+
+.login-title {
+	font-size: 24px;
+	margin-bottom: 20px;
+}
+
+.google-login-button {
+	display: inline-block; /* ensures the button is only as wide as it needs to be */
+}
+
+.error-message {
+	color: red;
+	font-weight: bold;
+	margin-top: 10px;
+}

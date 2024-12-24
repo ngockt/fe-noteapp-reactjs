@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+/* Import the external CSS */
+import "./Header.css";
 
 const Header = () => {
-    const location = useLocation(); // Get the current location
-    const [expanded, setExpanded] = useState(false); // Track the expanded state
-    const [user, setUser] = useState(null);          // Track the logged-in user
+    const location = useLocation();
+    const [expanded, setExpanded] = useState(false);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         // Load user info from localStorage when the component mounts
@@ -17,7 +19,7 @@ const Header = () => {
     }, []);
 
     const handleNavItemClick = () => {
-        setExpanded(false); // Collapse the navbar when a Nav item is clicked
+        setExpanded(false);
     };
 
     return (
@@ -25,17 +27,18 @@ const Header = () => {
             bg="dark"
             variant="dark"
             expand="sm"
-            className="mb-0 ps-2"
-            expanded={expanded} // Control expanded state
-            onToggle={() => setExpanded(!expanded)} // Toggle expanded state
+            className="mb-0 px-3 py-1"
+            expanded={expanded}
+            onToggle={() => setExpanded(!expanded)}
         >
             <Navbar.Brand as={Link} to="/" onClick={handleNavItemClick}>
                 Laboratory
             </Navbar.Brand>
+
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ms-auto">
-                    {/* Examples of other Nav.Links */}
                     <Nav.Link
                         as={Link}
                         to="/dashboard"
@@ -85,36 +88,20 @@ const Header = () => {
                         About
                     </Nav.Link>
 
-                    {/* If user is logged in, display profile picture and name below it; otherwise, show Login */}
+                    {/* If user is logged in, display profile image; otherwise, show Login link */}
                     {user ? (
                         <Nav.Link
                             as={Link}
                             to="/profile"
                             onClick={handleNavItemClick}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                marginLeft: "1rem",
-                            }}
+                            className="user-profile-link"
                         >
                             <img
                                 src={user.picture}
                                 alt="Profile"
-                                style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                    marginRight: "8px",   // space between image and name
-                                    objectFit: "cover",
-                                }}
+                                className="user-profile-image"
                             />
-                            {/* {user.name} */}
-                            {/* <span style={{ color: "#fff", fontSize: "14px" }}>
-                                {user.name}
-                            </span> */}
                         </Nav.Link>
-
                     ) : (
                         <Nav.Link
                             as={Link}
