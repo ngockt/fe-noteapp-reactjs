@@ -10,6 +10,12 @@ const LoginPage = () => {
   const [googleConfig, setGoogleConfig] = useState({});
 
   useEffect(() => {
+    // If user is already logged in, redirect to /profile
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      navigate("/profile");
+    }
+
     // Check if we need to re-prompt for account selection
     if (localStorage.getItem("selectAccountOnNextLogin")) {
       // Pass prompt=select_account to the GoogleLogin
@@ -17,7 +23,7 @@ const LoginPage = () => {
       // Clean up this flag once read
       localStorage.removeItem("selectAccountOnNextLogin");
     }
-  }, []);
+  }, [navigate]);
 
   const handleSuccess = async (credentialResponse) => {
     setErrorMessage(""); // Reset error message
@@ -36,7 +42,7 @@ const LoginPage = () => {
       localStorage.setItem("user", JSON.stringify({ email, name, picture }));
       localStorage.setItem("accessToken", access_token);
 
-      // Redirect to home page
+      // Redirect to home page (or wherever you'd like)
       navigate("/");
       window.location.reload();
     } catch (error) {

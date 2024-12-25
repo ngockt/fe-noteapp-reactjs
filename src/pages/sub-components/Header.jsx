@@ -94,7 +94,7 @@ const Header = () => {
                             as={Link}
                             to="/profile"
                             onClick={handleNavItemClick}
-                            className="user-profile-link"
+                            // className="user-profile-link"
                         >
                             <img
                                 src={user.picture}
