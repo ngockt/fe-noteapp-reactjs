@@ -15,22 +15,24 @@ import languages from './languages.json'; // Import JSON file containing all lan
 const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [isEditing, setIsEditing] = useState(isNew || false);
     const [content, setContent] = useState({
-        en: note.content, // Initialize English with the original note content
+        en: note.content,
         cn: '',
         jp: '',
         kr: '',
         vi: '',
     });
+
+    const [title, setTitle] = useState(note.title || 'Untitled');
+    const [isEditingTitle, setIsEditingTitle] = useState(false); // Track title edit mode
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [activeTab, setActiveTab] = useState('en');
-    const [tabOrder, setTabOrder] = useState(['en']); // Default tabs
+    const [tabOrder, setTabOrder] = useState(['en']);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [dropdownOptions, setDropdownOptions] = useState([]);
 
     useEffect(() => {
-        // Populate the searchable dropdown with remaining languages
         const options = languages
-            .filter((lang) => !tabOrder.includes(lang.code)) // Exclude already added languages
+            .filter((lang) => !tabOrder.includes(lang.code))
             .map((lang) => ({
                 value: lang.code,
                 label: `${lang.name} (${lang.code.toUpperCase()})`,
@@ -39,15 +41,10 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     }, [tabOrder]);
 
     useEffect(() => {
-        if (isNew) {
-            setIsEditing(true);
-        }
+        if (isNew) setIsEditing(true);
     }, [isNew]);
 
-    const handleEdit = () => {
-        setIsEditing(true);
-    };
-
+    const handleEdit = () => setIsEditing(true);
     const handleSave = () => {
         setIsEditing(false);
         onSave(note.id, content);
@@ -56,25 +53,14 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
 
     const handleCancel = () => {
         setIsEditing(false);
-        setContent((prev) => ({
-            ...prev,
-            en: note.content, // Restore the original English content
-        }));
+        setContent((prev) => ({ ...prev, en: note.content }));
         if (onCloseEditor) onCloseEditor();
     };
 
-    const handleFullScreenToggle = () => {
-        setIsFullScreen(!isFullScreen);
-    };
+    const handleFullScreenToggle = () => setIsFullScreen(!isFullScreen);
 
-    const preprocessContent = (text) => {
-        return text
-            .replace(/\\\(/g, '$')
-            .replace(/\\\)/g, '$')
-            .replace(/\\\[/g, '$$')
-            .replace(/\\\]/g, '$$');
-    };
-
+    const preprocessContent = (text) =>
+        text.replace(/\\\(/g, '$').replace(/\\\)/g, '$').replace(/\\\[/g, '$$').replace(/\\\]/g, '$$');
     const MarkdownComponents = {
         code({ node, inline, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
@@ -99,9 +85,8 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
             );
         },
     };
-
     const handleTabChange = (tab) => {
-        setDropdownVisible(false); // Hide the dropdown when switching tabs
+        setDropdownVisible(false);
         setActiveTab(tab);
     };
 
@@ -109,18 +94,44 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
         const langCode = selectedOption.value;
         if (!tabOrder.includes(langCode)) {
             setTabOrder([...tabOrder, langCode]);
-            setContent((prev) => ({
-                ...prev,
-                [langCode]: '', // Initialize the new language content as empty
-            }));
+            setContent((prev) => ({ ...prev, [langCode]: '' }));
         }
-        setDropdownVisible(false); // Hide the dropdown after selecting a language
+        setDropdownVisible(false);
+    };
+
+    const handleTitleClick = () => setIsEditingTitle(true);
+
+    const handleTitleChange = (e) => setTitle(e.target.value);
+
+    const handleTitleBlur = () => setIsEditingTitle(false); // Save and exit edit mode
+
+    const handleTitleKeyDown = (e) => {
+        if (e.key === 'Enter') setIsEditingTitle(false); // Save on Enter
     };
 
     return (
         <div className={`card border-primary my-0 shadow ${isFullScreen ? 'fullscreen-card' : ''}`}>
             <div className="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
-                <h5 className="mb-0">{note.title || 'Title'}</h5>
+                {/* Inline Editable Title */}
+                {isEditingTitle ? (
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={handleTitleChange}
+                        onBlur={handleTitleBlur}
+                        onKeyDown={handleTitleKeyDown}
+                        className="form-control form-control-sm"
+                        autoFocus
+                    />
+                ) : (
+                    <h5
+                        className="mb-0 text-primary"
+                        onClick={handleTitleClick}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        {title}
+                    </h5>
+                )}
                 <button
                     onClick={handleFullScreenToggle}
                     className="btn btn-light btn-sm p-1"
@@ -130,7 +141,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                 </button>
             </div>
             <div className="card-body">
-                <ul className="nav nav-tabs d-flex align-items-center">
+                <ul className="nav nav-tabs d-flex align-items-center w-100">
                     {tabOrder.map((lang) => (
                         <li key={lang} className="nav-item">
                             <button
@@ -149,12 +160,25 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             +
                         </button>
                     </li>
+
+                    {/* Edit Button in Same Row */}
+                    {!isEditing && (
+                        <li className="ms-auto nav-item">
+                            <button
+                                onClick={handleEdit}
+                                className="btn btn-primary btn-sm ms-2"
+                            >
+                                <FiEdit className="me-1" />
+                                Edit
+                            </button>
+                        </li>
+                    )}
                 </ul>
                 {dropdownVisible && (
                     <div className="mt-2">
                         <Select
-                            options={dropdownOptions} // Populate the dropdown with remaining languages
-                            onChange={handleAddLanguage} // Add selected language to tabs
+                            options={dropdownOptions}
+                            onChange={handleAddLanguage}
                             placeholder="Select Language"
                             isSearchable
                             menuPlacement="auto"
@@ -169,24 +193,11 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                         >
                             {isEditing ? (
                                 <>
-                                    <h6 className="text-primary">Preview</h6>
-                                    <div className="border rounded p-3 bg-light">
-                                        <ReactMarkdown
-                                            components={MarkdownComponents}
-                                            remarkPlugins={[remarkMath]}
-                                            rehypePlugins={[rehypeKatex]}
-                                        >
-                                            {preprocessContent(content[lang] || '')}
-                                        </ReactMarkdown>
-                                    </div>
                                     <h5 className="card-title mt-4">Edit Note ({lang.toUpperCase()})</h5>
                                     <textarea
                                         value={content[lang] || ''}
                                         onChange={(e) =>
-                                            setContent((prev) => ({
-                                                ...prev,
-                                                [lang]: e.target.value,
-                                            }))
+                                            setContent((prev) => ({ ...prev, [lang]: e.target.value }))
                                         }
                                         className="form-control mb-3"
                                         rows="3"
@@ -212,13 +223,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                                     >
                                         {preprocessContent(content[lang] || '')}
                                     </ReactMarkdown>
-                                    <button
-                                        onClick={handleEdit}
-                                        className="btn btn-primary mt-3"
-                                    >
-                                        <FiEdit className="me-2" />
-                                        Edit
-                                    </button>
                                 </>
                             )}
                         </div>
