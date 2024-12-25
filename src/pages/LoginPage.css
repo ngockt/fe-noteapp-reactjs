@@ -1,20 +1,125 @@
+/* LoginPage.css */
+
+/* Container for the entire login page */
 .login-page-container {
-	margin-top: 50px;
-	text-align: center;
+	min-height: 100vh; /* Make it take the full viewport height */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #f4f4f4; /* Light gray background */
 	font-family: Arial, sans-serif;
+	padding: 20px;
+	box-sizing: border-box;
 }
 
+/* Title at the top of the login page */
 .login-title {
-	font-size: 24px;
-	margin-bottom: 20px;
+	font-size: 2rem;
+	margin-bottom: 1rem;
+	color: #333;
 }
 
+/* The form that handles normal login (email/password) */
+.normal-login-form {
+	background-color: #fff;
+	width: 100%;
+	max-width: 400px; /* Ensures the form doesn’t stretch too wide */
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	padding: 24px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Each label/input group within the form */
+.form-group {
+	margin-bottom: 16px;
+}
+
+.form-group label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 6px;
+	color: #555;
+}
+
+.form-group input {
+	width: 100%;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 1rem;
+	box-sizing: border-box;
+}
+
+/* The regular login button */
+.login-button {
+	width: 100%;
+	background-color: #007bff; /* Bootstrap primary color */
+	color: #fff;
+	font-size: 1rem;
+	padding: 10px;
+	margin-top: 8px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.login-button:hover {
+	background-color: #0056b3;
+}
+
+/* Separator text for the "or" between normal login and Google login */
+.separator-text {
+	text-align: center;
+	margin: 20px 0;
+	color: #888;
+	font-size: 0.9rem;
+}
+
+/* Google login button container */
 .google-login-button {
-	display: inline-block; /* ensures the button is only as wide as it needs to be */
+	display: flex;
+	justify-content: center;
+	margin-bottom: 16px;
 }
 
+/* Error message displayed if login fails */
 .error-message {
 	color: red;
-	font-weight: bold;
+	text-align: center;
 	margin-top: 10px;
+}
+
+/* Sign-up option area */
+.signup-option {
+	text-align: center;
+	margin-top: 16px;
+	font-size: 0.95rem;
+	color: #555;
+}
+
+/* Button to redirect to Sign Up */
+.signup-button {
+	background: none;
+	border: none;
+	color: #007bff;
+	text-decoration: underline;
+	cursor: pointer;
+	font-size: 1rem;
+	padding: 0;
+	margin: 0;
+}
+
+.signup-button:hover {
+	color: #0056b3;
+}
+
+/* Responsive design tweaks */
+@media (max-width: 480px) {
+	.normal-login-form {
+		width: 100%;
+		margin: 0 10px;
+		padding: 16px;
+	}
 }

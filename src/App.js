@@ -13,6 +13,7 @@ import ContributionPage from 'pages/ContributionPage';
 import ExploreDetail from 'components/explore/content/ExploreDetail';
 import LoginPage from 'pages/LoginPage'; 
 import ProfilePage from 'pages/ProfilePage';
+import SignUpPage from 'pages/SignUpPage';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/home" element={<Home />} />
             <Route path="/dashboard" element={<DashBoardPage />} />

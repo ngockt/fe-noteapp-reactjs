@@ -6,45 +6,74 @@ import "./LoginPage.css";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [googleConfig, setGoogleConfig] = useState({});
 
   useEffect(() => {
-    // If user is already logged in, redirect to /profile
     const token = localStorage.getItem("accessToken");
     if (token) {
       navigate("/profile");
     }
 
-    // Check if we need to re-prompt for account selection
     if (localStorage.getItem("selectAccountOnNextLogin")) {
-      // Pass prompt=select_account to the GoogleLogin
       setGoogleConfig({ prompt: "select_account" });
-      // Clean up this flag once read
       localStorage.removeItem("selectAccountOnNextLogin");
     }
   }, [navigate]);
+
+  const handleNormalLogin = async (e) => {
+    e.preventDefault();
+    setErrorMessage(""); // Reset error message
+
+    if (!email || !password) {
+      setErrorMessage("Both email and password are required.");
+      return;
+    }
+
+    try {
+      const res = await axios.post("http://localhost:8000/auth/login", {
+        email,
+        password,
+      });
+
+      const { access_token, name, picture } = res.data;
+
+      // If 'picture' is missing, use a default "like" icon.
+      const defaultPicture = picture || "https://img.icons8.com/?size=100&id=60655&format=png&color=000000";
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ email, name, picture: defaultPicture })
+      );
+      localStorage.setItem("accessToken", access_token);
+
+
+      navigate("/");
+      // window.location.reload();
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
+    }
+  };
 
   const handleSuccess = async (credentialResponse) => {
     setErrorMessage(""); // Reset error message
     try {
       const token = credentialResponse.credential;
 
-      // Call FastAPI endpoint
       const res = await axios.post("http://localhost:8000/auth/google", {
         token,
       });
 
-      // Extract user details
       const { access_token, email, name, picture } = res.data;
 
-      // Store user info and token in localStorage
       localStorage.setItem("user", JSON.stringify({ email, name, picture }));
       localStorage.setItem("accessToken", access_token);
 
-      // Redirect to home page (or wherever you'd like)
       navigate("/");
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error("Login error:", error);
       setErrorMessage("Login failed. Please try again.");
@@ -55,18 +84,55 @@ const LoginPage = () => {
     setErrorMessage("Google Login Failed");
   };
 
+  const handleSignUpRedirect = () => {
+    navigate("/signup");
+  };
+
   return (
     <div className="login-page-container">
-      <h1 className="login-title">Sign in with Google</h1>
+      <h1 className="login-title">Sign in</h1>
+      <form className="normal-login-form" onSubmit={handleNormalLogin}>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <button type="submit" className="login-button">
+          Log In
+        </button>
+      </form>
+      <p className="separator-text">or</p>
       <div className="google-login-button">
         <GoogleLogin
           onSuccess={handleSuccess}
           onError={handleError}
-          // Spread in any custom config (like prompt: 'select_account')
           {...googleConfig}
         />
       </div>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <p className="signup-option">
+        Don't have an account?{" "}
+        <button className="signup-button" onClick={handleSignUpRedirect}>
+          Sign Up
+        </button>
+      </p>
     </div>
   );
 };
