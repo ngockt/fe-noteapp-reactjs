@@ -26,7 +26,7 @@ const Header = () => {
         <Navbar
             bg="dark"
             variant="dark"
-            expand="sm"
+            expand="md"
             className="mb-0 px-3 py-1"
             expanded={expanded}
             onToggle={() => setExpanded(!expanded)}
