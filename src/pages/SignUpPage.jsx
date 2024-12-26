@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./SignUpPage.css";
+import AxiosInstance from "AxiosInstance";
 
 const SignUpPage = () => {
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ const SignUpPage = () => {
         }
 
         try {
-            const res = await axios.post("http://localhost:8000/auth/signup", formData);
+            const res = await AxiosInstance.post("/auth/signup", formData);
 
             if (res.status === 201) {
                 setSuccessMessage("Account created successfully. Redirecting to login...");

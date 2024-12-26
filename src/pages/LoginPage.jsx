@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
+import AxiosInstance from "AxiosInstance";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const LoginPage = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:8000/auth/login", {
+      const res = await AxiosInstance.post("/auth/login", {
         email,
         password,
       });
@@ -50,8 +50,8 @@ const LoginPage = () => {
       localStorage.setItem("accessToken", access_token);
 
 
-      navigate("/");
-      // window.location.reload();
+      window.location.href = "/";
+
     } catch (error) {
       console.error("Login error:", error);
       setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
@@ -63,7 +63,7 @@ const LoginPage = () => {
     try {
       const token = credentialResponse.credential;
 
-      const res = await axios.post("http://localhost:8000/auth/google", {
+      const res = await AxiosInstance.post("/auth/google", {
         token,
       });
 
@@ -72,8 +72,7 @@ const LoginPage = () => {
       localStorage.setItem("user", JSON.stringify({ email, name, picture }));
       localStorage.setItem("accessToken", access_token);
 
-      navigate("/");
-      // window.location.reload();
+      window.location.href = "/";
     } catch (error) {
       console.error("Login error:", error);
       setErrorMessage("Login failed. Please try again.");

@@ -1,10 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
-    const navigate = useNavigate();
 
-    const handleSwitchAccount = () => {
+    const handleLogOut = () => {
         // Clear out the current user's data
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
@@ -12,9 +10,7 @@ const ProfilePage = () => {
         // Let the Login page know we want to pick a new Google account
         localStorage.setItem("selectAccountOnNextLogin", "true");
 
-        // Go back to /login
-        navigate("/login");
-        window.location.reload();
+        window.location.href = "/login";
     };
 
     const user = JSON.parse(localStorage.getItem("user")) || null;
@@ -33,7 +29,7 @@ const ProfilePage = () => {
             />
             <h2>{user.name}</h2>
             <p>{user.email}</p>
-            <button onClick={handleSwitchAccount}>Switch Account</button>
+            <button onClick={handleLogOut}>Log Out</button>
         </div>
     );
 };
