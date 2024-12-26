@@ -148,7 +148,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                                 className={`nav-link ${activeTab === lang ? 'active' : ''}`}
                                 onClick={() => handleTabChange(lang)}
                             >
-                                {languages.find((l) => l.code === lang)?.name || lang.toUpperCase()}
+                                {languages.find((l) => l.code === lang)?.code.toUpperCase() || lang.toUpperCase()}
                             </button>
                         </li>
                     ))}
