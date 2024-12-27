@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import CardList from 'components/contents/CardList'; // Import the CardList component
-import FetchData from 'components/apis/FetchData'; // Import the FetchData utility
+import FetchData from 'apis/FetchData'; // Import the FetchData utility
 
 const ProjectDetail = () => {
     const { id } = useParams(); // Retrieve the dynamic parameter `id`

@@ -4,5 +4,5 @@
 # Big TasksTasks
 - update database to handle multiple user
 - Card View-only version
-- Singin in LAN (ngrok)
 - syntax suggestion for each type of Card (latex, plantuml, mermaid, markdown, ...)
+- setting up guest mode [text](.drafts/App.jsx)

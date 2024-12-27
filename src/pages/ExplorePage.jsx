@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import VisNetworkGraph from 'components/explore/graph/VisNetworkGraph';
-import FetchData from 'components/apis/FetchData';
+import FetchData from 'apis/FetchData';
 import ClassicView from 'components/explore/classic/ClassicView';
-import SearchBar from 'components/SearchBar'; // Import the new SearchBar component
+import SearchBar from 'components/search/ExploreSearchBar'; // Import the new SearchBar component
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Explore = () => {

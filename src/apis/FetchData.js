@@ -1,4 +1,4 @@
-import AxiosInstance from 'AxiosInstance'; // Import axios instance
+import AxiosInstance from 'apis/AxiosInstance'; // Import axios instance
 
 const FetchData = async (url) => {
     try {

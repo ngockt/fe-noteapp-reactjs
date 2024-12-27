@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
-import AxiosInstance from "AxiosInstance";
+import AxiosInstance from "apis/AxiosInstance";
 
 const LoginPage = () => {
   const navigate = useNavigate();

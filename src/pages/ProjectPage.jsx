@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FetchData from 'components/apis/FetchData';
+import FetchData from 'apis/FetchData';
 import ProjectOverview from 'components/project/ProjectOverview';
 import NewProject from 'components/project/ProjectNew';
 

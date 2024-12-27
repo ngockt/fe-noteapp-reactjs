@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FetchData from 'components/apis/FetchData';
-import AxiosInstance from 'AxiosInstance'; // Import AxiosInstance
+import FetchData from 'apis/FetchData';
+import AxiosInstance from 'apis/AxiosInstance'; // Import AxiosInstance
 
 const NewProject = ({ onClose, onRefreshData }) => {
     const [nodes, setNodes] = useState([]);

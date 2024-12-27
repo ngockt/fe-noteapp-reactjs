@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CardList from 'components/contents/CardList'; // Import the CardList component
-import FetchData from 'components/apis/FetchData';
+import FetchData from 'apis/FetchData';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 
 const DashBoardPage = () => {
