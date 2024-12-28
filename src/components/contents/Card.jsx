@@ -129,33 +129,25 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     return (
         <div className={`card border-primary my-0 shadow ${isFullScreen ? 'fullscreen-card' : ''}`}>
             <div className="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
-                <ul className="nav nav-tabs w-100">
-                    {tabOrder.map((lang) => (
-                        <li key={lang} className="nav-item">
-                            <button
-                                className={`nav-link p-2 py-0  ${activeTab === lang ? 'active' : ''}`}
-                                onClick={() => handleTabChange(lang)}
-                            >
-                                {languages.find((l) => l.code === lang)?.code.toLowerCase() || lang.toLowerCase()}
-                            </button>
-                        </li>
-                    ))}
-                    <li key="add-language" className="nav-item">
-                        <button
-                            className={`nav-link p-2 py-0 ${activeTab === 'add' ? 'active' : ''}`}
-                            onClick={() => handleTabChange('add')}
-                        >
-                            +
-                        </button>
-                    </li>
-                </ul>
+                <div className="flex-grow-1 overflow-hidden">
+                    {isEditing ? (
+                        <input
+                            type="text"
+                            value={content[activeTab]?.title || ''}
+                            onChange={handleTitleChange}
+                            className="form-control form-control-sm"
+                            placeholder="Enter title"
+                        />
+                    ) : (
+                        <h5 className="mb-0 text-truncate">{content[activeTab]?.title || 'Untitled'}</h5>
+                    )}
+                </div>
                 <button
-                    onClick={handleFullScreenToggle}
-                    className="btn btn-light btn-sm p-1 position-absolute"
-                    style={{ top: '10px', right: '10px' }}
-                    aria-label="Toggle Fullscreen"
+                    onClick={handleEdit}
+                    className="btn btn-light btn-sm p-1 ms-2"
+                    aria-label="Edit Title"
                 >
-                    {isFullScreen ? <FiMinimize /> : <FiMaximize />}
+                    <FiEdit />
                 </button>
             </div>
             <div className="card-body">
@@ -165,28 +157,20 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             key={lang}
                             className={`tab-pane fade ${activeTab === lang ? 'show active' : ''}`}
                         >
-                            <div className="d-flex justify-content-between align-items-center mb-2">
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        value={content[lang]?.title || ''}
-                                        onChange={handleTitleChange}
-                                        className="form-control form-control-sm"
-                                        placeholder="Enter title"
-                                    />
-                                ) : (
-                                    <h5 className="text-primary mb-0">{content[lang]?.title || 'Untitled'}</h5>
-                                )}
-                                {!isEditing && (
-                                    <button
-                                        onClick={handleEdit}
-                                        className="btn btn-light btn-sm p-1 ms-2"
-                                        aria-label="Edit"
-                                    >
-                                        <FiEdit />
-                                    </button>
-                                )}
-                            </div>
+                            {isEditing && content[lang]?.content?.trim() ? (
+                                <>
+                                    <h6 className="mt-3">Live Preview:</h6>
+                                    <div className="border p-2 mb-3">
+                                        <ReactMarkdown
+                                            components={MarkdownComponents}
+                                            remarkPlugins={[remarkMath]}
+                                            rehypePlugins={[rehypeKatex]}
+                                        >
+                                            {preprocessContent(content[lang]?.content || '')}
+                                        </ReactMarkdown>
+                                    </div>
+                                </>
+                            ) : null}
                             {isEditing ? (
                                 <textarea
                                     value={content[lang]?.content || ''}
@@ -234,6 +218,35 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                         </button>
                     </div>
                 )}
+            </div>
+            <div className="card-footer d-flex justify-content-between align-items-center">
+                <ul className="nav nav-tabs">
+                    {tabOrder.map((lang) => (
+                        <li key={lang} className="nav-item">
+                            <button
+                                className={`nav-link p-2 py-0 ${activeTab === lang ? 'active' : ''}`}
+                                onClick={() => handleTabChange(lang)}
+                            >
+                                {languages.find((l) => l.code === lang)?.code.toLowerCase() || lang.toLowerCase()}
+                            </button>
+                        </li>
+                    ))}
+                    <li key="add-language" className="nav-item">
+                        <button
+                            className={`nav-link p-2 py-0 ${activeTab === 'add' ? 'active' : ''}`}
+                            onClick={() => handleTabChange('add')}
+                        >
+                            +
+                        </button>
+                    </li>
+                </ul>
+                <button
+                    onClick={handleFullScreenToggle}
+                    className="btn btn-light btn-sm p-1"
+                    aria-label="Toggle Fullscreen"
+                >
+                    {isFullScreen ? <FiMinimize /> : <FiMaximize />}
+                </button>
             </div>
         </div>
     );
