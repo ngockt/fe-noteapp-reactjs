@@ -6,7 +6,6 @@ import NewProject from 'components/project/ProjectNew';
 
 const ProjectPage = () => {
     const [projects, setProjects] = useState([]);
-    const [nodes, setNodes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('me'); // State for active tab
 
@@ -15,14 +14,8 @@ const ProjectPage = () => {
         setProjects(data);
     };
 
-    const fetchNodes = async () => {
-        const data = await FetchData('/maps/list');
-        setNodes(data);
-    };
-
     useEffect(() => {
         fetchStudySets();
-        fetchNodes();
     }, []);
 
     const handleAddProject = () => {
@@ -34,22 +27,10 @@ const ProjectPage = () => {
     };
 
     const handleRefreshData = async () => {
-        await fetchStudySets();
-        await fetchNodes(); // Refresh nodes after adding a new study set
+        await fetchStudySets(); // Refresh data after adding a new study set
     };
 
     const renderProjectsByTab = () => {
-        // Filter projects based on activeTab
-        // switch (activeTab) {
-        //     case 'me':
-        //         return projects.filter((p) => p.category === 'me');
-        //     case 'group':
-        //         return projects.filter((p) => p.category === 'group');
-        //     case 'community':
-        //         return projects.filter((p) => p.category === 'community');
-        //     default:
-        //         return projects;
-        // }
         return projects;
     };
 

@@ -23,7 +23,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [activeTab, setActiveTab] = useState(Object.keys(initialContents)[0] || 'en');
     const [tabOrder, setTabOrder] = useState(Object.keys(initialContents));
-    const [dropdownVisible, setDropdownVisible] = useState(false);
+    // const [dropdownVisible, setDropdownVisible] = useState(false);
     const [dropdownOptions, setDropdownOptions] = useState([]);
 
     const dropdownRef = useRef(null); // Ref for the dropdown
@@ -94,7 +94,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     };
 
     const handleTabChange = (tab) => {
-        setDropdownVisible(false);
+        // setDropdownVisible(false);
         setActiveTab(tab);
     };
 
@@ -109,7 +109,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
             setActiveTab(langCode);
             setIsEditing(true);
         }
-        setDropdownVisible(false);
+        // setDropdownVisible(false);
     };
 
     const handleTitleChange = (e) => {
