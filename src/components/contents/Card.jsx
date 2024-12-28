@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -26,6 +26,8 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [dropdownOptions, setDropdownOptions] = useState([]);
 
+    const dropdownRef = useRef(null); // Ref for the dropdown
+
     useEffect(() => {
         const options = languages
             .filter((lang) => !tabOrder.includes(lang.code))
@@ -35,6 +37,12 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
             }));
         setDropdownOptions(options);
     }, [tabOrder]);
+
+    useEffect(() => {
+        if (activeTab === 'add' && dropdownRef.current) {
+            dropdownRef.current.focus(); // Focus on dropdown when the "+" tab is active
+        }
+    }, [activeTab]);
 
     const handleEdit = () => setIsEditing(true);
 
@@ -98,12 +106,11 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                 ...prev,
                 [langCode]: { title: '', content: '' },
             }));
-            setActiveTab(langCode); // Set the new language tab as active
-            setIsEditing(true); // Enable editing mode
+            setActiveTab(langCode);
+            setIsEditing(true);
         }
         setDropdownVisible(false);
     };
-
 
     const handleTitleChange = (e) => {
         setContent((prev) => ({
@@ -122,98 +129,72 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     return (
         <div className={`card border-primary my-0 shadow ${isFullScreen ? 'fullscreen-card' : ''}`}>
             <div className="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
-                {isEditing ? (
-                    <input
-                        type="text"
-                        value={content[activeTab]?.title || ''}
-                        onChange={handleTitleChange}
-                        className="form-control form-control-sm"
-                        placeholder="Enter title"
-                    />
-                ) : (
-                    <h5 className="mb-0 text-primary">{content[activeTab]?.title || 'Untitled'}</h5>
-                )}
+                <ul className="nav nav-tabs w-100">
+                    {tabOrder.map((lang) => (
+                        <li key={lang} className="nav-item">
+                            <button
+                                className={`nav-link p-2 py-0  ${activeTab === lang ? 'active' : ''}`}
+                                onClick={() => handleTabChange(lang)}
+                            >
+                                {languages.find((l) => l.code === lang)?.code.toLowerCase() || lang.toLowerCase()}
+                            </button>
+                        </li>
+                    ))}
+                    <li key="add-language" className="nav-item">
+                        <button
+                            className={`nav-link p-2 py-0 ${activeTab === 'add' ? 'active' : ''}`}
+                            onClick={() => handleTabChange('add')}
+                        >
+                            +
+                        </button>
+                    </li>
+                </ul>
                 <button
                     onClick={handleFullScreenToggle}
-                    className="btn btn-light btn-sm p-1"
+                    className="btn btn-light btn-sm p-1 position-absolute"
+                    style={{ top: '10px', right: '10px' }}
                     aria-label="Toggle Fullscreen"
                 >
                     {isFullScreen ? <FiMinimize /> : <FiMaximize />}
                 </button>
             </div>
             <div className="card-body">
-                <ul className="nav nav-tabs d-flex align-items-center w-100">
-                    {tabOrder.map((lang) => (
-                        <li key={lang} className="nav-item">
-                            <button
-                                className={`nav-link ${activeTab === lang ? 'active' : ''}`}
-                                onClick={() => handleTabChange(lang)}
-                            >
-                                {languages.find((l) => l.code === lang)?.code.toUpperCase() || lang.toUpperCase()}
-                            </button>
-                        </li>
-                    ))}
-                    <li key="add-language" className="nav-item">
-                        <button
-                            className={`nav-link ${dropdownVisible ? 'active' : ''}`}
-                            onClick={() => setDropdownVisible((prev) => !prev)}
-                        >
-                            +
-                        </button>
-                    </li>
-                    {!isEditing && (
-                        <li className="ms-auto nav-item">
-                            <button
-                                onClick={handleEdit}
-                                className="btn btn-primary btn-sm ms-2"
-                            >
-                                <FiEdit className="me-1" />
-                                Edit
-                            </button>
-                        </li>
-                    )}
-                </ul>
-                {dropdownVisible && (
-                    <div className="mt-2">
-                        <Select
-                            options={dropdownOptions}
-                            onChange={handleAddLanguage}
-                            placeholder="Select Language"
-                            isSearchable
-                            menuPlacement="auto"
-                        />
-                    </div>
-                )}
-                <div className="tab-content mt-3">
+                <div className="tab-content mt-0">
                     {tabOrder.map((lang) => (
                         <div
                             key={lang}
                             className={`tab-pane fade ${activeTab === lang ? 'show active' : ''}`}
                         >
-                            {isEditing ? (
-                                <>
-                                    {content[lang]?.content?.trim() ? (
-                                        <>
-                                            <h6 className="mt-3">Live Preview:</h6>
-                                            <div className="border p-2 mb-3">
-                                                <ReactMarkdown
-                                                    components={MarkdownComponents}
-                                                    remarkPlugins={[remarkMath]}
-                                                    rehypePlugins={[rehypeKatex]}
-                                                >
-                                                    {preprocessContent(content[lang]?.content || '')}
-                                                </ReactMarkdown>
-                                            </div>
-                                        </>
-                                    ) : null}
-                                    <textarea
-                                        value={content[lang]?.content || ''}
-                                        onChange={handleContentChange}
-                                        className="form-control mb-3"
-                                        rows="3"
-                                        placeholder={`Enter your Markdown for ${lang.toUpperCase()} here...`}
+                            <div className="d-flex justify-content-between align-items-center mb-2">
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={content[lang]?.title || ''}
+                                        onChange={handleTitleChange}
+                                        className="form-control form-control-sm"
+                                        placeholder="Enter title"
                                     />
-                                </>
+                                ) : (
+                                    <h5 className="text-primary mb-0">{content[lang]?.title || 'Untitled'}</h5>
+                                )}
+                                {!isEditing && (
+                                    <button
+                                        onClick={handleEdit}
+                                        className="btn btn-light btn-sm p-1 ms-2"
+                                        aria-label="Edit"
+                                    >
+                                        <FiEdit />
+                                    </button>
+                                )}
+                            </div>
+                            {isEditing ? (
+                                <textarea
+                                    value={content[lang]?.content || ''}
+                                    onChange={handleContentChange}
+                                    className="form-control"
+                                    rows="5"
+                                    placeholder={`Enter your Markdown for ${lang.toUpperCase()} here...`}
+                                />
                             ) : (
                                 <ReactMarkdown
                                     components={MarkdownComponents}
@@ -225,6 +206,21 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             )}
                         </div>
                     ))}
+                    {activeTab === 'add' && (
+                        <div className="tab-pane fade show active">
+                            <div className="mt-3">
+                                <h6 className="text-primary mb-3">Select a Language</h6>
+                                <Select
+                                    ref={dropdownRef} // Attach ref to the dropdown
+                                    options={dropdownOptions}
+                                    onChange={handleAddLanguage}
+                                    placeholder="Select Language"
+                                    isSearchable
+                                    menuPlacement="auto"
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
                 {isEditing && (
                     <div className="d-flex justify-content-start align-items-center gap-2 mt-3">
