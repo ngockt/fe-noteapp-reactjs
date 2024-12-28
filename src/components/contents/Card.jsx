@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import Select from 'react-select'; // For searchable dropdown
+import Select from 'react-select';
 import 'katex/dist/katex.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -10,23 +10,19 @@ import { FiEdit, FiSave, FiArrowLeft, FiMaximize, FiMinimize } from 'react-icons
 import './Card.css';
 import Mermaid from './rendering/Mermaid';
 import PlantUML from './rendering/PlantUML';
-import languages from './languages.json'; // Import JSON file containing all languages
+import languages from './languages.json';
 
 const Card = ({ note, onSave, isNew, onCloseEditor }) => {
-    const [isEditing, setIsEditing] = useState(isNew || false);
-    const [content, setContent] = useState({
-        en: note.content,
-        cn: '',
-        jp: '',
-        kr: '',
-        vi: '',
-    });
+    const initialContents = note.contents.reduce((acc, curr) => {
+        acc[curr.language_code] = { title: curr.title, content: curr.content };
+        return acc;
+    }, {});
 
-    const [title, setTitle] = useState(note.title || 'Untitled');
-    const [isEditingTitle, setIsEditingTitle] = useState(false); // Track title edit mode
+    const [isEditing, setIsEditing] = useState(isNew || false);
+    const [content, setContent] = useState(initialContents);
     const [isFullScreen, setIsFullScreen] = useState(false);
-    const [activeTab, setActiveTab] = useState('en');
-    const [tabOrder, setTabOrder] = useState(['en']);
+    const [activeTab, setActiveTab] = useState(Object.keys(initialContents)[0] || 'en');
+    const [tabOrder, setTabOrder] = useState(Object.keys(initialContents));
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [dropdownOptions, setDropdownOptions] = useState([]);
 
@@ -40,20 +36,22 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
         setDropdownOptions(options);
     }, [tabOrder]);
 
-    useEffect(() => {
-        if (isNew) setIsEditing(true);
-    }, [isNew]);
-
     const handleEdit = () => setIsEditing(true);
+
     const handleSave = () => {
         setIsEditing(false);
-        onSave(note.id, content);
+        const updatedContents = Object.entries(content).map(([code, { title, content }]) => ({
+            language_code: code,
+            title,
+            content,
+        }));
+        onSave(note.id, updatedContents);
         if (onCloseEditor) onCloseEditor();
     };
 
     const handleCancel = () => {
         setIsEditing(false);
-        setContent((prev) => ({ ...prev, en: note.content }));
+        setContent(initialContents);
         if (onCloseEditor) onCloseEditor();
     };
 
@@ -61,6 +59,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
 
     const preprocessContent = (text) =>
         text.replace(/\\\(/g, '$').replace(/\\\)/g, '$').replace(/\\\[/g, '$$').replace(/\\\]/g, '$$');
+
     const MarkdownComponents = {
         code({ node, inline, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
@@ -85,6 +84,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
             );
         },
     };
+
     const handleTabChange = (tab) => {
         setDropdownVisible(false);
         setActiveTab(tab);
@@ -93,44 +93,45 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const handleAddLanguage = (selectedOption) => {
         const langCode = selectedOption.value;
         if (!tabOrder.includes(langCode)) {
-            setTabOrder([...tabOrder, langCode]);
-            setContent((prev) => ({ ...prev, [langCode]: '' }));
+            setTabOrder((prev) => [...prev, langCode]);
+            setContent((prev) => ({
+                ...prev,
+                [langCode]: { title: '', content: '' },
+            }));
+            setActiveTab(langCode); // Set the new language tab as active
+            setIsEditing(true); // Enable editing mode
         }
         setDropdownVisible(false);
     };
 
-    const handleTitleClick = () => setIsEditingTitle(true);
 
-    const handleTitleChange = (e) => setTitle(e.target.value);
+    const handleTitleChange = (e) => {
+        setContent((prev) => ({
+            ...prev,
+            [activeTab]: { ...prev[activeTab], title: e.target.value },
+        }));
+    };
 
-    const handleTitleBlur = () => setIsEditingTitle(false); // Save and exit edit mode
-
-    const handleTitleKeyDown = (e) => {
-        if (e.key === 'Enter') setIsEditingTitle(false); // Save on Enter
+    const handleContentChange = (e) => {
+        setContent((prev) => ({
+            ...prev,
+            [activeTab]: { ...prev[activeTab], content: e.target.value },
+        }));
     };
 
     return (
         <div className={`card border-primary my-0 shadow ${isFullScreen ? 'fullscreen-card' : ''}`}>
             <div className="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
-                {/* Inline Editable Title */}
-                {isEditingTitle ? (
+                {isEditing ? (
                     <input
                         type="text"
-                        value={title}
+                        value={content[activeTab]?.title || ''}
                         onChange={handleTitleChange}
-                        onBlur={handleTitleBlur}
-                        onKeyDown={handleTitleKeyDown}
                         className="form-control form-control-sm"
-                        autoFocus
+                        placeholder="Enter title"
                     />
                 ) : (
-                    <h5
-                        className="mb-0 text-primary"
-                        onClick={handleTitleClick}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        {title}
-                    </h5>
+                    <h5 className="mb-0 text-primary">{content[activeTab]?.title || 'Untitled'}</h5>
                 )}
                 <button
                     onClick={handleFullScreenToggle}
@@ -160,8 +161,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             +
                         </button>
                     </li>
-
-                    {/* Edit Button in Same Row */}
                     {!isEditing && (
                         <li className="ms-auto nav-item">
                             <button
@@ -193,41 +192,52 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                         >
                             {isEditing ? (
                                 <>
-                                    <h5 className="card-title mt-4">Edit Note ({lang.toUpperCase()})</h5>
+                                    {content[lang]?.content?.trim() ? (
+                                        <>
+                                            <h6 className="mt-3">Live Preview:</h6>
+                                            <div className="border p-2 mb-3">
+                                                <ReactMarkdown
+                                                    components={MarkdownComponents}
+                                                    remarkPlugins={[remarkMath]}
+                                                    rehypePlugins={[rehypeKatex]}
+                                                >
+                                                    {preprocessContent(content[lang]?.content || '')}
+                                                </ReactMarkdown>
+                                            </div>
+                                        </>
+                                    ) : null}
                                     <textarea
-                                        value={content[lang] || ''}
-                                        onChange={(e) =>
-                                            setContent((prev) => ({ ...prev, [lang]: e.target.value }))
-                                        }
+                                        value={content[lang]?.content || ''}
+                                        onChange={handleContentChange}
                                         className="form-control mb-3"
                                         rows="3"
                                         placeholder={`Enter your Markdown for ${lang.toUpperCase()} here...`}
                                     />
-                                    <div className="d-flex justify-content-start align-items-center gap-2">
-                                        <button onClick={handleSave} className="btn btn-success btn-sm">
-                                            <FiSave className="me-1" />
-                                            Save
-                                        </button>
-                                        <button onClick={handleCancel} className="btn btn-secondary btn-sm">
-                                            <FiArrowLeft className="me-1" />
-                                            Cancel
-                                        </button>
-                                    </div>
                                 </>
                             ) : (
-                                <>
-                                    <ReactMarkdown
-                                        components={MarkdownComponents}
-                                        remarkPlugins={[remarkMath]}
-                                        rehypePlugins={[rehypeKatex]}
-                                    >
-                                        {preprocessContent(content[lang] || '')}
-                                    </ReactMarkdown>
-                                </>
+                                <ReactMarkdown
+                                    components={MarkdownComponents}
+                                    remarkPlugins={[remarkMath]}
+                                    rehypePlugins={[rehypeKatex]}
+                                >
+                                    {preprocessContent(content[lang]?.content || '')}
+                                </ReactMarkdown>
                             )}
                         </div>
                     ))}
                 </div>
+                {isEditing && (
+                    <div className="d-flex justify-content-start align-items-center gap-2 mt-3">
+                        <button onClick={handleSave} className="btn btn-success btn-sm">
+                            <FiSave className="me-1" />
+                            Save
+                        </button>
+                        <button onClick={handleCancel} className="btn btn-secondary btn-sm">
+                            <FiArrowLeft className="me-1" />
+                            Cancel
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -24,6 +24,7 @@ const DashBoardPage = () => {
                     endpoint = '/content/me';
             }
             const data = await FetchData(endpoint);
+            console.log(endpoint, data);
             setNotes(data);
         };
         setData();

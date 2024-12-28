@@ -6,24 +6,35 @@ import { FiEdit } from 'react-icons/fi';
 
 const CardList = ({ notes }) => {
     const [currentNotes, setCurrentNotes] = useState(notes);
-    const [newCardId, setNewCardId] = useState(null); // Track the newly created card ID
+    const [newCardId, setNewCardId] = useState(null);
+
     useEffect(() => {
         if (notes) {
             setCurrentNotes(notes || []);
         }
     }, [notes]);
 
-    const handleSave = (id, updatedContent) => {
-        setCurrentNotes(
-            currentNotes.map((note) =>
-                note.id === id ? { ...note, content: updatedContent } : note
+    const handleSave = (id, updatedContents) => {
+        setCurrentNotes((prevNotes) =>
+            prevNotes.map((note) =>
+                note.id === id ? { ...note, contents: updatedContents } : note
             )
         );
     };
 
     const handleAddCard = () => {
         const newId = Date.now(); // Unique ID for the new card
-        const newCard = { id: newId, content: '' }; // Default new card content
+        const newCard = {
+            id: newId,
+            contents: [
+                {
+                    id: `${newId}-en`,
+                    language_code: 'en',
+                    title: 'Untitled',
+                    content: '',
+                },
+            ],
+        }; // Default new card content in English
         setCurrentNotes([newCard, ...currentNotes]); // Add the new card to the top of the list
         setNewCardId(newId); // Track the ID of the new card to open its editor
     };
