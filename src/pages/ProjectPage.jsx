@@ -1,22 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FetchData from 'apis/FetchData';
 import ProjectOverview from 'components/project/ProjectOverview';
 import NewProject from 'components/project/ProjectNew';
+import { getRequest } from 'apis/apiService';
+import ENDPOINTS from 'apis/endpoints';
 
 const ProjectPage = () => {
     const [projects, setProjects] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('me'); // State for active tab
 
-    const fetchStudySets = async () => {
-        const data = await FetchData('/projects');
-        setProjects(data);
+    const fetchProjects = async () => {
+        let endpoint;
+
+        // Determine the endpoint based on the activeTab
+        switch (activeTab) {
+            case 'me':
+                endpoint = ENDPOINTS.PROJECTS.ME;
+                break;
+            case 'group':
+                endpoint = ENDPOINTS.PROJECTS.GROUP;
+                break;
+            case 'community':
+                endpoint = ENDPOINTS.PROJECTS.COMMUNITY;
+                break;
+            default:
+                endpoint = ENDPOINTS.PROJECTS.ME;
+        }
+
+        // Fetch projects from the determined endpoint
+        try {
+            const data = await getRequest(endpoint);
+            setProjects(data);
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
     };
 
     useEffect(() => {
-        fetchStudySets();
-    }, []);
+        fetchProjects();
+    }, [activeTab]); // Re-fetch projects whenever the activeTab changes
 
     const handleAddProject = () => {
         setIsModalOpen(true);
@@ -27,11 +50,7 @@ const ProjectPage = () => {
     };
 
     const handleRefreshData = async () => {
-        await fetchStudySets(); // Refresh data after adding a new study set
-    };
-
-    const renderProjectsByTab = () => {
-        return projects;
+        await fetchProjects(); // Refresh data after adding a new study set
     };
 
     return (
@@ -74,12 +93,27 @@ const ProjectPage = () => {
 
             {/* Projects Grid */}
             <div className="row">
-                {renderProjectsByTab().map((s) => (
-                    <div className="col-lg-3 col-md-3 col-sm-3 mb-2" key={s.id}>
-                        <ProjectOverview id={s.id} title={s.title} category={s.category} tag={s.tag} />
+                {projects.length > 0 ? (
+                    projects.map((project) => (
+                        <div
+                            className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch"
+                            key={project.id}
+                        >
+                            <ProjectOverview
+                                id={project.id}
+                                title={project.title}
+                                category={project.node_info.category}
+                                tag={project.node_info.tag}
+                            />
+                        </div>
+                    ))
+                ) : (
+                    <div className="col-12 text-center">
+                        <p>No projects available to display.</p>
                     </div>
-                ))}
+                )}
             </div>
+
 
             {/* Modal */}
             {isModalOpen && <NewProject onClose={closeModal} onRefreshData={handleRefreshData} />}

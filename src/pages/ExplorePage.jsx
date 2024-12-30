@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import VisNetworkGraph from 'components/explore/graph/VisNetworkGraph';
-import FetchData from 'apis/FetchData';
 import ClassicView from 'components/explore/classic/ClassicView';
 import SearchBar from 'components/search/ExploreSearchBar'; // Import the new SearchBar component
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getRequest } from 'apis/apiService';
+import ENDPOINTS from 'apis/endpoints';
 
 const Explore = () => {
     const location = useLocation();
@@ -16,7 +17,8 @@ const Explore = () => {
 
     useEffect(() => {
         const setData = async () => {
-            const data = await FetchData('/maps?depth=10');
+            const data = await getRequest(ENDPOINTS.GRAPH);
+            console.log(data);
             setMapData(data);
         };
         setData();
