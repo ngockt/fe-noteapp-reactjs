@@ -4,7 +4,7 @@ import AxiosInstance from 'apis/AxiosInstance'; // Import AxiosInstance
 import { getRequest } from 'apis/apiService';
 import ENDPOINTS from 'apis/endpoints';
 
-const NewProject = ({ onClose, onRefreshData }) => {
+const ProjectNew = ({ onClose, onRefreshData }) => {
     const [nodes, setNodes] = useState([]);
     const [title, setTitle] = useState('');
     const [selectedNode, setSelectedNode] = useState('');
@@ -84,4 +84,4 @@ const NewProject = ({ onClose, onRefreshData }) => {
     );
 };
 
-export default NewProject;
+export default ProjectNew;

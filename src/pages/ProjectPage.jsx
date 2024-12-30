@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProjectOverview from 'components/project/ProjectOverview';
-import NewProject from 'components/project/ProjectNew';
+import ProjectNew from 'components/project/ProjectNew';
 import { getRequest } from 'apis/apiService';
 import ENDPOINTS from 'apis/endpoints';
 
@@ -113,7 +113,7 @@ const ProjectPage = () => {
             </div>
 
             {/* Modal */}
-            {isModalOpen && <NewProject onClose={closeModal} onRefreshData={handleRefreshData} />}
+            {isModalOpen && <ProjectNew onClose={closeModal} onRefreshData={handleRefreshData} />}
         </div>
     );
 };
