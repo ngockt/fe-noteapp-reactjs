@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignUpPage.css";
-import AxiosInstance from "apis/AxiosInstance";
+import ENDPOINTS from "apis/endpoints";
+import { postRequest } from "apis/apiService";
 
 const SignUpPage = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ email: "", password: "", name: "" });
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+        name: "",
+        nickname: "", // Added nickname field
+    });
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
@@ -19,17 +25,17 @@ const SignUpPage = () => {
         setErrorMessage("");
         setSuccessMessage("");
 
-        if (!formData.email || !formData.password || !formData.name) {
+        if (!formData.email || !formData.password || !formData.name || !formData.nickname) {
             setErrorMessage("All fields are required.");
             return;
         }
 
         try {
-            const res = await AxiosInstance.post("/auth/signup", formData);
+            const response = await postRequest(ENDPOINTS.AUTH.SIGNUP, formData);
 
-            if (res.status === 201) {
+            if (response.status === 201) {
                 setSuccessMessage("Account created successfully. Redirecting to login...");
-                console.log(res.data);
+                console.log(response.data);
                 setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
             }
         } catch (error) {
@@ -51,6 +57,18 @@ const SignUpPage = () => {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Enter your name"
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="nickname">Nickname</label>
+                    <input
+                        type="text"
+                        id="nickname"
+                        name="nickname"
+                        value={formData.nickname}
+                        onChange={handleChange}
+                        placeholder="Enter your nickname"
                         required
                     />
                 </div>

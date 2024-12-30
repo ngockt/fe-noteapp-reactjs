@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // You can retrieve the access token from localStorage or sessionStorage, for example.
-const accessToken = localStorage.getItem('access_token') || ''; // Replace with actual logic
+const accessToken = localStorage.getItem('accessToken') || ''; // Replace with actual logic
 
 // Set default authorization header for all axios requests
 if (accessToken) {
@@ -43,7 +43,7 @@ export const postRequest = async (url, data, headers = {}) => {
         const response = await axios.post(url, data, {
             headers,
         });
-        return response.data;
+        return response;
     } catch (error) {
         console.error('POST request failed:', error.response || error.message);
         throw error;

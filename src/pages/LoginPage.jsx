@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
-import AxiosInstance from "apis/AxiosInstance";
+import { postRequest } from "apis/apiService";
+import ENDPOINTS from "apis/endpoints";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -33,12 +34,13 @@ const LoginPage = () => {
     }
 
     try {
-      const res = await AxiosInstance.post("/auth/login", {
+      const response = await postRequest(ENDPOINTS.AUTH.LOGIN, {
         email,
         password,
       });
+      console.log(response.data)
 
-      const { access_token, name, picture } = res.data;
+      const { access_token, name, picture } = response.data;
 
       // If 'picture' is missing, use a default "like" icon.
       const defaultPicture = picture || "https://img.icons8.com/?size=100&id=60655&format=png&color=000000";
@@ -63,11 +65,8 @@ const LoginPage = () => {
     try {
       const token = credentialResponse.credential;
 
-      const res = await AxiosInstance.post("/auth/google", {
-        token,
-      });
-
-      const { access_token, email, name, picture } = res.data;
+      const response = await postRequest(ENDPOINTS.AUTH.GOOGLE, { token });
+      const { access_token, email, name, picture } = response.data;
 
       localStorage.setItem("user", JSON.stringify({ email, name, picture }));
       localStorage.setItem("accessToken", access_token);

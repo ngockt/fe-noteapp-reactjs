@@ -9,7 +9,7 @@ const ENDPOINTS = {
   AUTH: {
     GOOGLE: `${BASE_URL}/auth/google`,
     LOGIN: `${BASE_URL}/auth/login`,
-    REGISTER: `${BASE_URL}/auth/signup`,
+    SIGNUP: `${BASE_URL}/auth/signup`,
   },
   NODES: `${BASE_URL}/nodes`,
   GRAPH: `${BASE_URL}/graph`,
