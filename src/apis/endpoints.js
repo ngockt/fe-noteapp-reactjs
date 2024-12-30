@@ -28,8 +28,8 @@ const ENDPOINTS = {
     COMMUNITY: `${BASE_URL}/cards/community`,
   },
   CARD_CONTENTS: {
-    NONE: `${BASE_URL}/content`,
-    WITH_ID: (id) => `${BASE_URL}/content/${id}`,
+    NONE: `${BASE_URL}/contents`,
+    WITH_ID: (id) => `${BASE_URL}/contents/${id}`,
   },
   USERS: {
     GET_USER: (id) => `${BASE_URL}/users/${id}`,
