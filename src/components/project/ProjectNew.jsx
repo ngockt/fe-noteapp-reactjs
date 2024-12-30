@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AxiosInstance from 'apis/AxiosInstance'; // Import AxiosInstance
-import { getRequest } from 'apis/apiService';
+import { getRequest, postRequest } from 'apis/apiService';
 import ENDPOINTS from 'apis/endpoints';
 
 const ProjectNew = ({ onClose, onRefreshData }) => {
     const [nodes, setNodes] = useState([]);
     const [title, setTitle] = useState('');
     const [selectedNode, setSelectedNode] = useState('');
+    const [visibility, setVisibility] = useState('private'); // Default to 'private'
 
     useEffect(() => {
         const fetchNodes = async () => {
@@ -18,16 +18,16 @@ const ProjectNew = ({ onClose, onRefreshData }) => {
     }, []);
 
     const handleSave = async () => {
-        if (title && selectedNode) {
-            const newStudySet = { title, node_id: selectedNode };
+        if (title && selectedNode && visibility) {
+            const newProject = { title, node_id: selectedNode, visibility };
             try {
-                console.log('Saving new study set:', newStudySet);
-                await AxiosInstance.post('/projects', newStudySet);
+                console.log('Saving new project:', newProject);
+                await postRequest(ENDPOINTS.PROJECTS.NONE, newProject);
                 await onRefreshData(); // Refresh data after saving
                 onClose(); // Close the modal after successful save
             } catch (error) {
-                console.error('Error saving study set:', error);
-                alert('Failed to save the study set. Please try again.');
+                console.error('Error saving project:', error);
+                alert('Failed to save the project. Please try again.');
             }
         } else {
             alert('Please fill in all fields');
@@ -67,6 +67,18 @@ const ProjectNew = ({ onClose, onRefreshData }) => {
                                         {node.name} - {node.category}
                                     </option>
                                 ))}
+                            </select>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="visibility" className="form-label">Visibility</label>
+                            <select
+                                className="form-select"
+                                id="visibility"
+                                value={visibility}
+                                onChange={(e) => setVisibility(e.target.value)}
+                            >
+                                <option value="private">Private</option>
+                                <option value="public">Public</option>
                             </select>
                         </div>
                     </div>
