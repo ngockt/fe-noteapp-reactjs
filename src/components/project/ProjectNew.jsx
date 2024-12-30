@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FetchData from 'apis/FetchData';
 import AxiosInstance from 'apis/AxiosInstance'; // Import AxiosInstance
+import { getRequest } from 'apis/apiService';
+import ENDPOINTS from 'apis/endpoints';
 
 const NewProject = ({ onClose, onRefreshData }) => {
     const [nodes, setNodes] = useState([]);
@@ -10,7 +11,7 @@ const NewProject = ({ onClose, onRefreshData }) => {
 
     useEffect(() => {
         const fetchNodes = async () => {
-            const data = await FetchData('/maps/list');
+            const data = await getRequest(ENDPOINTS.NODES);
             setNodes(data);
         };
         fetchNodes();
