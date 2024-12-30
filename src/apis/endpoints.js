@@ -3,6 +3,7 @@
 // Base API URL
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000"; // Use environment variables for flexibility
 
+console.log(BASE_URL);
 // API Endpoints
 const ENDPOINTS = {
   AUTH: {

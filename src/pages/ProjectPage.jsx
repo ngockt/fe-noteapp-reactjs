@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProjectOverview from 'components/project/ProjectOverview';
 import NewProject from 'components/project/ProjectNew';
@@ -8,12 +8,11 @@ import ENDPOINTS from 'apis/endpoints';
 const ProjectPage = () => {
     const [projects, setProjects] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState('me'); // State for active tab
+    const [activeTab, setActiveTab] = useState('me');
 
-    const fetchProjects = async () => {
+    const fetchProjects = useCallback(async () => {
         let endpoint;
 
-        // Determine the endpoint based on the activeTab
         switch (activeTab) {
             case 'me':
                 endpoint = ENDPOINTS.PROJECTS.ME;
@@ -28,18 +27,17 @@ const ProjectPage = () => {
                 endpoint = ENDPOINTS.PROJECTS.ME;
         }
 
-        // Fetch projects from the determined endpoint
         try {
             const data = await getRequest(endpoint);
             setProjects(data);
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
-    };
+    }, [activeTab]);
 
     useEffect(() => {
         fetchProjects();
-    }, [activeTab]); // Re-fetch projects whenever the activeTab changes
+    }, [fetchProjects]);
 
     const handleAddProject = () => {
         setIsModalOpen(true);
@@ -50,7 +48,7 @@ const ProjectPage = () => {
     };
 
     const handleRefreshData = async () => {
-        await fetchProjects(); // Refresh data after adding a new study set
+        await fetchProjects();
     };
 
     return (
@@ -113,7 +111,6 @@ const ProjectPage = () => {
                     </div>
                 )}
             </div>
-
 
             {/* Modal */}
             {isModalOpen && <NewProject onClose={closeModal} onRefreshData={handleRefreshData} />}
