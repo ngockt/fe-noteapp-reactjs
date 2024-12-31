@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getRequest, postRequest } from 'apis/services';
+import { postRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
+import { useGraphData } from 'context_data/GraphDataContext';
 
 const ProjectNew = ({ onClose, onRefreshData }) => {
-    const [nodes, setNodes] = useState([]);
+    const graphData = useGraphData(); // Fetch graph data using the context
+    const nodes = graphData?.nodes || []; // Extract nodes from graph data, default to empty array
+
     const [title, setTitle] = useState('');
     const [selectedNode, setSelectedNode] = useState('');
     const [visibility, setVisibility] = useState('private'); // Default to 'private'
-
-    useEffect(() => {
-        const fetchNodes = async () => {
-            const data = await getRequest(ENDPOINTS.NODES);
-            setNodes(data);
-        };
-        fetchNodes();
-    }, []);
 
     const handleSave = async () => {
         if (title && selectedNode && visibility) {
