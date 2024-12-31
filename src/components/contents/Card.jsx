@@ -10,7 +10,7 @@ import { FiEdit, FiSave, FiArrowLeft, FiMaximize, FiMinimize } from 'react-icons
 import './Card.css';
 import Mermaid from './rendering/Mermaid';
 import PlantUML from './rendering/PlantUML';
-import languages from './languages.json';
+import { useLanguagesData } from 'context_data/LanguageDataContext';
 
 const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const initialContents = note.contents.reduce((acc, curr) => {
@@ -23,19 +23,18 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [activeTab, setActiveTab] = useState(Object.keys(initialContents)[0] || 'en');
     const [tabOrder, setTabOrder] = useState(Object.keys(initialContents));
-    const [dropdownOptions, setDropdownOptions] = useState([]);
 
     const dropdownRef = useRef(null); // Ref for the dropdown
 
-    useEffect(() => {
-        const options = languages
-            .filter((lang) => !tabOrder.includes(lang.code))
-            .map((lang) => ({
-                value: lang.code,
-                label: `${lang.name} (${lang.code.toUpperCase()})`,
-            }));
-        setDropdownOptions(options);
-    }, [tabOrder]);
+    // Get languages data from the shared context
+    const languagesData = useLanguagesData();
+
+    const dropdownOptions = languagesData
+        .filter((lang) => !tabOrder.includes(lang.code))
+        .map((lang) => ({
+            value: lang.code,
+            label: `${lang.name} (${lang.code.toUpperCase()})`,
+        }));
 
     useEffect(() => {
         if (activeTab === 'add' && dropdownRef.current) {
@@ -93,7 +92,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     };
 
     const handleTabChange = (tab) => {
-        // setDropdownVisible(false);
         setActiveTab(tab);
     };
 
@@ -108,7 +106,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
             setActiveTab(langCode);
             setIsEditing(true);
         }
-        // setDropdownVisible(false);
     };
 
     const handleTitleChange = (e) => {
@@ -226,7 +223,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                                 className={`nav-link p-2 py-0 ${activeTab === lang ? 'active' : ''}`}
                                 onClick={() => handleTabChange(lang)}
                             >
-                                {languages.find((l) => l.code === lang)?.code.toLowerCase() || lang.toLowerCase()}
+                                {languagesData.find((l) => l.code === lang)?.code.toLowerCase() || lang.toLowerCase()}
                             </button>
                         </li>
                     ))}

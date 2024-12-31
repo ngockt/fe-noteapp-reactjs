@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getRequest } from 'apis/services';
+import ENDPOINTS from 'apis/endpoints';
 
 // Create a context
 const LanguageDataContext = createContext();
@@ -10,12 +11,13 @@ export const LanguageDataProvider = ({ children }) => {
 
     useEffect(() => {
         if (!languagesData) {
-            getRequest('/languages/graph')
+            getRequest(ENDPOINTS.LANGUAGES)
                 .then((data) => setLanguagesData(data))
                 .catch((error) => {
                     console.error('Error fetching languages data:', error);
                     setLanguagesData([]); // Gracefully handle errors by setting an empty default value
                 });
+            console.log("Get language data");
         }
     }, [languagesData]);
 
