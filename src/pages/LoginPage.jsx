@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
-import { postRequest } from "apis/apiService";
+import { postRequest } from "apis/services";
 import ENDPOINTS from "apis/endpoints";
 
 const LoginPage = () => {

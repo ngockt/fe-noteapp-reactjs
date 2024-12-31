@@ -4,7 +4,7 @@ import VisNetworkGraph from 'components/explore/graph/VisNetworkGraph';
 import ClassicView from 'components/explore/classic/ClassicView';
 import SearchBar from 'components/search/ExploreSearchBar'; // Import the new SearchBar component
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getRequest } from 'apis/apiService';
+import { getRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
 
 const Explore = () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import CardList from 'components/contents/CardList'; // Import the CardList component
-import { getRequest } from 'apis/apiService';
+import { getRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
 
 const ProjectDetail = () => {

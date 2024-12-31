@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getRequest, postRequest } from 'apis/apiService';
+import { getRequest, postRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
 
 const ProjectNew = ({ onClose, onRefreshData }) => {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignUpPage.css";
 import ENDPOINTS from "apis/endpoints";
-import { postRequest } from "apis/apiService";
+import { postRequest } from "apis/services";
 
 const SignUpPage = () => {
     const navigate = useNavigate();
