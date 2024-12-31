@@ -14,7 +14,7 @@ import { useLanguagesData } from 'context_data/LanguageDataContext';
 
 const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const initialContents = note.contents.reduce((acc, curr) => {
-        acc[curr.language_code] = { title: curr.title, content: curr.content };
+        acc[curr.language_id] = { title: curr.title, content: curr.content };
         return acc;
     }, {});
 
@@ -24,21 +24,20 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const [activeTab, setActiveTab] = useState(Object.keys(initialContents)[0] || 'en');
     const [tabOrder, setTabOrder] = useState(Object.keys(initialContents));
 
-    const dropdownRef = useRef(null); // Ref for the dropdown
+    const dropdownRef = useRef(null);
 
-    // Get languages data from the shared context
     const languagesData = useLanguagesData();
 
     const dropdownOptions = languagesData
-        .filter((lang) => !tabOrder.includes(lang.code))
+        .filter((lang) => !tabOrder.includes(lang.id))
         .map((lang) => ({
-            value: lang.code,
+            value: lang.id,
             label: `${lang.name} (${lang.code.toUpperCase()})`,
         }));
 
     useEffect(() => {
         if (activeTab === 'add' && dropdownRef.current) {
-            dropdownRef.current.focus(); // Focus on dropdown when the "+" tab is active
+            dropdownRef.current.focus();
         }
     }, [activeTab]);
 
@@ -46,8 +45,8 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
 
     const handleSave = () => {
         setIsEditing(false);
-        const updatedContents = Object.entries(content).map(([code, { title, content }]) => ({
-            language_code: code,
+        const updatedContents = Object.entries(content).map(([id, { title, content }]) => ({
+            language_id: id,
             title,
             content,
         }));
@@ -96,14 +95,14 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     };
 
     const handleAddLanguage = (selectedOption) => {
-        const langCode = selectedOption.value;
-        if (!tabOrder.includes(langCode)) {
-            setTabOrder((prev) => [...prev, langCode]);
+        const langId = selectedOption.value;
+        if (!tabOrder.includes(langId)) {
+            setTabOrder((prev) => [...prev, langId]);
             setContent((prev) => ({
                 ...prev,
-                [langCode]: { title: '', content: '' },
+                [langId]: { title: '', content: '' },
             }));
-            setActiveTab(langCode);
+            setActiveTab(langId);
             setIsEditing(true);
         }
     };
@@ -191,7 +190,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             <div className="mt-3">
                                 <h6 className="text-primary mb-3">Select a Language</h6>
                                 <Select
-                                    ref={dropdownRef} // Attach ref to the dropdown
+                                    ref={dropdownRef}
                                     options={dropdownOptions}
                                     onChange={handleAddLanguage}
                                     placeholder="Select Language"
@@ -223,7 +222,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                                 className={`nav-link p-2 py-0 ${activeTab === lang ? 'active' : ''}`}
                                 onClick={() => handleTabChange(lang)}
                             >
-                                {languagesData.find((l) => l.code === lang)?.code.toLowerCase() || lang.toLowerCase()}
+                                {languagesData.find((l) => l.id === lang)?.code.toLowerCase() || lang.toLowerCase()}
                             </button>
                         </li>
                     ))}

@@ -13,7 +13,6 @@ const ProjectDetail = () => {
         const fetchProjectContent = async () => {
             try {
                 const data = await getRequest(ENDPOINTS.PROJECTS.WITH_ID(id)); // Fetch data with project ID
-                console.log(data);
                 setProject(data); // Update state with the fetched project data
                 setProjectType(data.visibility.charAt(0).toUpperCase() + data.visibility.slice(1)); // Update project type based on visibility
             } catch (error) {
@@ -87,14 +86,7 @@ const ProjectDetail = () => {
                 <p><strong>Category:</strong> {node_info.category}</p>
             </div>
 
-            <CardList notes={cards.map(card => ({
-                id: card.id,
-                contents: card.contents.map(content => ({
-                    id: content.id,
-                    title: content.title,
-                    content: content.content
-                }))
-            }))} /> {/* Render CardList with the fetched cards */}
+            <CardList notes={cards} /> {/* Render CardList with the fetched cards */}
         </div>
     );
 };
