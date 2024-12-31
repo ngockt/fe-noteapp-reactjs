@@ -1,28 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
 import VisNetworkGraph from 'components/explore/graph/VisNetworkGraph';
 import ClassicView from 'components/explore/classic/ClassicView';
 import SearchBar from 'components/search/ExploreSearchBar'; // Import the new SearchBar component
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getRequest } from 'apis/services';
-import ENDPOINTS from 'apis/endpoints';
+import { useGraphData } from 'context_data/GraphDataContext';
 
 const Explore = () => {
-    const location = useLocation();
-    const url = location.pathname + location.search;
 
-    const [mapData, setMapData] = useState(null);
+    const mapData = useGraphData(); // Get data from the custom hook
     const [isPageView, setIsPageView] = useState(true); // State to toggle views
     const [selectedNode, setSelectedNode] = useState(null); // Selected node
-
-    useEffect(() => {
-        const setData = async () => {
-            const data = await getRequest(ENDPOINTS.GRAPH);
-            console.log(data);
-            setMapData(data);
-        };
-        setData();
-    }, [url]);
 
     const handleItemSelected = (nodeName) => {
         const node = mapData?.nodes.find((n) => n.name === nodeName);
@@ -32,6 +19,8 @@ const Explore = () => {
         }, 0); // Allow React to reset the state before setting it again
     };
 
+    if (!mapData) return <div>Loading...</div>; // Gracefully handle loading state
+
     return (
         <div className="container mt-2 mx-0" style={{ height: '100vh', display: 'flex', flexDirection: 'column', maxWidth: '100%', margin: '0 auto' }}>
             {/* Fixed Search Bar */}
@@ -39,7 +28,7 @@ const Explore = () => {
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h1 className="mb-0">Explore Community Contents</h1>
 
-                    <div  >
+                    <div>
                         <fieldset className="btn-group" aria-label="View Toggle">
                             <button
                                 type="button"

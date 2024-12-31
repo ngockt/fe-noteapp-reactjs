@@ -13,7 +13,9 @@ const Header = () => {
     useEffect(() => {
         // Load user info from localStorage when the component mounts
         const storedUser = localStorage.getItem("user");
-        if (storedUser) {
+        const accessToken = localStorage.getItem("accessToken");
+        console.log(storedUser, accessToken);
+        if (storedUser && accessToken) {
             setUser(JSON.parse(storedUser));
         }
     }, []);
@@ -94,7 +96,7 @@ const Header = () => {
                             as={Link}
                             to="/profile"
                             onClick={handleNavItemClick}
-                            // className="user-profile-link"
+                        // className="user-profile-link"
                         >
                             <img
                                 src={user.picture}

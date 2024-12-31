@@ -7,3 +7,4 @@
 - syntax suggestion for each type of Card (latex, plantuml, mermaid, markdown, ...)
 - setting up guest mode [text](.drafts/App.jsx)
 - check user exist if sign up, if so, redirect to login page
+- away to force logout if there is no access token

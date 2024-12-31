@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { LanguageDataProvider } from "context_data/LanguageDataContext";
+import { GraphDataProvider } from "context_data/GraphDataContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || ""; // Use environment variables for flexibility
@@ -10,8 +11,10 @@ const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || ""; // Use environmen
 
 root.render(
   <LanguageDataProvider>
-    <GoogleOAuthProvider clientId={clientId}>
-      <App />
-    </GoogleOAuthProvider>
+    <GraphDataProvider>
+      <GoogleOAuthProvider clientId={clientId}>
+        <App />
+      </GoogleOAuthProvider>
+    </GraphDataProvider>
   </LanguageDataProvider>
 );
