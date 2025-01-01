@@ -1,5 +1,5 @@
 // Card.js
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -8,7 +8,8 @@ import {
   FiSave,
   FiArrowLeft,
   FiMaximize,
-  FiMinimize
+  FiMinimize,
+  FiUpload
 } from 'react-icons/fi';
 
 import 'katex/dist/katex.min.css';
@@ -240,12 +241,15 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
   // 7.1) PASTE IMAGE HANDLER (store image in state as base64)
   // -------------------------------------------------------------------
   const [imageMap, setImageMap] = useState({});
+  const fileInputRef = useRef(null);
 
   const handlePaste = async (e) => {
     if (!isEditing) return; // Only handle if in edit mode
 
-    if (e.clipboardData && e.clipboardData.files.length > 0) {
-      const file = e.clipboardData.files[0];
+    const files = e.clipboardData?.files || (e.target?.files ? Array.from(e.target.files) : []);
+
+    if (files.length > 0) {
+      const file = files[0];
       if (file && file.type.startsWith('image/')) {
         e.preventDefault();
 
@@ -261,7 +265,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
           setImageMap(prev => ({...prev, [imageUUID]: dataURL}));
 
           // 2) Insert a Markdown reference using the custom `ls://<UUID>` syntax
-          const markdownRef = `![Image](${imageUUID})\n`;
+          const markdownRef = `![Pasted Image](${imageUUID})\n`;
 
           // 3) Update the editor content with the new Markdown reference
           setVersions((prevVersions) =>
@@ -283,6 +287,16 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
 
         reader.readAsDataURL(file);
       }
+    }
+    if (e.target?.files) {
+      // Clear the file input after processing
+      e.target.value = null;
+    }
+  };
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -430,13 +444,31 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
             )}
 
             {isEditing ? (
-              <textarea
-                value={content}
-                onChange={handleContentChange}
-                onPaste={handlePaste}
-                className="form-control editor-textarea"
-                rows="8"
-              />
+              <>
+                <textarea
+                  value={content}
+                  onChange={handleContentChange}
+                  onPaste={handlePaste}
+                  className="form-control editor-textarea"
+                  rows="8"
+                />
+                <div className="d-flex justify-content-end mt-1">
+                  <button
+                    onClick={handleUploadClick}
+                    className="btn btn-light btn-sm"
+                    aria-label="Upload Image"
+                  >
+                    <FiUpload />
+                  </button>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    ref={fileInputRef}
+                    onChange={handlePaste}
+                  />
+                </div>
+              </>
             ) : (
               <ReactMarkdown
                 components={MarkdownComponents}
