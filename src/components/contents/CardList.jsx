@@ -4,60 +4,224 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './CardList.css';
 import { FiEdit } from 'react-icons/fi';
 
+// We'll use our contexts to get the list of languages and nodes
+import { useLanguagesData } from 'context_data/LanguageDataContext';
+import { useGraphData } from 'context_data/GraphDataContext';
+
+// ----------------------------------------------------------------
+// Modal for creating a new card
+// ----------------------------------------------------------------
+const NewCardModal = ({ show, onClose, onCreate }) => {
+    const allLanguages = useLanguagesData();
+    const graphData = useGraphData();
+
+    // Safe checks (you can adapt these if your data structure differs)
+    const languages = allLanguages || [];
+    const nodes = graphData?.nodes || [];
+
+    // Local state for the user’s choices
+    const [selectedLang, setSelectedLang] = useState('');
+    const [selectedNode, setSelectedNode] = useState('');
+
+    // Called when user clicks "Create" in the modal
+    const handleCreate = () => {
+        // If either is not selected, you might want to show a warning or just prevent creation
+        if (!selectedLang || !selectedNode) {
+            // For example, do nothing or show an alert
+            return;
+        }
+
+        // Find the node object from the ID
+        const foundNode = nodes.find((n) => n.id === selectedNode);
+
+        // We pass the selected language + node up to the parent
+        onCreate(selectedLang, foundNode);
+    };
+
+    // If `show` is false, we don’t render anything
+    if (!show) return null;
+
+    return (
+        <div
+            className="modal show"
+            style={{ display: 'block', background: 'rgba(0,0,0,0.5)' }}
+            tabIndex="-1"
+        >
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    {/* HEADER */}
+                    <div className="modal-header">
+                        <h5 className="modal-title">Create New Card</h5>
+                        <button
+                            type="button"
+                            className="btn-close"
+                            aria-label="Close"
+                            onClick={onClose}
+                        />
+                    </div>
+
+                    {/* BODY */}
+                    <div className="modal-body">
+                        <div className="mb-3">
+                            <label htmlFor="languageSelect" className="form-label">
+                                Language
+                            </label>
+                            <select
+                                id="languageSelect"
+                                className="form-select"
+                                value={selectedLang}
+                                onChange={(e) => setSelectedLang(e.target.value)}
+                            >
+                                <option value="">-- Select a language --</option>
+                                {languages.map((lang) => (
+                                    <option key={lang.id} value={lang.id}>
+                                        {lang.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="nodeSelect" className="form-label">
+                                Node
+                            </label>
+                            <select
+                                id="nodeSelect"
+                                className="form-select"
+                                value={selectedNode}
+                                onChange={(e) => setSelectedNode(e.target.value)}
+                            >
+                                <option value="">-- Select a node --</option>
+                                {nodes.map((node) => (
+                                    <option key={node.id} value={node.id}>
+                                        {node.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* FOOTER */}
+                    <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleCreate}
+                        >
+                            Create
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const CardList = ({ notes }) => {
-    const [currentNotes, setCurrentNotes] = useState(notes);
+    const [currentNotes, setCurrentNotes] = useState(notes || []);
     const [newCardId, setNewCardId] = useState(null);
+
+    // State that determines whether the "New Card" modal is visible
+    const [showNewCardModal, setShowNewCardModal] = useState(false);
 
     useEffect(() => {
         if (notes) {
-            setCurrentNotes(notes || []);
+            setCurrentNotes(notes);
         }
     }, [notes]);
 
-    const handleSave = (id, updatedContents) => {
+    // Called when a card is saved inside <Card />
+    const handleSave = (updatedNote) => {
         setCurrentNotes((prevNotes) =>
             prevNotes.map((note) =>
-                note.id === id ? { ...note, contents: updatedContents } : note
+                note.id === updatedNote.id ? updatedNote : note
             )
         );
     };
 
-    const handleAddCard = () => {
-        const newId = Date.now(); // Unique ID for the new card
-        const newCard = {
-            id: newId,
-            contents: [
-                {
-                    id: `${newId}-en`,
-                    language_code: 'en',
-                    title: 'Untitled',
-                    content: '',
-                },
-            ],
-        }; // Default new card content in English
-        setCurrentNotes([newCard, ...currentNotes]); // Add the new card to the top of the list
-        setNewCardId(newId); // Track the ID of the new card to open its editor
+    // Show the "New Card" modal
+    const handleOpenNewCardModal = () => {
+        setShowNewCardModal(true);
     };
 
+    // Hide the "New Card" modal
+    const handleCloseNewCardModal = () => {
+        setShowNewCardModal(false);
+    };
+
+    // Actually create the new card
+    // Called once user selects language + node in the popup and clicks "Create"
+    const handleAddCard = (language_id, nodeInfo) => {
+        const newId = Date.now(); // Unique ID for the new card
+
+        // Example structure to match your Card.jsx usage:
+        const newCard = {
+            id: newId,
+            node_info: nodeInfo,
+            versions: [
+                {
+                    version: '1.0.0',
+                    contents: [
+                        {
+                            language_id: language_id,
+                            title: 'Untitled',
+                            content: '',
+                        },
+                    ],
+                },
+            ],
+        };
+
+        // Insert the new card at the top
+        setCurrentNotes((prev) => [newCard, ...prev]);
+
+        // We track the new card so that <Card /> automatically opens in Edit mode
+        setNewCardId(newId);
+    };
+
+    // Reset the "newCardId" after the card is saved or canceled
     const handleEditorClose = () => {
-        setNewCardId(null); // Reset the newCardId when the editor is closed
+        setNewCardId(null);
     };
 
     return (
         <div className="container mt-4">
+            {/* Our "Create New Card" modal */}
+            <NewCardModal
+                show={showNewCardModal}
+                onClose={handleCloseNewCardModal}
+                onCreate={(langId, nodeObj) => {
+                    // Create the card
+                    handleAddCard(langId, nodeObj);
+                    // Close modal
+                    handleCloseNewCardModal();
+                }}
+            />
+
             <div className="d-flex justify-content-end mb-3">
-                <button onClick={handleAddCard} className="btn btn-primary d-flex align-items-center">
+                <button
+                    onClick={handleOpenNewCardModal}
+                    className="btn btn-primary d-flex align-items-center"
+                >
                     <FiEdit className="me-2" />
                     New Card
                 </button>
             </div>
+
             <div className="row">
                 {currentNotes.map((note) => (
                     <div className="col-md-4 mb-3" key={note.id}>
                         <Card
                             note={note}
                             onSave={handleSave}
-                            isNew={newCardId === note.id} // Open editor if it's a new card
+                            isNew={newCardId === note.id}
                             onCloseEditor={handleEditorClose}
                         />
                     </div>
