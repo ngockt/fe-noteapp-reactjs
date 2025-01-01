@@ -321,6 +321,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                         ) : (
                             <h5 className="mb-2">{title || 'Untitled'}</h5>
                         )}
+                        <hr className="my-3" />
 
                         {/* If editing & content is non-empty => show live preview */}
                         {isEditing && content.trim() && (
@@ -374,18 +375,18 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                     {/* RIGHT COLUMN: Icon container */}
                     <div className="icon-container d-flex flex-column align-items-center p-2">
                         <button
-                            onClick={handleEdit}
-                            className="btn btn-light btn-sm my-1"
-                            aria-label="Edit Title"
-                        >
-                            <FiEdit />
-                        </button>
-                        <button
                             onClick={handleFullScreenToggle}
                             className="btn btn-light btn-sm my-1"
                             aria-label="Toggle Fullscreen"
                         >
                             {isFullScreen ? <FiMinimize /> : <FiMaximize />}
+                        </button>
+                        <button
+                            onClick={handleEdit}
+                            className="btn btn-light btn-sm my-1"
+                            aria-label="Edit Title"
+                        >
+                            <FiEdit />
                         </button>
                     </div>
                 </div>
@@ -394,7 +395,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                 <div className="card-footer d-flex justify-content-start align-items-center p-2 gap-4">
                     {/* VERSION */}
                     <div>
-                        <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>Version:</span>
                         <button
                             className="btn btn-sm btn-outline-primary"
                             onClick={() => setShowVersionModal(true)}
@@ -405,7 +405,6 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
 
                     {/* LANGUAGE */}
                     <div>
-                        <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>Language:</span>
                         <button
                             className="btn btn-sm btn-outline-primary"
                             onClick={() => setShowLanguageModal(true)}
@@ -413,21 +412,29 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                             {(() => {
                                 // Find the language object for activeLang among all languages
                                 const found = allLanguages.find((ld) => ld.id === activeLang);
-                                return found ? found.code.toUpperCase() : 'Select Language';
+                                return found ? found.name : 'Select Language';
                             })()}
                         </button>
                     </div>
 
                     {/* NODE */}
                     <div>
-                        <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>Node:</span>
                         <button
                             className="btn btn-sm btn-outline-primary"
                             onClick={() => setShowNodeModal(true)}
                         >
-                            {nodeInfo
-                                ? `[${nodeInfo.tag}] ${nodeInfo.name} - ${nodeInfo.category}`
-                                : 'Select Node'}
+                            {
+                                nodeInfo ? (
+                                    <>
+                                        {nodeInfo.name} 
+                                        <span className="badge  text-dark ms-1">
+                                            {nodeInfo.category}
+                                        </span>
+                                    </>
+                                ) : (
+                                    "Select Node"
+                                )
+                            }
                         </button>
                     </div>
                 </div>
