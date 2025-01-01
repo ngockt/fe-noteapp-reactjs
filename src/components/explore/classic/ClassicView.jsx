@@ -117,9 +117,14 @@ const ClassicView = ({ data, selectedNode }) => {
                             className="btn btn-link p-0 text-decoration-none text-dark"
                             style={{ cursor: 'pointer' }}
                         >
-                            {item.name}
+                            {item.name} 
                         </button>
-                        <span className="badge bg-light text-dark ms-1">{item.category}</span>
+                        <span className="badge bg-light text-dark ms-1">
+                            {item.category}
+                        </span>
+                        <span className="badge bg-light text-dark ms-1">
+                            ({item.children.length})
+                        </span>
                     </div>
 
                     {expandedNodes.has(item.id) && (
