@@ -392,7 +392,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
                 </div>
 
                 {/* FOOTER: version, language & node selection via popups */}
-                <div className="card-footer d-flex justify-content-start align-items-center p-2 gap-4">
+                <div className="card-footer d-flex flex-wrap align-items-center gap-2 p-2">
                     {/* VERSION */}
                     <div>
                         <button
