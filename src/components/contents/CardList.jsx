@@ -124,24 +124,24 @@ const NewCardModal = ({ show, onClose, onCreate }) => {
     );
 };
 
-const CardList = ({ notes }) => {
-    const [currentNotes, setCurrentNotes] = useState(notes || []);
+const CardList = ({ cards }) => {
+    const [currentCards, setCurrentCards] = useState(cards || []);
     const [newCardId, setNewCardId] = useState(null);
 
     // State that determines whether the "New Card" modal is visible
     const [showNewCardModal, setShowNewCardModal] = useState(false);
 
     useEffect(() => {
-        if (notes) {
-            setCurrentNotes(notes);
+        if (cards) {
+            setCurrentCards(cards);
         }
-    }, [notes]);
+    }, [cards]);
 
     // Called when a card is saved inside <Card />
-    const handleSave = (updatedNote) => {
-        setCurrentNotes((prevNotes) =>
-            prevNotes.map((note) =>
-                note.id === updatedNote.id ? updatedNote : note
+    const handleSave = (updatedCard) => {
+        setCurrentCards((prevCards) =>
+            prevCards.map((card) =>
+                card.id === updatedCard.id ? updatedCard : card
             )
         );
     };
@@ -180,7 +180,7 @@ const CardList = ({ notes }) => {
         };
 
         // Insert the new card at the top
-        setCurrentNotes((prev) => [newCard, ...prev]);
+        setCurrentCards((prev) => [newCard, ...prev]);
 
         // We track the new card so that <Card /> automatically opens in Edit mode
         setNewCardId(newId);
@@ -216,12 +216,12 @@ const CardList = ({ notes }) => {
             </div>
 
             <div className="row">
-                {currentNotes.map((note) => (
-                    <div className="col-md-4 mb-3" key={note.id}>
+                {currentCards.map((card) => (
+                    <div className="col-md-4 mb-3" key={card.id}>
                         <Card
-                            note={note}
+                            card={card}
                             onSave={handleSave}
-                            isNew={newCardId === note.id}
+                            isNew={newCardId === card.id}
                             onCloseEditor={handleEditorClose}
                         />
                     </div>

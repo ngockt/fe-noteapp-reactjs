@@ -19,11 +19,11 @@ import NodeModal from './NodeModal';
 import { useLanguagesData } from 'context_data/LanguageDataContext';
 import { useGraphData } from 'context_data/GraphDataContext';
 
-const Card = ({ note, onSave, isNew, onCloseEditor }) => {
+const Card = ({ card, onSave, isNew, onCloseEditor }) => {
     // -------------------------------------------------------------------
     // 1) Versions: State & initialization
     // -------------------------------------------------------------------
-    const [versions, setVersions] = useState(() => note.versions || []);
+    const [versions, setVersions] = useState(() => card.versions || []);
 
     useEffect(() => {
         // If no versions exist, initialize with a default 1.0.0
@@ -179,7 +179,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
     const mapData = useGraphData();
     const nodeList = mapData?.nodes || [];
 
-    const [nodeInfo, setNodeInfo] = useState(note.node_info || null);
+    const [nodeInfo, setNodeInfo] = useState(card.node_info || null);
 
     const handleSelectNode = (node) => {
         setNodeInfo({
@@ -272,7 +272,7 @@ const Card = ({ note, onSave, isNew, onCloseEditor }) => {
         setIsEditing(false);
         onSave(
             {
-                ...note,
+                ...card,
                 versions,
                 node_info: nodeInfo,
             },

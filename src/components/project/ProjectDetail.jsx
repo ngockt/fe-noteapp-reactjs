@@ -86,7 +86,7 @@ const ProjectDetail = () => {
                 <p><strong>Category:</strong> {node_info.category}</p>
             </div>
 
-            <CardList notes={cards} /> {/* Render CardList with the fetched cards */}
+            <CardList cards={cards} /> {/* Render CardList with the fetched cards */}
         </div>
     );
 };

@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import ENDPOINTS from 'apis/endpoints';
 import { getRequest } from 'apis/services';
 const DashBoardPage = () => {
-    const [notes, setNotes] = useState([]);
+    const [cards, setCards] = useState([]);
     const [activeTab, setActiveTab] = useState('Me'); // State to manage active tab
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const DashBoardPage = () => {
             }
             const data = await getRequest(endpoint)
             console.log(endpoint, data);
-            setNotes(data);
+            setCards(data);
         };
         setData();
     }, [activeTab]); // Refetch data when activeTab changes
@@ -62,7 +62,7 @@ const DashBoardPage = () => {
 
             {/* Content */}
             <div className="mt-3">
-                <CardList notes={notes} />
+                <CardList cards={cards} />
             </div>
         </div>
     );
