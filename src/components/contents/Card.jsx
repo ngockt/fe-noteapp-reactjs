@@ -304,104 +304,95 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
     const contentContainerClass =
         isFullScreen && isEditing ? 'fullscreen-edit-mode' : '';
 
-    // -------------------------------------------------------------------
-    // Render
-    // -------------------------------------------------------------------
     return (
         <>
             <div className={`card border-primary shadow ${isFullScreen ? 'fullscreen-card' : ''}`}>
-                <div className="card-body d-flex p-0">
-                    {/* LEFT COLUMN: Title + content */}
-                    <div className="card-content p-3 flex-grow-1">
-
-                        {/* -- Title Container -- */}
-                        <div className="card-title-container">
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    value={title}
-                                    onChange={handleTitleChange}
-                                    className="form-control form-control-sm mb-2"
-                                    placeholder="Enter title"
-                                />
-                            ) : (
-                                <h5 className="mb-2">{title || 'Untitled'}</h5>
-                            )}
-                            <hr className="my-3" />
-                        </div>
-
-                        {/* -- Main Content Container -- */}
-                        <div className={`card-content-container ${contentContainerClass}`}>
-                            {/* If editing & content is non-empty => show live preview */}
-                            {isEditing && content.trim() && (
-                                <>
-                                    <h6 className="mt-2">Live Preview:</h6>
-                                    <div className="live-preview">
-                                        <ReactMarkdown
-                                            components={MarkdownComponents}
-                                            remarkPlugins={[remarkMath]}
-                                            rehypePlugins={[rehypeKatex]}
-                                        >
-                                            {preprocessContent(content)}
-                                        </ReactMarkdown>
-                                    </div>
-                                </>
-                            )}
-
-                            {/* Editing => textarea, otherwise => rendered Markdown */}
-                            {isEditing ? (
-                                <textarea
-                                    value={content}
-                                    onChange={handleContentChange}
-                                    className="form-control editor-textarea"
-                                    rows="8"
-                                />
-                            ) : (
-                                <ReactMarkdown
-                                    components={MarkdownComponents}
-                                    remarkPlugins={[remarkMath]}
-                                    rehypePlugins={[rehypeKatex]}
-                                >
-                                    {preprocessContent(content)}
-                                </ReactMarkdown>
-                            )}
-                        </div>
-
-                        {/* Save & Cancel Buttons (when editing) */}
-                        {isEditing && (
-                            <div className="d-flex gap-2 mt-3">
-                                <button onClick={handleSave} className="btn btn-success btn-sm">
-                                    <FiSave className="me-1" />
-                                    Save
-                                </button>
-                                <button onClick={handleCancel} className="btn btn-secondary btn-sm">
-                                    <FiArrowLeft className="me-1" />
-                                    Cancel
-                                </button>
-                            </div>
+                {/* --- CARD HEADER (title on the left, icons on the right) --- */}
+                <div className="card-header d-flex align-items-center justify-content-between">
+                    <div className="card-title-container">
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={handleTitleChange}
+                                className="form-control form-control-sm"
+                                placeholder="Enter title"
+                            />
+                        ) : (
+                            <h5 className="mb-0">{title || 'Untitled'}</h5>
                         )}
                     </div>
-
-                    {/* RIGHT COLUMN: Icon container */}
-                    <div className="icon-container d-flex flex-column align-items-center p-2">
-                        <button
-                            onClick={handleFullScreenToggle}
-                            className="btn btn-light btn-sm my-1"
-                            aria-label="Toggle Fullscreen"
-                        >
-                            {isFullScreen ? <FiMinimize /> : <FiMaximize />}
-                        </button>
+                    
+                    <div className="icon-container d-flex align-items-center">
                         <button
                             onClick={handleEdit}
-                            className="btn btn-light btn-sm my-1"
+                            className="btn btn-light btn-sm"
                             aria-label="Edit Title"
                         >
                             <FiEdit />
                         </button>
+                        <button
+                            onClick={handleFullScreenToggle}
+                            className="btn btn-light btn-sm me-2"
+                            aria-label="Toggle Fullscreen"
+                        >
+                            {isFullScreen ? <FiMinimize /> : <FiMaximize />}
+                        </button>
                     </div>
                 </div>
 
-                {/* FOOTER: version, language & node selection via popups */}
+                {/* --- CARD BODY (main content) --- */}
+                <div className="card-body">
+                    <div className={`card-content-container ${contentContainerClass}`}>
+                        {isEditing && content.trim() && (
+                            <>
+                                <h6 className="mt-2">Live Preview:</h6>
+                                <div className="live-preview">
+                                    <ReactMarkdown
+                                        components={MarkdownComponents}
+                                        remarkPlugins={[remarkMath]}
+                                        rehypePlugins={[rehypeKatex]}
+                                    >
+                                        {preprocessContent(content)}
+                                    </ReactMarkdown>
+                                </div>
+                            </>
+                        )}
+
+                        {isEditing ? (
+                            <textarea
+                                value={content}
+                                onChange={handleContentChange}
+                                className="form-control editor-textarea"
+                                rows="8"
+                            />
+                        ) : (
+                            <ReactMarkdown
+                                components={MarkdownComponents}
+                                remarkPlugins={[remarkMath]}
+                                rehypePlugins={[rehypeKatex]}
+                            >
+                                {preprocessContent(content)}
+                            </ReactMarkdown>
+                        )}
+                    </div>
+
+                    {/* Save & Cancel Buttons (when editing) */}
+                    {isEditing && (
+                        <div className="d-flex gap-2 mt-3">
+                            <button onClick={handleSave} className="btn btn-success btn-sm">
+                                <FiSave className="me-1" />
+                                Save
+                            </button>
+                            <button onClick={handleCancel} className="btn btn-secondary btn-sm">
+                                <FiArrowLeft className="me-1" />
+                                Cancel
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* --- CARD FOOTER (versions, language, node selection) --- */}
                 <div className="card-footer d-flex flex-wrap align-items-center gap-2 p-2">
                     {/* VERSION */}
                     <div>
@@ -420,7 +411,6 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                             onClick={() => setShowLanguageModal(true)}
                         >
                             {(() => {
-                                // Find the language object for activeLang among all languages
                                 const found = allLanguages.find((ld) => ld.id === activeLang);
                                 return found ? found.name : 'Select Language';
                             })()}
@@ -448,7 +438,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                 </div>
             </div>
 
-            {/* -------------- All the modals -------------- */}
+            {/* -- Version Modal -- */}
             <VersionModal
                 show={showVersionModal}
                 onClose={() => setShowVersionModal(false)}
@@ -457,6 +447,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                 onAddVersion={handleAddVersion}
             />
 
+            {/* -- Language Modal -- */}
             <LanguageModal
                 show={showLanguageModal}
                 onClose={() => setShowLanguageModal(false)}
@@ -466,6 +457,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                 onAddLanguage={handleAddLanguageToVersion}
             />
 
+            {/* -- Node Modal -- */}
             <NodeModal
                 show={showNodeModal}
                 onClose={() => setShowNodeModal(false)}

@@ -1,10 +1,9 @@
-/* Base card layout (non-fullscreen) */
+/* Base card layout */
 .card {
 	position: relative;
-	display: flex;
-	flex-direction: column;
 	max-width: 800px;
 	margin: 1rem auto; /* center on page */
+	border: 1px solid #007bff; /* example border color to emphasize it's primary */
 }
 
 /* Fullscreen override */
@@ -18,60 +17,45 @@
 	z-index: 9999;
 	border-radius: 0;
 	background: #fff; /* optional */
-	display: flex;
-	flex-direction: column;
 	margin: 0 !important; /* ensure no margin in fullscreen */
-}
-
-/* Container for main body content in row layout */
-.card-body {
-	flex: 1; /* fill vertical space */
 	display: flex;
-	flex-direction: row;
-	padding: 0;
-	overflow: hidden; /* ensures right column is visible in fullscreen */
+	flex-direction: column; /* allows body & footer to stack */
 }
 
-/* The main left column that holds title + content container */
-.card-content {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	overflow: hidden; /* We'll manage scrolling inside child containers */
+/* Card header (title + icons in the same row) */
+.card-header {
+	border-bottom: 1px solid #ccc;
+	background-color: #f8f9fa; /* typical bootstrap-like header color */
+	padding: 0.75rem 1rem;
 }
 
-/* The icon container on the right side. */
-.icon-container {
-	width: 60px; /* or whatever suits your design */
-	justify-content: flex-start;
-	align-items: flex-start;
-}
-
-/* The footer stays at bottom. */
-.card-footer {
-	border-top: 1px solid #ccc;
-	background-color: #f8f9fa; /* typical bootstrap card-footer color */
-}
-
-/* --- Classes for separation and max-height/overflow behavior --- */
-
-/* Title container (above content) */
 .card-title-container {
-	margin-bottom: 1rem;
+	flex: 1;
+	min-width: 0; /* helps avoid overflow if title is very long */
 }
 
-/**
- * By default, let's keep a max-height for normal mode.
- * In fullscreen, we remove that cap—except we have a special mode for editing + fullscreen.
- */
+.icon-container button {
+	margin-left: 0.25rem;
+}
+
+/* Card body just needs vertical stacking for content */
+.card-body {
+	padding: 1rem;
+	flex: 1; /* In fullscreen, let the body grow/shrink */
+	display: flex;
+	flex-direction: column; 
+	overflow: hidden; /* We'll manage scrolling within content container */
+}
+
+/* The main content container inside the body */
 .card-content-container {
-	flex: 1; /* fill all remaining vertical space */
-	overflow-y: auto; /* scroll if content is large */
+	flex: 1;
+	overflow-y: auto;
 	margin-bottom: 1rem;
-	max-height: 500px; /* only in normal mode */
+	max-height: 400px; /* normal mode limit */
 }
 
-/* In fullscreen, remove the normal 400px cap */
+/* Fullscreen remove height cap */
 .fullscreen-card .card-content-container {
 	max-height: none;
 }
@@ -83,6 +67,7 @@
 	border: 1px solid #ddd;
 	padding: 0.5rem;
 	margin-bottom: 1rem;
+	background-color: #fafafa;
 }
 
 /* The textarea editor with its own scroll limit */
@@ -91,29 +76,28 @@
 	overflow-y: auto;
 }
 
-/* ----------------------------------------------------------------- */
-/* When in FULLSCREEN + EDITING mode => editor is 200px, preview fills the rest. */
-/* We'll add .fullscreen-edit-mode conditionally to .card-content-container. */
-/* ----------------------------------------------------------------- */
-
+/* When in FULLSCREEN + EDITING mode => editor is 200px, preview can fill the rest */
 .fullscreen-edit-mode {
-	/* Make the content area a flex column that can fill the vertical space. */
 	display: flex !important;
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
 }
 
-/* Live preview now flexes to fill leftover space. */
 .fullscreen-edit-mode .live-preview {
 	flex: 1;
 	max-height: none; /* remove the 200px limit */
 	margin-bottom: 1rem;
 }
 
-/* Editor is pinned to 200px tall. */
 .fullscreen-edit-mode .editor-textarea {
-	flex: 0 0 auto; /* fixed size in the flex layout */
+	flex: 0 0 auto; /* fixed size in flex layout */
 	max-height: 200px !important;
 	margin-bottom: 0;
+}
+
+/* The footer stays at bottom, in normal or fullscreen mode */
+.card-footer {
+	border-top: 1px solid #ccc;
+	background-color: #f8f9fa;
 }
