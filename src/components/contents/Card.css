@@ -1,3 +1,4 @@
+/* Base card layout (non-fullscreen) */
 .card {
   position: relative;
   display: flex;
@@ -6,11 +7,13 @@
   margin: 1rem auto; /* center on page */
 }
 
+/* Fullscreen override */
 .fullscreen-card {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100% !important;      /* take full width */
+  max-width: 100% !important;  /* override any other max-width */
   height: 100vh;
   z-index: 9999;
   border-radius: 0;
@@ -20,27 +23,70 @@
   margin: 0 !important; /* ensure no margin in fullscreen */
 }
 
+/* Container for main body content in row layout */
 .card-body {
   flex: 1; /* fill vertical space */
   display: flex;
   flex-direction: row;
   padding: 0;
+  overflow: hidden; /* Ensure the right column is visible in fullscreen */
 }
 
+/* The main left column that holds title + content container */
 .card-content {
   flex: 1;
-  overflow: auto; /* scroll if content is large */
+  display: flex;
+  flex-direction: column; 
+  overflow: hidden; /* We'll manage scrolling inside child containers */
 }
 
-/* Icon container on the right side. */
+/* The icon container on the right side. */
 .icon-container {
   width: 60px; /* or whatever suits your design */
   justify-content: flex-start;
   align-items: flex-start;
 }
 
-/* Footer stays at bottom. */
+/* The footer stays at bottom. */
 .card-footer {
   border-top: 1px solid #ccc;
   background-color: #f8f9fa; /* typical bootstrap card-footer color */
+}
+
+/* --- Classes for separation and max-height/overflow behavior --- */
+
+/* Title container (above content) */
+.card-title-container {
+  margin-bottom: 1rem;
+}
+
+/**
+ * By default, let's keep a max-height for normal mode.
+ * In fullscreen, it can expand to fit the entire vertical space.
+ */
+.card-content-container {
+  flex: 1;             /* fill all remaining vertical space */
+  overflow-y: auto;    /* scroll if content is large */
+  margin-bottom: 1rem;
+  max-height: 400px;   /* only in normal mode to avoid huge scroll */
+}
+
+/* If in fullscreen, expand fully */
+.fullscreen-card .card-content-container {
+  max-height: none;    /* remove the 400px cap in fullscreen */
+}
+
+/* Live preview block */
+.live-preview {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Textarea editor with its own scroll limit */
+.editor-textarea {
+  max-height: 200px; /* keep the text input from growing too large */
+  overflow-y: auto;
 }

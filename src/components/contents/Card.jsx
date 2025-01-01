@@ -309,53 +309,59 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                 <div className="card-body d-flex p-0">
                     {/* LEFT COLUMN: Title + content */}
                     <div className="card-content p-3 flex-grow-1">
-                        {/* Title row */}
-                        {isEditing ? (
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={handleTitleChange}
-                                className="form-control form-control-sm mb-2"
-                                placeholder="Enter title"
-                            />
-                        ) : (
-                            <h5 className="mb-2">{title || 'Untitled'}</h5>
-                        )}
-                        <hr className="my-3" />
 
-                        {/* If editing & content is non-empty => show live preview */}
-                        {isEditing && content.trim() && (
-                            <>
-                                <h6 className="mt-2">Live Preview:</h6>
-                                <div className="border p-2 mb-3">
-                                    <ReactMarkdown
-                                        components={MarkdownComponents}
-                                        remarkPlugins={[remarkMath]}
-                                        rehypePlugins={[rehypeKatex]}
-                                    >
-                                        {preprocessContent(content)}
-                                    </ReactMarkdown>
-                                </div>
-                            </>
-                        )}
+                        {/* -- Title Container -- */}
+                        <div className="card-title-container">
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={handleTitleChange}
+                                    className="form-control form-control-sm mb-2"
+                                    placeholder="Enter title"
+                                />
+                            ) : (
+                                <h5 className="mb-2">{title || 'Untitled'}</h5>
+                            )}
+                            <hr className="my-3" />
+                        </div>
 
-                        {/* Editing => textarea, otherwise => rendered Markdown */}
-                        {isEditing ? (
-                            <textarea
-                                value={content}
-                                onChange={handleContentChange}
-                                className="form-control"
-                                rows="8"
-                            />
-                        ) : (
-                            <ReactMarkdown
-                                components={MarkdownComponents}
-                                remarkPlugins={[remarkMath]}
-                                rehypePlugins={[rehypeKatex]}
-                            >
-                                {preprocessContent(content)}
-                            </ReactMarkdown>
-                        )}
+                        {/* -- Main Content Container -- */}
+                        <div className="card-content-container">
+                            {/* If editing & content is non-empty => show live preview */}
+                            {isEditing && content.trim() && (
+                                <>
+                                    <h6 className="mt-2">Live Preview:</h6>
+                                    <div className="live-preview">
+                                        <ReactMarkdown
+                                            components={MarkdownComponents}
+                                            remarkPlugins={[remarkMath]}
+                                            rehypePlugins={[rehypeKatex]}
+                                        >
+                                            {preprocessContent(content)}
+                                        </ReactMarkdown>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Editing => textarea, otherwise => rendered Markdown */}
+                            {isEditing ? (
+                                <textarea
+                                    value={content}
+                                    onChange={handleContentChange}
+                                    className="form-control editor-textarea"
+                                    rows="8"
+                                />
+                            ) : (
+                                <ReactMarkdown
+                                    components={MarkdownComponents}
+                                    remarkPlugins={[remarkMath]}
+                                    rehypePlugins={[rehypeKatex]}
+                                >
+                                    {preprocessContent(content)}
+                                </ReactMarkdown>
+                            )}
+                        </div>
 
                         {/* Save & Cancel Buttons (when editing) */}
                         {isEditing && (
@@ -423,18 +429,16 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                             className="btn btn-sm btn-outline-primary"
                             onClick={() => setShowNodeModal(true)}
                         >
-                            {
-                                nodeInfo ? (
-                                    <>
-                                        {nodeInfo.name} 
-                                        <span className="badge  text-dark ms-1">
-                                            {nodeInfo.category}
-                                        </span>
-                                    </>
-                                ) : (
-                                    "Select Node"
-                                )
-                            }
+                            {nodeInfo ? (
+                                <>
+                                    {nodeInfo.name}
+                                    <span className="badge text-dark ms-1">
+                                        {nodeInfo.category}
+                                    </span>
+                                </>
+                            ) : (
+                                'Select Node'
+                            )}
                         </button>
                     </div>
                 </div>
@@ -455,7 +459,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                 currentLanguages={currentLanguages}
                 allLanguages={allLanguages}
                 onSelect={(langId) => setActiveLang(langId)}
-                onAddLanguage={handleAddLanguageToVersion} // <-- Switch to new language immediately
+                onAddLanguage={handleAddLanguageToVersion}
             />
 
             <NodeModal
