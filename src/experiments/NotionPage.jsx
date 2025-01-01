@@ -40,6 +40,8 @@ const NotionPage = ({ initialContent = '', onSave, onCloseEditor }) => {
     x: 0,
     y: 0,
     blockId: null,
+    lineIndex: null,
+    lineContent: null,
   });
   const hoverTimeout = useRef(null);
   const textareaRef = useRef(null);
@@ -100,11 +102,16 @@ const NotionPage = ({ initialContent = '', onSave, onCloseEditor }) => {
   };
 
   const handleBlockEdit = (id, blockContent) => {
-    setEditingBlock(id);
-    setTempBlockContent(blockContent);
-    setContextMenu({ ...contextMenu, visible: false });
+    setEditingBlock(id); // Set the block as being edited
+    setTempBlockContent(blockContent); // Load the block's content for editing
+    setContextMenu({ ...contextMenu, visible: false }); // Close context menu
   };
 
+  const handleLineEdit = (blockId, lineIndex, lineContent) => {
+    setEditingBlock(blockId); // Set the block ID as being edited
+    setTempBlockContent(lineContent); // Load the specific line's content for editing
+    setContextMenu({ ...contextMenu, visible: false }); // Close context menu
+  };
   const handleBlockChange = (e) => {
     setTempBlockContent(e.target.value);
   };
@@ -123,6 +130,24 @@ const NotionPage = ({ initialContent = '', onSave, onCloseEditor }) => {
     }
   };
 
+  const handleLineBlur = () => {
+    if (editingBlock !== null && contextMenu.lineIndex !== null) {
+      setBlocks(prevBlocks => {
+        const updatedBlocks = [...prevBlocks];
+        const blockIndex = updatedBlocks.findIndex(block => block.id === editingBlock);
+        if (blockIndex !== -1) {
+          const lines = updatedBlocks[blockIndex].content.split('\n');
+          lines[contextMenu.lineIndex] = tempBlockContent; // Update the specific line's content
+          updatedBlocks[blockIndex] = { ...updatedBlocks[blockIndex], content: lines.join('\n') };
+        }
+        return updatedBlocks;
+      });
+      setEditingBlock(null); // Clear editing state
+      setContextMenu({ ...contextMenu, lineIndex: null, lineContent: null, visible: false });
+    } else {
+      handleBlockBlur(); // If no specific line is edited, save the whole block
+    }
+  };
   const handleBlockSave = () => {
     handleBlockBlur();
   };
@@ -150,12 +175,20 @@ const NotionPage = ({ initialContent = '', onSave, onCloseEditor }) => {
 
   const handleBlockContextMenu = (e, id, blockContent) => {
     e.preventDefault();
+    const lines = blockContent.split('\n');
+    const lineHeight = 20; // Approximate line height
+    const lineIndex = Math.floor((e.clientY - e.target.offsetTop) / lineHeight);
+    let lineContent = null;
+    if (lineIndex >= 0 && lineIndex < lines.length) {
+      lineContent = lines[lineIndex];
+    }
     setContextMenu({
       visible: true,
       x: e.clientX,
       y: e.clientY,
       blockId: id,
-      blockContent: blockContent,
+      lineIndex: lineIndex >= 0 && lineIndex < lines.length ? lineIndex : null,
+      lineContent: lineContent,
     });
   };
 
@@ -251,7 +284,7 @@ const NotionPage = ({ initialContent = '', onSave, onCloseEditor }) => {
                     ref={textareaRef}
                     value={tempBlockContent}
                     onChange={handleBlockChange}
-                    onBlur={handleBlockBlur}
+                    onBlur={handleLineBlur}
                     onKeyDown={(e) => {if (e.key === 'Enter') handleBlockSave()}}
                     className="inline-textarea"
                     autoFocus
@@ -261,7 +294,7 @@ const NotionPage = ({ initialContent = '', onSave, onCloseEditor }) => {
                       <FiSave className="me-1" />
                       Save
                     </button>
-                    <button onClick={handleBlockBlur} className="btn btn-secondary btn-sm">
+                    <button onClick={handleLineBlur} className="btn btn-secondary btn-sm">
                       <FiArrowLeft className="me-1" />
                       Cancel
                     </button>
@@ -338,14 +371,22 @@ const NotionPage = ({ initialContent = '', onSave, onCloseEditor }) => {
             className="context-menu-item"
             onClick={() => handleBlockEdit(contextMenu.blockId, contextMenu.blockContent)}
           >
-            <FiEdit /> Edit
+            <FiEdit /> Edit Block
           </button>
           <button
             className="context-menu-item"
             onClick={() => handleBlockDelete(contextMenu.blockId)}
           >
-            <FiTrash2 /> Delete
+            <FiTrash2 /> Delete Block
           </button>
+          {contextMenu.lineIndex !== null && (
+            <button
+              className="context-menu-item"
+              onClick={() => handleLineEdit(contextMenu.blockId, contextMenu.lineIndex, contextMenu.lineContent)}
+            >
+              <FiEdit /> Edit Line
+            </button>
+          )}
         </div>
       )}
     </div>
