@@ -1,4 +1,4 @@
-// src/services/apiService.js
+// src/services/services.js
 import axios from 'axios';
 
 // You can retrieve the access token from localStorage or sessionStorage, for example.
