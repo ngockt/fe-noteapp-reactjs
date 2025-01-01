@@ -40,12 +40,15 @@ function NodeModal({ show, onClose, nodes, onSelect, currentNode }) {
                     {/* Body */}
                     <div className="modal-body">
                         {/* SECTION A: Current Node */}
-                        <h6>Currently Selected Node:</h6>
+                        <h6>Selected Node:</h6>
                         {currentNode ? (
                             <div className="mb-3">
-                                <strong>
-                                    [{currentNode.tag}] {currentNode.name} - {currentNode.category}
-                                </strong>
+
+                                {currentNode.name}
+                                <span className="badge  text-dark ms-1">
+                                    {currentNode.category}
+                                </span>
+
                             </div>
                         ) : (
                             <div className="mb-3 text-muted">
@@ -75,7 +78,10 @@ function NodeModal({ show, onClose, nodes, onSelect, currentNode }) {
                                             onSelect(node);
                                         }}
                                     >
-                                        [<strong>{node.tag}</strong>] {node.name} - {node.category}
+                                        {node.name}
+                                        <span className="badge  text-dark ms-1">
+                                            {node.category}
+                                        </span>
                                     </li>
                                 ))}
 

@@ -69,7 +69,7 @@ function LanguageModal({
                     {/* Body */}
                     <div className="modal-body">
                         {/* SECTION A: Current Languages (in active version) */}
-                        <h6 className="mb-2">Current Languages in Version:</h6>
+                        <h6 className="mb-2">Switch Language</h6>
 
                         {/* Search bar for current languages */}
                         <div className="mb-2">
@@ -112,7 +112,7 @@ function LanguageModal({
                         <hr />
 
                         {/* SECTION B: Add New Language (available for adding) */}
-                        <h6 className="mb-2">Add New Language to Version:</h6>
+                        <h6 className="mb-2">Add New Language</h6>
 
                         {/* Search bar for adding new languages */}
                         <div className="mb-2">
