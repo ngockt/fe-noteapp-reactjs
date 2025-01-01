@@ -1,0 +1,108 @@
+/* NotionPage.css */
+.notion-page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .editor-preview-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  .content-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .block {
+    position: relative;
+    transition: background-color 0.2s ease;
+  }
+  
+  .block.editing {
+    background-color: #f0f0f0;
+  }
+  
+  .rendered-block {
+    position: relative;
+    padding-right: 0px; /* Removed space for the edit button */
+  }
+  
+  .block-options {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .block:hover .block-options {
+    opacity: 1;
+  }
+  
+  .edit-button,
+  .delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .inline-editor {
+    position: relative;
+  }
+  
+  .inline-textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    font-family: monospace;
+    resize: vertical;
+    overflow: auto;
+  }
+  
+  .add-block-container {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+  }
+  
+  .add-block-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #888;
+  }
+  
+  .add-block-button:hover {
+    color: #333;
+  }
+  
+  .context-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 1000;
+  }
+  
+  .context-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .context-menu-item:hover {
+    background-color: #f0f0f0;
+  }

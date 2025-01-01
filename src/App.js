@@ -14,6 +14,7 @@ import ExploreDetail from 'components/explore/content/ExploreDetail';
 import LoginPage from 'pages/LoginPage'; 
 import ProfilePage from 'pages/ProfilePage';
 import SignUpPage from 'pages/SignUpPage';
+import NotionPage from 'experiments/NotionPage';
 
 const App = () => {
   return (
@@ -33,8 +34,9 @@ const App = () => {
             <Route path="/contribution" element={<ContributionPage />} />
             <Route path="/projects" element={<ProjectPage />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
-            <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/experiments/notion-page" element={<NotionPage />} />
           </Routes>
         </div>
         <Footer />
