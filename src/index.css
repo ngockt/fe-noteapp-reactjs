@@ -8,3 +8,7 @@ details summary {
 details summary:hover {
 	text-decoration: underline;
 }
+
+.modal-content {
+	z-index: 1000;
+}

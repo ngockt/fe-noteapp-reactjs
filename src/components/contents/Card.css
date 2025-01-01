@@ -14,7 +14,7 @@
 	width: 100% !important; /* take full width */
 	max-width: 100% !important; /* override any other max-width */
 	height: 100vh;
-	z-index: 9999;
+	z-index: 999;
 	border-radius: 0;
 	background: #fff; /* optional */
 	margin: 0 !important; /* ensure no margin in fullscreen */
