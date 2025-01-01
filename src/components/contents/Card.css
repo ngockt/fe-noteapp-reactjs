@@ -68,7 +68,7 @@
   flex: 1;             /* fill all remaining vertical space */
   overflow-y: auto;    /* scroll if content is large */
   margin-bottom: 1rem;
-  max-height: 400px;   /* only in normal mode to avoid huge scroll */
+  max-height: 500px;   /* only in normal mode to avoid huge scroll */
 }
 
 /* If in fullscreen, expand fully */
