@@ -1,28 +1,49 @@
-.fullscreen-card {
+.card {
+    /* Let the card grow if fullscreen is toggled */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 1rem auto; /* center on page */
+  }
+  
+  .fullscreen-card {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    max-height: 100vh;
-    background-color: #fff;
+    width: 100vw;
+    height: 100vh;
     z-index: 9999;
-    margin: 0;
-    border: none;
     border-radius: 0;
+    background: #fff; /* optional */
     display: flex;
     flex-direction: column;
-}
-
-.fullscreen-card .card-body {
-    overflow: auto;
+  }
+  
+  /* We set d-flex & p-0 in JSX, so these columns share space. */
+  .card-body {
+    flex: 1; /* fill vertical space */
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+  }
+  
+  /* Main content area on the left. */
+  .card-content {
     flex: 1;
-}
-
-.fullscreen-card .card-header {
-    border-bottom: 1px solid #dee2e6;
-}
-
-.card-body {
-    padding-top: 0.5rem; /* adjust as needed */
-}
+    overflow: auto; /* scroll if content is large */
+  }
+  
+  /* Icon container on the right side. */
+  .icon-container {
+    width: 60px; /* or whatever suits your design */
+    /* border-left: 1px solid #ccc; */
+    justify-content: flex-start;
+  }
+  
+  /* Footer stays at bottom. */
+  .card-footer {
+    border-top: 1px solid #ccc;
+    background-color: #f8f9fa; /* typical bootstrap card-footer color */
+  }
+  
