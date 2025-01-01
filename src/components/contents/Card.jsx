@@ -300,6 +300,10 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
         content: '',
     };
 
+    // Determine the extra class for .card-content-container if in fullscreen+editing
+    const contentContainerClass =
+        isFullScreen && isEditing ? 'fullscreen-edit-mode' : '';
+
     // -------------------------------------------------------------------
     // Render
     // -------------------------------------------------------------------
@@ -327,7 +331,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
                         </div>
 
                         {/* -- Main Content Container -- */}
-                        <div className="card-content-container">
+                        <div className={`card-content-container ${contentContainerClass}`}>
                             {/* If editing & content is non-empty => show live preview */}
                             {isEditing && content.trim() && (
                                 <>
