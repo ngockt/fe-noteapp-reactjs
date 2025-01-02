@@ -11,12 +11,14 @@ import ProjectDetail from 'components/project/ProjectDetail';
 import ProjectPage from 'pages/ProjectPage';
 import ContributionPage from 'pages/ContributionPage';
 import ExploreDetail from 'components/explore/content/ExploreDetail';
-import LoginPage from 'pages/LoginPage'; 
+import LoginPage from 'pages/LoginPage';
 import ProfilePage from 'pages/ProfilePage';
 import SignUpPage from 'pages/SignUpPage';
-import NotionPage from 'experiments/NotionPage';
+import NotionPage from 'experiments/notion-page/NotionPage';
+import PromptingAssistantPage from 'experiments/prompting-assistant/PromptingAssistantPage';
 
 const App = () => {
+
   return (
     <Router>
       <div className="app-container">
@@ -37,6 +39,7 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/experiments/notion-page" element={<NotionPage />} />
+            <Route path="/experiments/prompting" element={<PromptingAssistantPage />} />
           </Routes>
         </div>
         <Footer />

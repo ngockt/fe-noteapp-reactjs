@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, ListGroup, Form, Button, Modal } from "react-bootstrap";
-import { FiEdit2 } from "react-icons/fi";
-import { FaThumbtack, FaFolder, FaFolderOpen, FaTrash } from "react-icons/fa";
+import { Container, Row, Col } from "react-bootstrap";
+import { DragDropContext } from 'react-beautiful-dnd';
+import ComponentsList from "./ComponentsList";
+import MainContent from "./MainContent";
+import Modals from "./Modals";
 import { v4 as uuidv4 } from 'uuid';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './styles.css'; // Import the styles
 
 const PromptingAssistantPage = () => {
@@ -38,7 +39,6 @@ const PromptingAssistantPage = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [draggedItemId, setDraggedItemId] = useState(null);
     const [folderExpanded, setFolderExpanded] = useState({}); // Track expanded state of each folder
-
 
     // Default select the first component
     useEffect(() => {
@@ -88,10 +88,10 @@ const PromptingAssistantPage = () => {
         setShowEditModal(false);
     };
 
-    const handleAddComponent = (newComponent, folderId) => {
+    const handleAddComponent = (newComponent) => {
         setComponents((prevComponents) =>
             prevComponents.map(folder => {
-                if (folder.id === folderId) {
+                if (selectedComponent && folder.id === selectedComponent.id) {
                     return { ...folder, components: [...folder.components, { ...newComponent, pinned: false }] }
                 }
                 return folder;
@@ -122,8 +122,6 @@ const PromptingAssistantPage = () => {
         })
         setShowEditFolderModal(false);
     }
-
-
     // Pin component
     const handlePinComponent = (componentName, folderId) => {
         setComponents((prevComponents) => {
@@ -139,7 +137,7 @@ const PromptingAssistantPage = () => {
                     const unpinnedComponents = updatedComponents.filter((component) => !component.pinned);
                     return { ...folder, components: [...pinnedComponents, ...unpinnedComponents] };
                 }
-                return folder;
+                return folder
             });
         });
     };
@@ -177,12 +175,10 @@ const PromptingAssistantPage = () => {
         setShowDeleteConfirmationModal(true);
     };
 
-
     const handleInstructionDoubleClick = (component) => {
         setEditComponent(component);
         setShowEditModal(true);
     };
-
     const onDragStart = (start) => {
         setIsDragging(true);
         setDraggedItemId(start.draggableId);
@@ -252,325 +248,61 @@ const PromptingAssistantPage = () => {
         setShowEditModal(true);
     };
 
+
     return (
-        <Container fluid >
+        <Container fluid>
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
                 <Row>
                     {/* Sidebar */}
                     <Col md={3} className="bg-light vh-100 p-3" style={{ overflowY: "auto" }}>
                         <h5>Components</h5>
-                        <ListGroup style={{ maxHeight: "80vh", overflowY: "auto" }}>
-                            <Droppable droppableId="sidebar-folders" type="folder">
-                                {(provided) => (
-                                    <div ref={provided.innerRef} {...provided.droppableProps}>
-                                        {components.map((folder, index) => (
-                                            <Draggable key={folder.id} draggableId={folder.id} index={index}>
-                                                {(provided, snapshot) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        className={
-                                                            snapshot.isDragging ? "grabbing-item" : ""
-                                                        }
-                                                    >
-                                                        <ListGroup.Item
-                                                            key={folder.id}
-                                                            className="d-flex justify-content-between align-items-center"
-                                                            style={{ backgroundColor: "#f0f0f0", cursor: "pointer" }}
-                                                            onClick={() => handleToggleFolder(folder.id)}
-                                                        >
-                                                            <div className="d-flex align-items-center">
-                                                                {folderExpanded[folder.id] ?
-                                                                    <FaFolderOpen size={20} style={{ marginRight: "5px" }} />
-                                                                    :
-                                                                    <FaFolder size={20} style={{ marginRight: "5px" }} />
-                                                                }
-                                                                <span  >{folder.name}</span>
-                                                                <FiEdit2
-                                                                    size={18}
-                                                                    style={{ cursor: "pointer", marginLeft: "5px" }}
-                                                                    onClick={(e) => handleEditFolderClick(e, folder)}
-                                                                />
-                                                            </div>
-                                                            <FaTrash
-                                                                size={18}
-                                                                style={{ cursor: "pointer", marginLeft: "5px" }}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleOpenDeleteModal("folder", folder.id);
-                                                                }}
-                                                            />
-                                                        </ListGroup.Item>
-                                                        {folderExpanded[folder.id] &&
-                                                            <Droppable droppableId={folder.id} type="component">
-                                                                {(provided) => (
-                                                                    <div ref={provided.innerRef} {...provided.droppableProps}>
-                                                                        {folder.components.map((component, index) => (
-                                                                            <Draggable key={component.name} draggableId={component.name} index={index}>
-                                                                                {(provided, snapshot) => (
-                                                                                    <div
-                                                                                        ref={provided.innerRef}
-                                                                                        {...provided.draggableProps}
-                                                                                        {...provided.dragHandleProps}
-                                                                                        className={
-                                                                                            snapshot.isDragging ? "grabbing-item" : ""
-                                                                                        }
-                                                                                    >
-                                                                                        <ListGroup.Item
-                                                                                            key={index}
-                                                                                            className="d-flex justify-content-between align-items-center"
-                                                                                            onClick={() => setSelectedComponent(component)}
-                                                                                        >
-                                                                                            <span style={{ marginLeft: "20px" }}>{component.name}</span>
-                                                                                            <div className="d-flex align-items-center">
-                                                                                                <FiEdit2
-                                                                                                    size={18}
-                                                                                                    style={{ cursor: "pointer", marginLeft: "5px" }}
-                                                                                                    onClick={(e) => handleEditComponentClick(e, component)}
-                                                                                                />
-                                                                                                <FaThumbtack
-                                                                                                    size={18}
-                                                                                                    style={{
-                                                                                                        cursor: "pointer",
-                                                                                                        color: component.pinned ? "blue" : "black",
-                                                                                                    }}
-                                                                                                    onClick={(e) => {
-                                                                                                        e.stopPropagation();
-                                                                                                        handlePinComponent(component.name, folder.id);
-                                                                                                    }}
-                                                                                                />
-                                                                                                <FaTrash
-                                                                                                    size={18}
-                                                                                                    style={{ cursor: "pointer", marginLeft: "5px" }}
-                                                                                                    onClick={(e) => {
-                                                                                                        e.stopPropagation();
-                                                                                                        handleOpenDeleteModal("component", component.name, folder.id);
-                                                                                                    }}
-                                                                                                />
-                                                                                            </div>
-                                                                                        </ListGroup.Item>
-                                                                                    </div>
-                                                                                )}
-                                                                            </Draggable>
-                                                                        ))}
-                                                                        {provided.placeholder}
-                                                                        <ListGroup.Item
-                                                                            role="button"
-                                                                            className="text-center"
-                                                                            onClick={() => { setShowAddModal(true); setSelectedComponent(folder) }}
-                                                                        >
-                                                                            <strong style={{ marginLeft: "20px" }}>+</strong>
-                                                                        </ListGroup.Item>
-                                                                    </div>
-                                                                )}
-                                                            </Droppable>
-                                                        }
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        ))}
-                                        {provided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
-                            <ListGroup.Item
-                                role="button"
-                                className="text-center"
-                                onClick={() => setShowAddFolderModal(true)}
-                            >
-                                <strong>+</strong>
-                            </ListGroup.Item>
-                        </ListGroup>
+                        <ComponentsList
+                            components={components}
+                            folderExpanded={folderExpanded}
+                            selectedComponent={selectedComponent}
+                            handleToggleFolder={handleToggleFolder}
+                            handleOpenDeleteModal={handleOpenDeleteModal}
+                            handlePinComponent={handlePinComponent}
+                            setSelectedComponent={setSelectedComponent}
+                            handleEditFolderClick={handleEditFolderClick}
+                            handleEditComponentClick={handleEditComponentClick}
+                            setShowAddModal={setShowAddModal}
+                            isDragging={isDragging}
+                        />
                     </Col>
                     {/* Main Content */}
-                    <Col md={9} className="p-4">
-                        {selectedComponent ? (
-                            <div>
-                                <h4>{selectedComponent.name}</h4>
-                                <div
-                                    className="border p-3 mb-3"
-                                    style={{
-                                        maxHeight: "150px",
-                                        overflowY: "auto",
-                                        whiteSpace: "pre-wrap",
-                                        borderRadius: "4px",
-                                        cursor: "pointer"
-                                    }}
-                                    onDoubleClick={() => handleInstructionDoubleClick(selectedComponent)}
-                                >
-                                    {selectedComponent.instruction}
-                                </div>
-                                <Form>
-                                    <Form.Group controlId="inputText">
-                                        <Form.Control
-                                            as="textarea"
-                                            rows={5}
-                                            placeholder="Enter additional input text here..."
-                                            value={inputText}
-                                            onChange={(e) => setInputText(e.target.value)}
-                                        />
-                                    </Form.Group>
-                                    <div className="d-flex mt-3">
-                                        <Button
-                                            variant="success"
-                                            onClick={handleCopyToClipboard}
-                                            className="me-2"
-                                            disabled={!inputText.trim()}
-                                        >
-                                            Copy Combined Text
-                                        </Button>
-                                        <Button variant="danger" onClick={handleClearInput}>
-                                            Clear Text
-                                        </Button>
-                                    </div>
-                                </Form>
-                            </div>
-                        ) : (
-                            <p className="text-muted">Please select a component from the sidebar.</p>
-                        )}
-                    </Col>
+                    <MainContent
+                        selectedComponent={selectedComponent}
+                        inputText={inputText}
+                        setInputText={setInputText}
+                        handleCopyToClipboard={handleCopyToClipboard}
+                        handleClearInput={handleClearInput}
+                        handleInstructionDoubleClick={handleInstructionDoubleClick}
+                    />
                 </Row>
             </DragDropContext>
-
-            {/* Edit Component Modal */}
-            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Component</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            handleEditComponent();
-                        }}
-                    >
-                        <Form.Group controlId="editComponentName">
-                            <Form.Label>Component Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={editComponent.name}
-                                onChange={(e) =>
-                                    setEditComponent({ ...editComponent, name: e.target.value })
-                                }
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="editComponentInstruction" className="mt-3">
-                            <Form.Label>Instruction</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={4}
-                                value={editComponent.instruction}
-                                onChange={(e) =>
-                                    setEditComponent({ ...editComponent, instruction: e.target.value })
-                                }
-                            />
-                        </Form.Group>
-                        <Button type="submit" variant="primary" className="mt-3">
-                            Save Changes
-                        </Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-
-            {/* Add Folder Modal */}
-            <Modal show={showAddFolderModal} onHide={() => setShowAddFolderModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add New Folder</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            handleAddFolder(e.target.folderName.value);
-                        }}
-                    >
-                        <Form.Group controlId="addFolderName">
-                            <Form.Label>Folder Name</Form.Label>
-                            <Form.Control type="text" name="folderName" />
-                        </Form.Group>
-                        <Button type="submit" variant="primary" className="mt-3">
-                            Add Folder
-                        </Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-
-            {/* Edit Folder Modal */}
-            <Modal show={showEditFolderModal} onHide={() => setShowEditFolderModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Folder</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            handleEditFolder();
-                        }}
-                    >
-                        <Form.Group controlId="editFolderName">
-                            <Form.Label>Folder Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={editFolder.name}
-                                onChange={(e) =>
-                                    setEditFolder({ ...editFolder, name: e.target.value })
-                                }
-                            />
-                        </Form.Group>
-                        <Button type="submit" variant="primary" className="mt-3">
-                            Save Changes
-                        </Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-
-            {/* Delete Confirmation Modal */}
-            <Modal show={showDeleteConfirmationModal} onHide={() => setShowDeleteConfirmationModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Confirm Delete</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Are you sure you want to delete this {itemToDelete.type}?</p>
-                    <Button variant="danger" onClick={handleDeleteItem} className="me-2">
-                        Delete
-                    </Button>
-                    <Button variant="secondary" onClick={() => setShowDeleteConfirmationModal(false)}>
-                        Cancel
-                    </Button>
-                </Modal.Body>
-            </Modal>
-
-            {/* Add Component Modal */}
-            <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add New Component</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            const newComponent = {
-                                name: e.target.componentName.value,
-                                instruction: e.target.componentInstruction.value,
-                            };
-                            handleAddComponent(newComponent, selectedComponent.id)
-                        }}
-                    >
-                        <Form.Group controlId="addComponentName">
-                            <Form.Label>Component Name</Form.Label>
-                            <Form.Control type="text" name="componentName" />
-                        </Form.Group>
-                        <Form.Group controlId="addComponentInstruction" className="mt-3">
-                            <Form.Label>Instruction</Form.Label>
-                            <Form.Control as="textarea" rows={4} name="componentInstruction" />
-                        </Form.Group>
-                        <Button type="submit" variant="primary" className="mt-3">
-                            Add Component
-                        </Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
+            <Modals
+                showEditModal={showEditModal}
+                setShowEditModal={setShowEditModal}
+                editComponent={editComponent}
+                setEditComponent={setEditComponent}
+                handleEditComponent={handleEditComponent}
+                showAddModal={showAddModal}
+                setShowAddModal={setShowAddModal}
+                handleAddComponent={handleAddComponent}
+                showAddFolderModal={showAddFolderModal}
+                setShowAddFolderModal={setShowAddFolderModal}
+                handleAddFolder={handleAddFolder}
+                showEditFolderModal={showEditFolderModal}
+                setShowEditFolderModal={setShowEditFolderModal}
+                editFolder={editFolder}
+                setEditFolder={setEditFolder}
+                handleEditFolder={handleEditFolder}
+                showDeleteConfirmationModal={showDeleteConfirmationModal}
+                setShowDeleteConfirmationModal={setShowDeleteConfirmationModal}
+                handleDeleteItem={handleDeleteItem}
+                itemToDelete={itemToDelete}
+            />
         </Container>
     );
 };
