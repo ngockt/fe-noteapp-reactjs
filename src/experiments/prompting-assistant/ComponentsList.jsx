@@ -1,22 +1,66 @@
-import React from "react";
-import { ListGroup } from "react-bootstrap";
+import React, { useState, useRef, useEffect } from "react";
+import { ListGroup, Form } from "react-bootstrap";
 import { FiEdit2 } from "react-icons/fi";
 import { FaThumbtack, FaFolder, FaFolderOpen, FaTrash } from "react-icons/fa";
-import { Droppable, Draggable } from '@hello-pangea/dnd';
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 const ComponentsList = ({
-     components,
-     folderExpanded,
-     selectedComponent,
-     handleToggleFolder,
-     handleOpenDeleteModal,
+    components,
+    folderExpanded,
+    selectedComponent,
+    handleToggleFolder,
+    handleOpenDeleteModal,
     handlePinComponent,
     setSelectedComponent,
-    handleEditFolderClick,
-    handleEditComponentClick,
-    setShowAddModal,
-    isDragging
+    isDragging,
+    setComponents,
 }) => {
+    const [editingItem, setEditingItem] = useState({ type: null, id: null });
+    const [editValue, setEditValue] = useState("");
+    const inputRef = useRef(null);
+
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [editingItem])
+
+    const handleStartEdit = (e, type, id, name) => {
+        e.stopPropagation();
+        setEditingItem({ type, id });
+        setEditValue(name)
+
+    };
+
+
+    const handleSaveEdit = (e, type, id, folderId) => {
+        e.stopPropagation();
+        setEditingItem({ type: null, id: null });
+        setComponents((prevComponents) => {
+            return prevComponents.map((folder) => {
+                if (type === "folder" && folder.id === id) {
+                    return { ...folder, name: editValue }
+                } else if (type === 'component' && folder.id === folderId) {
+                    const updatedComponents = folder.components.map((component) => {
+                        if (component.name === id) {
+                            return { ...component, name: editValue }
+                        }
+                        return component;
+                    })
+                    return { ...folder, components: updatedComponents }
+                }
+                return folder;
+            });
+        });
+
+    };
+
+    const handleCancelEdit = (e) => {
+        e.stopPropagation();
+        setEditingItem({ type: null, id: null });
+    };
+
     return (
         <ListGroup style={{ maxHeight: "80vh", overflowY: "auto" }}>
             <Droppable droppableId="sidebar-folders" type="folder">
@@ -29,44 +73,69 @@ const ComponentsList = ({
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
-                                        className={
-                                            snapshot.isDragging ? "grabbing-item" : ""
-                                        }
+                                        className={snapshot.isDragging ? "grabbing-item" : ""}
                                     >
                                         <ListGroup.Item
                                             key={folder.id}
-                                            className="d-flex justify-content-between align-items-center"
+                                            className="d-flex justify-content-between align-items-center component-list-item"
                                             style={{ backgroundColor: "#f0f0f0", cursor: "pointer" }}
                                             onClick={() => handleToggleFolder(folder.id)}
                                         >
-                                            <div className="d-flex align-items-center">
-                                                {folderExpanded[folder.id] ?
+                                            <div className="d-flex align-items-center flex-grow-1">
+                                                {folderExpanded[folder.id] ? (
                                                     <FaFolderOpen size={20} style={{ marginRight: "5px" }} />
-                                                    :
+                                                ) : (
                                                     <FaFolder size={20} style={{ marginRight: "5px" }} />
-                                                }
-                                                <span  >{folder.name}</span>
-                                                  <FiEdit2
-                                                      size={18}
-                                                      style={{ cursor: "pointer", marginLeft: "5px" }}
-                                                        onClick={(e) => handleEditFolderClick(e, folder)}
-                                                  />
+                                                )}
+                                                {(editingItem.type !== "folder" || (editingItem.id !== folder.id)) ? (
+                                                    <span className="flex-grow-1" >{folder.name}</span>
+                                                ) : (
+                                                    <Form.Control
+                                                        type="text"
+                                                        value={editValue}
+                                                        ref={inputRef}
+                                                        onChange={(e) => setEditValue(e.target.value)}
+                                                        onBlur={(e) => handleSaveEdit(e, "folder", folder.id)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === "Enter") {
+                                                                handleSaveEdit(e, "folder", folder.id);
+                                                            }
+                                                            if (e.key === 'Escape') {
+                                                                handleCancelEdit(e);
+                                                            }
+                                                        }}
+
+                                                    />
+                                                )}
                                             </div>
-                                            <FaTrash
-                                                size={18}
-                                                style={{ cursor: "pointer", marginLeft: "5px" }}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleOpenDeleteModal("folder", folder.id);
-                                                }}
-                                            />
+                                            <div className="d-flex align-items-center">
+                                                {(editingItem.type !== "folder" || (editingItem.id !== folder.id)) && (
+                                                    <FiEdit2
+                                                        size={18}
+                                                        style={{ cursor: "pointer", marginRight: "5px" }}
+                                                        onClick={(e) => handleStartEdit(e, "folder", folder.id, folder.name)}
+                                                    />
+                                                )}
+                                                <FaTrash
+                                                    size={18}
+                                                    style={{ cursor: "pointer", marginLeft: "5px" }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleOpenDeleteModal("folder", folder.id);
+                                                    }}
+                                                />
+                                            </div>
                                         </ListGroup.Item>
-                                        {folderExpanded[folder.id] &&
+                                        {folderExpanded[folder.id] && (
                                             <Droppable droppableId={folder.id} type="component">
                                                 {(provided) => (
                                                     <div ref={provided.innerRef} {...provided.droppableProps}>
                                                         {folder.components.map((component, index) => (
-                                                            <Draggable key={component.name} draggableId={component.name} index={index}>
+                                                            <Draggable
+                                                                key={component.name}
+                                                                draggableId={component.name}
+                                                                index={index}
+                                                            >
                                                                 {(provided, snapshot) => (
                                                                     <div
                                                                         ref={provided.innerRef}
@@ -78,16 +147,41 @@ const ComponentsList = ({
                                                                     >
                                                                         <ListGroup.Item
                                                                             key={index}
-                                                                            className="d-flex justify-content-between align-items-center"
+                                                                            className="d-flex justify-content-between align-items-center  component-list-item"
                                                                             onClick={() => setSelectedComponent(component)}
                                                                         >
-                                                                            <span style={{ marginLeft: "20px" }}>{component.name}</span>
+                                                                            <div className="d-flex align-items-center flex-grow-1">
+                                                                                {(editingItem.type !== "component" || (editingItem.id !== component.name)) ? (
+                                                                                    <span style={{ marginLeft: "20px" }} className="flex-grow-1">
+                                                                                        {component.name}
+                                                                                    </span>
+                                                                                ) : (
+                                                                                    <Form.Control
+                                                                                        type="text"
+                                                                                        value={editValue}
+                                                                                        ref={inputRef}
+                                                                                        onChange={(e) => setEditValue(e.target.value)}
+                                                                                        onBlur={(e) => handleSaveEdit(e, "component", component.name, folder.id)}
+                                                                                        onKeyDown={(e) => {
+                                                                                            if (e.key === "Enter") {
+                                                                                                handleSaveEdit(e, "component", component.name, folder.id);
+                                                                                            }
+                                                                                            if (e.key === 'Escape') {
+                                                                                                handleCancelEdit(e);
+                                                                                            }
+                                                                                        }}
+
+                                                                                    />
+                                                                                )}
+                                                                            </div>
                                                                             <div className="d-flex align-items-center">
-                                                                                 <FiEdit2
-                                                                                    size={18}
-                                                                                    style={{ cursor: "pointer", marginLeft: "5px" }}
-                                                                                     onClick={(e) => handleEditComponentClick(e, component)}
-                                                                                 />
+                                                                                {(editingItem.type !== "component" || (editingItem.id !== component.name)) && (
+                                                                                    <FiEdit2
+                                                                                        size={18}
+                                                                                        style={{ cursor: "pointer", marginRight: "5px" }}
+                                                                                        onClick={(e) => handleStartEdit(e, "component", component.name, component.name)}
+                                                                                    />
+                                                                                )}
                                                                                 <FaThumbtack
                                                                                     size={18}
                                                                                     style={{
@@ -96,7 +190,10 @@ const ComponentsList = ({
                                                                                     }}
                                                                                     onClick={(e) => {
                                                                                         e.stopPropagation();
-                                                                                        handlePinComponent(component.name, folder.id);
+                                                                                        handlePinComponent(
+                                                                                            component.name,
+                                                                                            folder.id
+                                                                                        );
                                                                                     }}
                                                                                 />
                                                                                 <FaTrash
@@ -104,7 +201,11 @@ const ComponentsList = ({
                                                                                     style={{ cursor: "pointer", marginLeft: "5px" }}
                                                                                     onClick={(e) => {
                                                                                         e.stopPropagation();
-                                                                                        handleOpenDeleteModal("component", component.name, folder.id);
+                                                                                        handleOpenDeleteModal(
+                                                                                            "component",
+                                                                                            component.name,
+                                                                                            folder.id
+                                                                                        );
                                                                                     }}
                                                                                 />
                                                                             </div>
@@ -117,14 +218,16 @@ const ComponentsList = ({
                                                         <ListGroup.Item
                                                             role="button"
                                                             className="text-center"
-                                                            onClick={() => { setShowAddModal(true); setSelectedComponent(folder) }}
+                                                            onClick={() => {
+                                                                setSelectedComponent(folder);
+                                                            }}
                                                         >
                                                             <strong style={{ marginLeft: "20px" }}>+</strong> Add Component
                                                         </ListGroup.Item>
                                                     </div>
                                                 )}
                                             </Droppable>
-                                        }
+                                        )}
                                     </div>
                                 )}
                             </Draggable>
@@ -136,12 +239,11 @@ const ComponentsList = ({
             <ListGroup.Item
                 role="button"
                 className="text-center"
-                onClick={() => setShowAddModal(true)}
+                onClick={() => console.log("add new folder")}
             >
                 <strong>+</strong> Add Folder
             </ListGroup.Item>
         </ListGroup>
-
     );
 };
 

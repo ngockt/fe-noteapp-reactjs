@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { FiSave, FiArrowLeft, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiSave, FiArrowLeft, FiPlus } from 'react-icons/fi';
 import 'katex/dist/katex.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';

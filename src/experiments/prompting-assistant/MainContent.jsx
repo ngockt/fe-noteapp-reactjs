@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Col, Form, Button } from "react-bootstrap";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 
@@ -8,30 +8,80 @@ const MainContent = ({
   setInputText,
   handleCopyToClipboard,
   handleClearInput,
-  handleInstructionDoubleClick,
+  handleInstructionDoubleClick
 }) => {
   const [instructionExpanded, setInstructionExpanded] = useState(false);
+  const [isEditingInstruction, setIsEditingInstruction] = useState(false);
+  const [editInstruction, setEditInstruction] = useState("");
+  const textAreaRef = useRef(null)
+
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  }, [isEditingInstruction]);
 
   const toggleInstruction = (e) => {
     e.stopPropagation();
     setInstructionExpanded(!instructionExpanded);
   };
+
+
+  const handleStartInstructionEdit = (e) => {
+    e.stopPropagation();
+    setIsEditingInstruction(true);
+    setEditInstruction(selectedComponent.instruction);
+  };
+
+  const handleSaveInstructionEdit = (e) => {
+    e.stopPropagation();
+    setIsEditingInstruction(false);
+
+    // update instruction in the main state
+    // we need to set component and update the instruction
+    handleInstructionDoubleClick({ ...selectedComponent, instruction: editInstruction });
+  };
+
+  const handleCancelInstructionEdit = (e) => {
+    e.stopPropagation();
+    setIsEditingInstruction(false);
+  };
+
   return (
     <Col md={9} className="p-4">
       {selectedComponent ? (
         <div>
           <h4>{selectedComponent.name}</h4>
           <div
-            className={`instruction-container ${
-              instructionExpanded ? "expanded" : ""
-            }`}
-             onClick={handleInstructionDoubleClick}
+            className={`instruction-container ${instructionExpanded ? "expanded" : ""
+              }`}
+            onClick={!isEditingInstruction ? handleStartInstructionEdit : () => { }}
           >
-              <div className="content" >
+            {isEditingInstruction ? (
+              <Form.Control
+                as="textarea"
+                rows={4}
+                value={editInstruction}
+                ref={textAreaRef}
+                onChange={(e) => setEditInstruction(e.target.value)}
+                onBlur={(e) => handleSaveInstructionEdit(e)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSaveInstructionEdit(e);
+                  }
+                  if (e.key === 'Escape') {
+                    handleCancelInstructionEdit(e);
+                  }
+                }}
+              />
+            ) : (
+              <div className="content">
                 {selectedComponent.instruction}
-            </div>
-              <button className="toggle-button" onClick={toggleInstruction}>
-                {instructionExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
+              </div>
+            )}
+            <button className="toggle-button" onClick={toggleInstruction}>
+              {instructionExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
             </button>
           </div>
           <Form>

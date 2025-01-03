@@ -36,6 +36,9 @@ const ENDPOINTS = {
     UPDATE_USER: (id) => `${BASE_URL}/users/${id}`,
     DELETE_USER: (id) => `${BASE_URL}/users/${id}`,
   },
+  EXPERIMENTS: {
+    PROMPTS: `${BASE_URL}/experiments/prompts`
+  }
 };
 
 export default ENDPOINTS;

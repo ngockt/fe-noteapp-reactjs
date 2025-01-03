@@ -1,128 +1,124 @@
 body {
-    font-family: 'Arial', sans-serif;
+	font-family: "Arial", sans-serif;
 }
 
 .grabbing-item {
-    cursor: grab;
+	cursor: grab;
 }
 .component-list-item {
-    border-radius: 4px;
-    margin-bottom: 5px;
-    transition: background-color 0.2s ease;
+	border-radius: 4px;
+	margin-bottom: 5px;
+	transition: background-color 0.2s ease;
 }
 
 .component-list-item:hover {
-  background-color: #f8f9fa;
+	background-color: #f8f9fa;
 }
 .component-list-item:focus {
-    outline: none;
-   box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+	outline: none;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 .component-list-item.selected {
-    background-color: #e9ecef;
+	background-color: #e9ecef;
 }
-
 
 .instruction-container {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 15px;
-     overflow: hidden;
-    position: relative; /* For absolute positioning of the toggle */
-    border-radius: 4px;
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin-bottom: 15px;
+	overflow: hidden;
+	position: relative; /* For absolute positioning of the toggle */
+	border-radius: 4px;
 }
- .instruction-container.expanded {
-    max-height: none;
-     overflow-y: auto;
- }
+.instruction-container.expanded {
+	max-height: none;
+	overflow-y: auto;
+}
 
 .instruction-container .toggle-button {
-    position: absolute;
-     right: 5px;
-    top: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #777;
-    font-size: 14px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: #777;
+	font-size: 14px;
 }
 
 .instruction-container .toggle-button:hover {
-    color: #333;
+	color: #333;
 }
 .instruction-container .content {
- white-space: pre-wrap; /* keep whitespaces and new lines */
-    overflow: hidden; /* hide the overflow */
-  max-height: 100px; /* default max height */
-  transition: max-height 0.3s ease-out; /* smooth transition */
+	white-space: pre-wrap; /* keep whitespaces and new lines */
+	overflow: hidden; /* hide the overflow */
+	max-height: 100px; /* default max height */
+	transition: max-height 0.3s ease-out; /* smooth transition */
 }
 .instruction-container.expanded .content {
-    max-height: none; /* remove height limitation if expanded */
-    overflow-y: auto;
+	max-height: none; /* remove height limitation if expanded */
+	overflow-y: auto;
 }
 
-
 .form-control {
-    border-radius: 4px;
-    border: 1px solid #ced4da;
+	border-radius: 4px;
+	border: 1px solid #ced4da;
 }
 
 .form-control:focus {
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-    border-color: #80bdff;
+	outline: none;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+	border-color: #80bdff;
 }
-
 
 .btn {
-    border-radius: 4px;
-    padding: 8px 15px;
-    font-size: 14px;
-    transition: all 0.2s ease;
+	border-radius: 4px;
+	padding: 8px 15px;
+	font-size: 14px;
+	transition: all 0.2s ease;
 }
 
-
 .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
+	background-color: #28a745;
+	border-color: #28a745;
 }
 
 .btn-success:hover {
-  background-color: #218838;
-     border-color: #218838;
+	background-color: #218838;
+	border-color: #218838;
 }
 .btn-danger {
-  background-color: #dc3545;
-    border-color: #dc3545;
+	background-color: #dc3545;
+	border-color: #dc3545;
 }
 
 .btn-danger:hover {
-  background-color: #c82333;
-  border-color: #c82333;
+	background-color: #c82333;
+	border-color: #c82333;
 }
 
-.list-group-item.list-group-item-action.component-list-item{
-    padding: 0.75rem 1rem;
-     cursor: pointer;
-     transition: background-color 0.15s ease-in-out;
-
+.list-group-item.list-group-item-action.component-list-item {
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+	transition: background-color 0.15s ease-in-out;
 }
 
-.list-group-item.list-group-item-action.component-list-item.active, .list-group-item.list-group-item-action.component-list-item:active{
-    background-color: #007bff;
-        color: white;
+.list-group-item.list-group-item-action.component-list-item.active,
+.list-group-item.list-group-item-action.component-list-item:active {
+	background-color: #007bff;
+	color: white;
 }
 .modal-content {
-    border-radius: 8px;
+	border-radius: 8px;
 }
 
 .modal-header {
-    border-bottom: 1px solid #dee2e6;
+	border-bottom: 1px solid #dee2e6;
 }
 
 .modal-footer {
-    border-top: 1px solid #dee2e6;
+	border-top: 1px solid #dee2e6;
 }
 .modal-title {
-    font-size: 1.2rem;
+	font-size: 1.2rem;
 }
