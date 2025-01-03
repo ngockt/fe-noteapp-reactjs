@@ -2,7 +2,7 @@ import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { FiEdit2 } from "react-icons/fi";
 import { FaThumbtack, FaFolder, FaFolderOpen, FaTrash } from "react-icons/fa";
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from '@hello-pangea/dnd';
 
 const ComponentsList = ({
      components,
