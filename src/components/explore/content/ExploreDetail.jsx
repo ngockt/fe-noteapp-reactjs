@@ -1,9 +1,43 @@
-import React from 'react';
+// src/components/pages/ExploreDetail.js
+
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CardList from 'components/contents/CardList';
+import ENDPOINTS from 'apis/endpoints';
+import { getRequest } from 'apis/services';
 
 const ExploreDetail = () => {
     const { nodeId } = useParams();
+    const [meCards, setMeCards] = useState([]);
+    const [groupCards, setGroupCards] = useState([]);
+    const [communityCards, setCommunityCards] = useState([]);
+    const [activeTab, setActiveTab] = useState('me');
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const meEndpoint = ENDPOINTS.CARDS.NODE_ME(nodeId);
+                const groupEndpoint = ENDPOINTS.CARDS.NODE_GROUP(nodeId);
+                const communityEndpoint = ENDPOINTS.CARDS.NODE_COMMUNITY(nodeId);
+
+                const meData = await getRequest(meEndpoint);
+                const groupData = await getRequest(groupEndpoint);
+                const communityData = await getRequest(communityEndpoint);
+
+                console.log('Fetched data:', { meData, groupData, communityData });
+                setMeCards(meData);
+                setGroupCards(groupData);
+                setCommunityCards(communityData);
+            } catch (error) {
+                console.error('Error fetching cards:', error);
+            }
+        };
+
+        fetchData();
+    }, [nodeId]);
+
 
     return (
         <div className="container mt-4">
@@ -11,42 +45,40 @@ const ExploreDetail = () => {
             <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item" role="presentation">
                     <button
-                        className="nav-link active"
+                        className={`nav-link ${activeTab === 'me' ? 'active' : ''}`}
                         id="me-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#me"
                         type="button"
                         role="tab"
                         aria-controls="me"
-                        aria-selected="true"
+                        aria-selected={activeTab === 'me'}
+                        onClick={() => setActiveTab('me')}
+
                     >
                         Me
                     </button>
                 </li>
                 <li className="nav-item" role="presentation">
                     <button
-                        className="nav-link"
+                         className={`nav-link ${activeTab === 'group' ? 'active' : ''}`}
                         id="group-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#group"
-                        type="button"
+                         type="button"
                         role="tab"
                         aria-controls="group"
-                        aria-selected="false"
+                        aria-selected={activeTab === 'group'}
+                        onClick={() => setActiveTab('group')}
                     >
                         Group
                     </button>
                 </li>
                 <li className="nav-item" role="presentation">
                     <button
-                        className="nav-link"
+                         className={`nav-link ${activeTab === 'community' ? 'active' : ''}`}
                         id="community-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#community"
-                        type="button"
+                         type="button"
                         role="tab"
                         aria-controls="community"
-                        aria-selected="false"
+                        aria-selected={activeTab === 'community'}
+                        onClick={() => setActiveTab('community')}
                     >
                         Community
                     </button>
@@ -54,34 +86,28 @@ const ExploreDetail = () => {
             </ul>
             <div className="tab-content mt-3" id="myTabContent">
                 <div
-                    className="tab-pane fade show active"
+                    className={`tab-pane fade ${activeTab === 'me' ? 'show active' : ''}`}
                     id="me"
                     role="tabpanel"
                     aria-labelledby="me-tab"
                 >
-                    <div className="alert alert-primary">
-                        Me content goes here.
-                    </div>
+                     <CardList cards={meCards} />
                 </div>
                 <div
-                    className="tab-pane fade"
+                    className={`tab-pane fade ${activeTab === 'group' ? 'show active' : ''}`}
                     id="group"
                     role="tabpanel"
                     aria-labelledby="group-tab"
                 >
-                    <div className="alert alert-warning">
-                        Group content goes here.
-                    </div>
+                    <CardList cards={groupCards} />
                 </div>
                 <div
-                    className="tab-pane fade"
+                    className={`tab-pane fade ${activeTab === 'community' ? 'show active' : ''}`}
                     id="community"
                     role="tabpanel"
                     aria-labelledby="community-tab"
                 >
-                    <div className="alert alert-secondary">
-                        Community content goes here.
-                    </div>
+                      <CardList cards={communityCards} />
                 </div>
             </div>
         </div>
