@@ -3,18 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@hello-pangea/dnd": "^17.0.0",
-    "@mui/icons-material": "^6.2.0",
-    "@mui/material": "^6.2.0",
     "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.8",
     "bootstrap": "^5.3.3",
-    "cytoscape": "^3.30.4",
     "d3": "^7.9.0",
     "katex": "^0.16.15",
     "mermaid": "^11.4.1",
@@ -23,18 +17,12 @@
     "react-bootstrap": "^2.10.6",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
-    "react-katex": "^3.0.1",
-    "react-latex-next": "^3.0.0",
     "react-markdown": "^9.0.1",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
-    "react-select": "^5.9.0",
-    "react-sigma": "^1.2.35",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
-    "sigma": "^3.0.0-beta.38",
-    "styled-components": "^6.1.13",
-    "uuid": "^11.0.3",
+    "uuid": "^9.0.1",
     "vis-data": "^7.1.9",
     "vis-network": "^9.1.9",
     "web-vitals": "^2.1.4"
@@ -64,11 +52,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.25.9",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.1.0"
+    "eslint": "^8.57.1"
   }
 }
