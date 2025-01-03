@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap"; // Import NavDropdown
 import { Link, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-/* Import the external CSS */
 import "./Header.css";
 
 const Header = () => {
@@ -11,10 +10,8 @@ const Header = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        // Load user info from localStorage when the component mounts
         const storedUser = localStorage.getItem("user");
         const accessToken = localStorage.getItem("accessToken");
-        console.log(storedUser, accessToken);
         if (storedUser && accessToken) {
             setUser(JSON.parse(storedUser));
         }
@@ -73,14 +70,26 @@ const Header = () => {
                     >
                         Projects
                     </Nav.Link>
-                    <Nav.Link
-                        as={Link}
-                        to="/contact"
-                        active={location.pathname === "/contact"}
-                        onClick={handleNavItemClick}
-                    >
-                        Contact
-                    </Nav.Link>
+
+
+                    {/* Experiments Dropdown */}
+                    <NavDropdown title="Experiments" id="experiments-dropdown" onToggle={() => setExpanded(false)}>
+                        <NavDropdown.Item
+                            as={Link}
+                            to="/experiments/prompting"
+                            onClick={handleNavItemClick}
+                        >
+                            Prompting
+                        </NavDropdown.Item>
+                        <NavDropdown.Item
+                            as={Link}
+                            to="/experiments/notion-page"
+                            onClick={handleNavItemClick}
+                        >
+                            Notion Page
+                        </NavDropdown.Item>
+                    </NavDropdown>
+
                     <Nav.Link
                         as={Link}
                         to="/about"
@@ -90,13 +99,13 @@ const Header = () => {
                         About
                     </Nav.Link>
 
-                    {/* If user is logged in, display profile image; otherwise, show Login link */}
+
+                    {/* Conditional Login/Profile */}
                     {user ? (
                         <Nav.Link
                             as={Link}
                             to="/profile"
                             onClick={handleNavItemClick}
-                        // className="user-profile-link"
                         >
                             <img
                                 src={user.picture}
