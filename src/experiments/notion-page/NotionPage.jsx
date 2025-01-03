@@ -1,211 +1,325 @@
-import React, { useState, useRef, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import { FiSave, FiArrowLeft, FiPlus } from 'react-icons/fi';
-import 'katex/dist/katex.min.css';
+import React, { useState, useCallback, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './NotionPage.css';
+import { DndProvider, useDrop, useDrag } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { v4 as uuidv4 } from 'uuid';
+import { FiEdit, FiPlus, FiTrash2 } from 'react-icons/fi';
 
-const Line = ({
-  content,
-  onDoubleClick,
-  isEditing,
-  onChange,
-  onBlur,
-  caretPosition,
-  onEnter,
-  onDelete
-}) => {
-  const textareaRef = useRef(null);
+const NotionPage = () => {
+  const [blocks, setBlocks] = useState([
+    { type: 'heading', level: 1, id: uuidv4(), text: 'My Notion-like Page' },
+    { type: 'paragraph', id: uuidv4(), text: 'This is a sample paragraph with some text.' },
+    {
+      type: 'list',
+      listType: 'bullet',
+      id: uuidv4(),
+      items: ['First list item', 'Second list item', 'Third list item'],
+    },
+    { type: 'code', language: 'javascript', id: uuidv4(), code: 'console.log("Hello World!");' },
+    {
+      type: 'image',
+      src: 'https://placekitten.com/200/150',
+      id: uuidv4(),
+      alt: 'Cute Kitten',
+    },
+  ]);
 
-  useEffect(() => {
-    if (isEditing && textareaRef.current) {
-      textareaRef.current.focus();
-      if (caretPosition !== null) {
-        textareaRef.current.setSelectionRange(caretPosition, caretPosition);
-      }
-    }
-  }, [isEditing, caretPosition]);
+  const [hoveredBlock, setHoveredBlock] = useState(null);
+  const handleMouseEnter = (id) => setHoveredBlock(id);
+  const handleMouseLeave = () => setHoveredBlock(null);
 
-  const handleKeyDown = (e) => {
-      if (e.key === 'Enter') {
-          e.preventDefault(); // Prevent adding a new line in the textarea
-          onEnter();
+
+  const addBlock = (type, options = {}) => {
+    const newBlock = {
+      type,
+      id: uuidv4(),
+      ...options,
+      text: options.text || (type === 'paragraph' ? 'New paragraph' : ''),
+    };
+    setBlocks([...blocks, newBlock]);
+  };
+
+
+  const deleteBlock = (id) => {
+    setBlocks(blocks.filter((block) => block.id !== id));
+  };
+
+
+  const updateTextBlock = (id, newText) => {
+    setBlocks(
+      blocks.map((block) => {
+        if (block.id === id && (block.type === 'paragraph' || block.type === 'heading')) {
+          return { ...block, text: newText };
+        }
+        return block;
+      })
+    );
+  };
+
+  const updateListItem = (blockId, itemId, newItemText) => {
+    setBlocks(blocks.map(block => {
+      if (block.id === blockId && block.type === 'list') {
+        return {
+          ...block,
+          items: block.items.map((item, index) => index === itemId ? newItemText : item),
+        };
       }
-      if (e.key === "Backspace" && content === '') {
-          e.preventDefault(); // Prevent cursor from going back a line.
-          onDelete();
+      return block;
+    }));
+  };
+
+  const addListItem = (blockId) => {
+    setBlocks(blocks.map(block => {
+      if (block.id === blockId && block.type === 'list') {
+        return { ...block, items: [...block.items, 'New Item'] }
       }
+      return block;
+    }))
   }
 
 
-  return isEditing ? (
-    <textarea
-      ref={textareaRef}
-      value={content}
-      onChange={onChange}
-      onBlur={onBlur}
-      onKeyDown={handleKeyDown}
-      className="form-control"
-      style={{ minHeight: '30px', height: 'auto', width: '100%', overflow: 'hidden'}}
-    />
-  ) : (
-    <div
-      onDoubleClick={onDoubleClick}
-      style={{ cursor: 'pointer', padding: '5px', borderBottom: '1px solid #ddd' }}
-    >
-      <ReactMarkdown
-        remarkPlugins={[remarkMath]}
-        rehypePlugins={[rehypeKatex]}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
-  );
-};
-
-
-const NotionPage = ({ onSave, onCloseEditor }) => {
-  const [blocks, setBlocks] = useState([]);
-  const [currentBlockId, setCurrentBlockId] = useState(null);
-  const [editingLine, setEditingLine] = useState(null);
-  const [caretPosition, setCaretPosition] = useState(null);
-
-  const handleAddBlock = () => {
-    const newBlock = { id: uuidv4(), content: [''] };
-    setBlocks([...blocks, newBlock]);
-    setCurrentBlockId(newBlock.id);
-  };
-
-   const handleAddLine = (blockId, lineIndex) => {
-     setBlocks(blocks.map(block => {
-         if (block.id === blockId) {
-           const updatedContent = [...block.content];
-             updatedContent.splice(lineIndex+1, 0, '');
-             return {...block, content: updatedContent};
-         }
-         return block;
-     }));
-     setEditingLine(lineIndex + 1);
-     setCurrentBlockId(blockId);
-     setCaretPosition(0);
-
-   }
-
-   const handleDeleteLine = (blockId, lineIndex) => {
-      if (blocks.length === 1 && blocks[0].content.length === 1) return;
-      setBlocks(blocks.map(block => {
-          if (block.id === blockId) {
-              const updatedContent = [...block.content];
-              if (updatedContent.length > 1) {
-                updatedContent.splice(lineIndex, 1);
-                return {...block, content: updatedContent};
-              }
-              else {
-                  // Delete the whole block, if there is only one line
-                  return null;
-              }
-
-          }
-          return block;
-      }).filter(block => block !== null));
-       setEditingLine(null);
-       setCurrentBlockId(null);
-       setCaretPosition(null);
-
-   }
-
-
-  const handleDoubleClickLine = (blockId, lineIndex, content, clickEvent) => {
-    setCurrentBlockId(blockId);
-    setEditingLine(lineIndex);
-
-    const clickX = clickEvent.clientX;
-    const clickY = clickEvent.clientY;
-
-    const targetElement = clickEvent.target;
-    const textContent = targetElement.innerText;
-
-    const range = document.createRange();
-    range.setStart(targetElement.firstChild || targetElement, 0);
-    range.setEnd(targetElement.firstChild || targetElement, textContent.length);
-
-    const rects = range.getClientRects();
-    let caretIndex = 0;
-
-    Array.from(rects).forEach(rect => {
-      if (clickY >= rect.top && clickY <= rect.bottom) {
-        const relativeX = clickX - rect.left;
-        const charWidth = rect.width / textContent.length;
-        caretIndex += Math.floor(relativeX / charWidth);
+  const deleteListItem = (blockId, itemId) => {
+    setBlocks(blocks.map(block => {
+      if (block.id === blockId && block.type === 'list') {
+        return { ...block, items: block.items.filter((_, index) => index !== itemId) };
       }
-    });
-
-    setCaretPosition(Math.min(caretIndex, textContent.length));
+      return block;
+    })
+    )
   };
 
- const handleLineChange = (blockId, lineIndex, e) => {
-        setBlocks(blocks.map(block => {
-            if (block.id === blockId) {
-                const updatedContent = [...block.content];
-                updatedContent[lineIndex] = e.target.value;
-                return {...block, content: updatedContent}
-            }
-           return block;
-        }));
-    };
+
+  const moveBlock = useCallback((dragIndex, hoverIndex) => {
+    const dragBlock = blocks[dragIndex];
+    const newBlocks = [...blocks];
+    newBlocks.splice(dragIndex, 1);
+    newBlocks.splice(hoverIndex, 0, dragBlock);
+    setBlocks(newBlocks);
+  }, [blocks, setBlocks]);
 
 
-  const handleLineBlur = () => {
-    setEditingLine(null);
-    setCaretPosition(null);
+  const renderBlock = (block, index) => {
+    switch (block.type) {
+      case 'heading':
+        const HeadingTag = `h${block.level}`;
+        return (
+          <DraggableBlock key={block.id} index={index} id={block.id} moveBlock={moveBlock}>
+            <div
+              className="card block-container"
+              onMouseEnter={() => handleMouseEnter(block.id)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="card-body d-flex justify-content-between align-items-center">
+                <HeadingTag
+                  contentEditable
+                  onBlur={(e) => updateTextBlock(block.id, e.target.innerText)}
+                  suppressContentEditableWarning
+                >
+                  {block.text}
+                </HeadingTag>
+                {hoveredBlock === block.id && (
+                  <div className="block-icons">
+                    <FiTrash2
+                      onClick={() => deleteBlock(block.id)}
+                      className="icon delete-icon"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </DraggableBlock>
+        );
+      case 'paragraph':
+        return (
+          <DraggableBlock key={block.id} index={index} id={block.id} moveBlock={moveBlock}>
+            <div
+              className="card block-container"
+              onMouseEnter={() => handleMouseEnter(block.id)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="card-body d-flex justify-content-between align-items-center">
+                <p
+                  contentEditable
+                  onBlur={(e) => updateTextBlock(block.id, e.target.innerText)}
+                  suppressContentEditableWarning
+                >
+                  {block.text}
+                </p>
+                {hoveredBlock === block.id && (
+                  <div className="block-icons">
+                    <FiTrash2
+                      onClick={() => deleteBlock(block.id)}
+                      className="icon delete-icon"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </DraggableBlock>
+        );
+      case 'list':
+        const ListTag = block.listType === 'bullet' ? 'ul' : 'ol';
+        return (
+          <DraggableBlock key={block.id} index={index} id={block.id} moveBlock={moveBlock}>
+            <div
+              className="card block-container"
+              onMouseEnter={() => handleMouseEnter(block.id)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="card-body d-flex justify-content-between align-items-center">
+                <ListTag>
+                  {block.items.map((item, i) => (
+                    <li key={i} className='d-flex align-items-center justify-content-between'>
+                      <span
+                        contentEditable
+                        onBlur={(e) => updateListItem(block.id, i, e.target.innerText)}
+                        suppressContentEditableWarning
+                      >
+                        {item}
+                      </span>
+                      {hoveredBlock === block.id && (
+                        <div className='list-buttons'>
+                          <FiTrash2 onClick={() => deleteListItem(block.id, i)} className='icon delete-item-icon' />
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ListTag>
+                {hoveredBlock === block.id && (
+                  <div className="list-buttons">
+                    <FiPlus onClick={() => addListItem(block.id)} className='icon add-item-icon' />
+                    <FiTrash2 onClick={() => deleteBlock(block.id)} className='icon delete-icon' />
+                  </div>
+                )}
+              </div>
+            </div>
+          </DraggableBlock>
+        );
+      case 'code':
+        return (
+          <DraggableBlock key={block.id} index={index} id={block.id} moveBlock={moveBlock}>
+            <div
+              className="card block-container"
+              onMouseEnter={() => handleMouseEnter(block.id)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="card-body d-flex justify-content-between align-items-center">
+                <pre className='flex-grow-1'>
+                  <code className={`language-${block.language}`}>{block.code}</code>
+                </pre>
+                {hoveredBlock === block.id && (
+                  <div className="block-icons">
+                    <FiTrash2
+                      onClick={() => deleteBlock(block.id)}
+                      className="icon delete-icon"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </DraggableBlock>
+        );
+      case 'image':
+        return (
+          <DraggableBlock key={block.id} index={index} id={block.id} moveBlock={moveBlock}>
+            <div
+              className="card block-container"
+              onMouseEnter={() => handleMouseEnter(block.id)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="card-body d-flex justify-content-between align-items-center">
+                <img src={block.src} alt={block.alt} />
+                {hoveredBlock === block.id && (
+                  <div className="block-icons">
+                    <FiTrash2
+                      onClick={() => deleteBlock(block.id)}
+                      className="icon delete-icon"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </DraggableBlock>
+        );
+      default:
+        return <div key={index}>Unsupported block type</div>;
+    }
   };
 
-  const handleSave = () => {
-    onSave(blocks);
-  };
 
   return (
-    <div className="notion-page-container">
-      <div className="content-container">
-        {blocks.map(block => (
-          <div key={block.id} className="block border rounded p-2 mb-2">
-            {block.content.map((line, index) => (
-              <Line
-                key={index}
-                content={line}
-                onDoubleClick={(e) => handleDoubleClickLine(block.id, index, line, e)}
-                isEditing={currentBlockId === block.id && editingLine === index}
-                onChange={(e) => handleLineChange(block.id, index, e)}
-                onBlur={handleLineBlur}
-                caretPosition={currentBlockId === block.id && editingLine === index ? caretPosition : null}
-                onEnter={() => handleAddLine(block.id, index)}
-                onDelete={() => handleDeleteLine(block.id, index)}
-              />
-            ))}
+    <DndProvider backend={HTML5Backend}>
+      <div className="notion-page">
+        {blocks.map((block, index) => renderBlock(block, index))}
+        <div className="mt-3">
+          <div className="dropdown">
+            <button className="btn btn-secondary dropdown-toggle" type="button" id="addBlockDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              Add
+            </button>
+            <ul className="dropdown-menu" aria-labelledby="addBlockDropdown">
+              <li><button className="dropdown-item" onClick={() => addBlock('heading', { level: 2 })}>Add Heading</button></li>
+              <li><button className="dropdown-item" onClick={() => addBlock('paragraph')}>Add Paragraph</button></li>
+              <li><button className="dropdown-item" onClick={() => addBlock('list')}>Add List</button></li>
+              <li><button className="dropdown-item" onClick={() => addBlock('code')}>Add Code Block</button></li>
+            </ul>
           </div>
-        ))}
-        <div className="add-block-container mt-3">
-          <button className="btn btn-primary" onClick={handleAddBlock}>
-            <FiPlus />
-          </button>
         </div>
       </div>
-      <div className="d-flex gap-2 mt-3 justify-content-end">
-        <button onClick={handleSave} className="btn btn-success btn-sm">
-          <FiSave className="me-1" />
-          Save All
-        </button>
-        {onCloseEditor && (
-          <button onClick={onCloseEditor} className="btn btn-secondary btn-sm">
-            <FiArrowLeft className="me-1" />
-            Cancel
-          </button>
-        )}
-      </div>
+    </DndProvider>
+  );
+};
+
+
+
+const DraggableBlock = ({ id, index, moveBlock, children }) => {
+  const ref = useRef(null);
+
+
+  const [, drop] = useDrop({
+    accept: 'block',
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      moveBlock(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+  const [{ isDragging }, drag] = useDrag({
+    type: 'block',
+    item: () => {
+      return { id, index };
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  drag(drop(ref));
+
+  return (
+    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+      {children}
     </div>
   );
 };
+
 
 export default NotionPage;

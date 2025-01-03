@@ -1,117 +1,53 @@
-/* NotionPage.css */
-.notion-page-container {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
+.notion-page {
+	font-family: sans-serif;
+	/* padding: 20px; */
+	max-width: 900px; /* Optional: set max width of the notion page, e.g., 900px*/
+	margin: 0 auto; /*Optional: center the Notion page if max width is set*/
 }
 
-.editor-preview-container {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	overflow: hidden;
-}
-
-.content-container {
-	flex: 1;
-	overflow-y: auto;
-	padding: 10px;
-}
-
-.block {
+.block-container {
+	margin-bottom: 10px;
 	position: relative;
-	transition: background-color 0.2s ease;
-}
-
-.block.editing {
-	background-color: #f0f0f0;
-}
-
-.rendered-block {
-	position: relative;
-	padding-right: 0px; /* Removed space for the edit button */
-}
-
-.block-options {
-	position: absolute;
-	top: 50%;
-	right: 0;
-	transform: translateY(-50%);
-	display: flex;
-	gap: 5px;
-	opacity: 0;
-	transition: opacity 0.2s ease;
-}
-
-.block:hover .block-options {
-	opacity: 1;
-}
-
-.edit-button,
-.delete-button {
-	background: none;
-	border: none;
-	cursor: pointer;
-}
-
-.inline-editor {
-	position: relative;
-}
-
-.inline-textarea {
 	width: 100%;
-	border: 1px solid #ccc;
-	padding: 5px;
-	font-family: monospace;
-	resize: vertical;
-	overflow: auto;
 }
 
-.add-block-container {
-	display: flex;
-	justify-content: center;
-	padding: 5px 0;
+.card {
+	border: 1px solid #dee2e6; /* Add a border to the card */
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	margin: 5px 0; /* Add margin to space the blocks out*/
+	transition: box-shadow 0.3s ease; /* Add transition for smooth hover */
+}
+.card:hover {
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /*Add a larger shadow on hover*/
 }
 
-.add-block-button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	font-size: 1.2em;
-	color: #888;
-}
-
-.add-block-button:hover {
-	color: #333;
-}
-
-.context-menu {
-	position: absolute;
-	background-color: white;
-	border: 1px solid #ccc;
-	padding: 5px;
-	z-index: 1000;
-}
-
-.context-menu-item {
+.block-icons {
 	display: flex;
 	align-items: center;
-	gap: 5px;
-	background: none;
-	border: none;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.block-icons .icon {
 	cursor: pointer;
+	font-size: 18px;
+	margin-left: 5px;
 	padding: 5px;
 }
 
-.context-menu-item:hover {
-	background-color: #f0f0f0;
+.block-container .card-body {
+	padding-right: 30px;
 }
-.content-container {
-	height: 50vh;
-	overflow-y: auto;
+
+.list-buttons {
+	display: flex;
+	gap: 10px;
+	align-items: center;
 }
-.inline-editor textarea {
-	max-height: 50vh;
-	height: auto;
-	overflow-y: auto;
+
+.list-buttons .icon {
+	cursor: pointer;
+	font-size: 18px;
+	padding: 5px;
 }
