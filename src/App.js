@@ -16,6 +16,7 @@ import ProfilePage from 'pages/ProfilePage';
 import SignUpPage from 'pages/SignUpPage';
 import NotionPage from 'experiments/notion-page/NotionPage';
 import PromptingAssistantPage from 'experiments/prompting-assistant/PromptingAssistantPage';
+import LatexRenderer from 'experiments/LatexRender';
 
 const App = () => {
 
@@ -40,6 +41,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/experiments/notion-page" element={<NotionPage />} />
             <Route path="/experiments/prompting" element={<PromptingAssistantPage />} />
+            <Route path="/experiments/latex-render" element={<LatexRenderer />} />
           </Routes>
         </div>
         <Footer />

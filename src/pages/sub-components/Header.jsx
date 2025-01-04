@@ -88,6 +88,13 @@ const Header = () => {
                         >
                             Notion Page
                         </NavDropdown.Item>
+                        <NavDropdown.Item
+                            as={Link}
+                            to="/experiments/latex-render"
+                            onClick={handleNavItemClick}
+                        >
+                            Latex Renderer
+                        </NavDropdown.Item>
                     </NavDropdown>
 
                     <Nav.Link
