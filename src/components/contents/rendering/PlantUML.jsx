@@ -1,3 +1,4 @@
+// src/components/contents/rendering/PlantUML.jsx
 import React, { useEffect, useState } from "react";
 import plantumlEncoder from "plantuml-encoder";
 

@@ -1,4 +1,4 @@
-// Card.js
+// src/components/contents/Card.jsx
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';

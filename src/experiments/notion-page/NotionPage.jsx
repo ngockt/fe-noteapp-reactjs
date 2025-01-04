@@ -1,10 +1,17 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './NotionPage.css';
 import { DndProvider, useDrop, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { v4 as uuidv4 } from 'uuid';
-import { FiEdit, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiPlus, FiTrash2, FiUpload } from 'react-icons/fi';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
+import Mermaid from 'components/contents/rendering/Mermaid';
+import PlantUML from 'components/contents/rendering/PlantUML';
+
 
 const NotionPage = () => {
   const [blocks, setBlocks] = useState([
@@ -28,6 +35,10 @@ const NotionPage = () => {
   const [hoveredBlock, setHoveredBlock] = useState(null);
   const handleMouseEnter = (id) => setHoveredBlock(id);
   const handleMouseLeave = () => setHoveredBlock(null);
+  const fileInputRef = useRef(null);
+
+  // PASTE IMAGE HANDLER (store image in state as base64)
+  const [imageMap, setImageMap] = useState({});
 
 
   const addBlock = (type, options = {}) => {
@@ -98,6 +109,104 @@ const NotionPage = () => {
     setBlocks(newBlocks);
   }, [blocks, setBlocks]);
 
+  const handlePaste = async (e, blockId) => {
+    const files = e.clipboardData?.files || (e.target?.files ? Array.from(e.target.files) : []);
+
+    if (files.length > 0) {
+      const file = files[0];
+      if (file && file.type.startsWith('image/')) {
+        e.preventDefault();
+
+        // Generate a UUID for the image
+        const imageUUID = uuidv4();
+
+        // Read the file as a Data URL
+        const reader = new FileReader();
+        reader.onload = (loadEvent) => {
+          const dataURL = loadEvent.target.result;
+
+          // 1) Store the Data URL in state
+          setImageMap(prev => ({ ...prev, [imageUUID]: dataURL }));
+
+          // 2) Insert a Markdown reference using the custom `ls://<UUID>` syntax
+          const markdownRef = `![Pasted Image](${imageUUID})\n`;
+
+          // 3) Update the editor content with the new Markdown reference
+          setBlocks((prev) =>
+            prev.map((block) => {
+              if (block.id === blockId && (block.type === 'paragraph')) {
+                const updatedContent = (block.text || '') + markdownRef;
+                return { ...block, text: updatedContent };
+              }
+              return block;
+            })
+          );
+        };
+
+        reader.readAsDataURL(file);
+      }
+    }
+    if (e.target?.files) {
+      // Clear the file input after processing
+      e.target.value = null;
+    }
+  };
+  const handleUploadClick = (blockId) => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+      fileInputRef.current.blockId = blockId;
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const blockId = fileInputRef.current?.blockId;
+    handlePaste(e, blockId);
+    if (fileInputRef.current) {
+      fileInputRef.current.blockId = null;
+    }
+  };
+
+
+  const preprocessContent = (text) =>
+    text
+      ?.replace(/\\\(/g, '$')
+      .replace(/\\\)/g, '$')
+      .replace(/\\\[/g, '$$')
+      .replace(/\\\]/g, '$$');
+
+  // Custom image renderer
+  const ImageRenderer = ({ src, alt }) => {
+    const dataURL = imageMap[src] || '';
+    return dataURL ? <img src={dataURL} alt={alt} style={{ maxWidth: '100%' }} /> : null;
+  };
+
+  // You can still add custom renderers for code blocks (mermaid, plantuml, etc.)
+  const MarkdownComponents = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || '');
+      if (match) {
+        switch (match[1]) {
+          case 'mermaid':
+            return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+          case 'plantuml':
+            return <PlantUML content={String(children).replace(/\n$/, '')} />;
+          default:
+            return (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+        }
+      }
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+    img: ImageRenderer, // Use the custom image renderer
+  };
+
 
   const renderBlock = (block, index) => {
     switch (block.type) {
@@ -138,19 +247,53 @@ const NotionPage = () => {
               onMouseEnter={() => handleMouseEnter(block.id)}
               onMouseLeave={handleMouseLeave}
             >
-              <div className="card-body d-flex justify-content-between align-items-center">
-                <p
-                  contentEditable
-                  onBlur={(e) => updateTextBlock(block.id, e.target.innerText)}
-                  suppressContentEditableWarning
-                >
-                  {block.text}
-                </p>
+              <div className="card-body d-flex  align-items-center">
+                <div className='flex-grow-1'>
+                  <ReactMarkdown
+                    components={MarkdownComponents}
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                  >
+                    {preprocessContent(block.text)}
+                  </ReactMarkdown>
+                  {hoveredBlock === block.id && (
+                    <div className="d-flex justify-content-end">
+                      <button
+                        onClick={() => handleUploadClick(block.id)}
+                        className="btn btn-light btn-sm"
+                        aria-label="Upload Image"
+                      >
+                        <FiUpload />
+                      </button>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                  )}
+                  {hoveredBlock === block.id && (
+                    <div className="block-icons">
+                      <FiTrash2
+                        onClick={() => deleteBlock(block.id)}
+                        className="icon delete-icon"
+                      />
+                    </div>
+                  )}
+
+                </div>
                 {hoveredBlock === block.id && (
                   <div className="block-icons">
-                    <FiTrash2
-                      onClick={() => deleteBlock(block.id)}
-                      className="icon delete-icon"
+                    <FiEdit
+                      onClick={() => {
+                        const newText = prompt('Edit text:', block.text);
+                        if (newText !== null) {
+                          updateTextBlock(block.id, newText);
+                        }
+                      }}
+                      className="icon edit-icon"
                     />
                   </div>
                 )}

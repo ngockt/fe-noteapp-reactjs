@@ -1,3 +1,4 @@
+// src/components/contents/rendering/Mermaid.jsx
 import React, { useEffect, useRef } from 'react';
 import mermaid from 'mermaid';
 
