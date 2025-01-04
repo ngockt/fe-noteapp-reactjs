@@ -262,7 +262,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
           const dataURL = loadEvent.target.result;
 
           // 1) Store the Data URL in state
-          setImageMap(prev => ({...prev, [imageUUID]: dataURL}));
+          setImageMap(prev => ({ ...prev, [imageUUID]: dataURL }));
 
           // 2) Insert a Markdown reference using the custom `ls://<UUID>` syntax
           const markdownRef = `![Pasted Image](${imageUUID})\n`;
@@ -304,18 +304,25 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
   // -------------------------------------------------------------------
   // 8) Markdown & code block rendering
   // -------------------------------------------------------------------
-  const preprocessContent = (text) =>
-    text
-      .replace(/\\\(/g, '$')
-      .replace(/\\\)/g, '$')
-      .replace(/\\\[/g, '$$')
-      .replace(/\\\]/g, '$$');
+  const preprocessContent = (text) => {
+    text = text
+      // Convert \( ... \) to $ ... $
+      .replace(/\\\(([\s\S]*?)\\\)/g, function (match, p1) {
+        return `$${p1}$`;
+      })
+
+      // Convert \[ ... \] to $$ ... $$
+      .replace(/\\\[([\s\S]*?)\\\]/g, function (match, p1) {
+        return `$$${p1}$$`;
+      });
+    return text;
+  };
 
   // Custom image renderer
   const ImageRenderer = ({ src, alt }) => {
     console.log("ImageRenderer called with src:", src, "alt:", alt);
     const dataURL = imageMap[src] || '';
-    return dataURL ? <img src={dataURL} alt={alt} style={{maxWidth: '100%'}} /> : null;
+    return dataURL ? <img src={dataURL} alt={alt} style={{ maxWidth: '100%' }} /> : null;
   };
 
   // You can still add custom renderers for code blocks (mermaid, plantuml, etc.)
