@@ -73,7 +73,7 @@ const Header = () => {
 
 
                     {/* Experiments Dropdown */}
-                    <NavDropdown title="Experiments" id="experiments-dropdown" onToggle={() => setExpanded(false)}>
+                    <NavDropdown title="Experiments" id="experiments-dropdown" onToggle={() => setExpanded(false)} onClick={() => setExpanded(false)}>
                         <NavDropdown.Item
                             as={Link}
                             to="/experiments/prompting"
@@ -99,13 +99,21 @@ const Header = () => {
 
                     <Nav.Link
                         as={Link}
+                        to="/docs"
+                        active={location.pathname === "/about"}
+                        onClick={handleNavItemClick}
+                    >
+                        Docs
+                    </Nav.Link>
+
+                    <Nav.Link
+                        as={Link}
                         to="/about"
                         active={location.pathname === "/about"}
                         onClick={handleNavItemClick}
                     >
                         About
                     </Nav.Link>
-
 
                     {/* Conditional Login/Profile */}
                     {user ? (
