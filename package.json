@@ -28,6 +28,7 @@
     "react-scripts": "5.0.1",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
+    "styled-components": "^6.1.14",
     "uuid": "^9.0.1",
     "vis-data": "^7.1.9",
     "vis-network": "^9.1.9",
