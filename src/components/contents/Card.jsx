@@ -416,14 +416,14 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
           <div className="icon-container d-flex align-items-center">
             <button
               onClick={handleEdit}
-              className="btn btn-light btn-sm"
+              className="btn btn-light btn-sm p-1"
               aria-label="Edit Title"
             >
               <FiEdit />
             </button>
             <button
               onClick={handleFullScreenToggle}
-              className="btn btn-light btn-sm me-2"
+              className="btn btn-light btn-sm p-1"
               aria-label="Toggle Fullscreen"
             >
               {isFullScreen ? <FiMinimize /> : <FiMaximize />}

@@ -43,7 +43,7 @@
 	padding: 1rem;
 	flex: 1; /* In fullscreen, let the body grow/shrink */
 	display: flex;
-	flex-direction: column; 
+	flex-direction: column;
 	overflow: hidden; /* We'll manage scrolling within content container */
 }
 
