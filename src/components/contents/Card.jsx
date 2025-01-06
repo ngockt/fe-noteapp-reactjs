@@ -490,11 +490,11 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
           {/* Save & Cancel Buttons (when editing) */}
           {isEditing && (
             <div className="d-flex gap-2 mt-3">
-              <button onClick={handleSave} className="btn btn-success btn-sm">
+              <button onClick={handleSave} className="btn btn-success btn-sm p-2">
                 <FiSave className="me-1" />
                 Save
               </button>
-              <button onClick={handleCancel} className="btn btn-secondary btn-sm">
+              <button onClick={handleCancel} className="btn btn-secondary btn-sm p-2">
                 <FiArrowLeft className="me-1" />
                 Cancel
               </button>
@@ -507,7 +507,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
           {/* VERSION */}
           <div>
             <button
-              className="btn btn-sm btn-outline-primary"
+              className="btn btn-sm btn-outline-primary p-1"
               onClick={() => setShowVersionModal(true)}
             >
               {activeVersion || 'Select Version'}
@@ -517,7 +517,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
           {/* LANGUAGE */}
           <div>
             <button
-              className="btn btn-sm btn-outline-primary"
+              className="btn btn-sm btn-outline-primary p-1"
               onClick={() => setShowLanguageModal(true)}
             >
               {(() => {
@@ -530,7 +530,7 @@ const Card = ({ card, onSave, isNew, onCloseEditor }) => {
           {/* NODE */}
           <div>
             <button
-              className="btn btn-sm btn-outline-primary"
+              className="btn btn-sm btn-outline-primary p-1"
               onClick={() => setShowNodeModal(true)}
             >
               {nodeInfo ? (
