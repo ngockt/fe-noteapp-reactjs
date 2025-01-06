@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import PropTypes from 'prop-types'; 
 
 import Mermaid from './Mermaid';
 import PlantUML from './PlantUML';
@@ -85,4 +86,9 @@ const CardContentRender = ({ content, imageMap, isEditing }) => {
     );
 };
 
+CardContentRender.propTypes = {  // Define propTypes
+    content: PropTypes.string,
+    imageMap: PropTypes.objectOf(PropTypes.string),
+    isEditing: PropTypes.bool,
+};
 export default CardContentRender;
