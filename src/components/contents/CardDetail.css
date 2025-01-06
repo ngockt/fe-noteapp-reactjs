@@ -1,23 +1,21 @@
 .card-detail-page {
-    padding: 20px; /* Add some padding around the content */
+	display: flex;
+	flex-direction: column;
+	min-height: 90vh; /* Ensure the page takes at least the full viewport height */
 }
 
-.card-detail-page .card {
-    border: none; /* Remove the card border */
-    box-shadow: none; /* Remove the card shadow */
+.card-detail-body {
+	flex-grow: 1; /* Allow the body to take up the available space */
+	display: flex;
+	flex-direction: column;
 }
 
-.card-detail-page .card-header {
-    background-color: transparent; /* Remove background color */
-    border-bottom: none; /* Remove border */
+.card-content-container {
+	flex-grow: 1;
 }
 
-.card-detail-page .card-body {
-    padding: 0; /* Adjust padding as needed */
-}
-
-.card-detail-page .card-footer {
-    background-color: transparent; /* Remove background color */
-    border-top: none; /* Remove border */
-    padding: 0; /* Adjust padding as needed */
+.card-detail-footer {
+	/* No changes needed here - the flex-grow on the body does the work */
+	margin-top: auto; /* Push the footer to the bottom */
+	padding-top: 1rem;
 }

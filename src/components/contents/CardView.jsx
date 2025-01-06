@@ -1,25 +1,19 @@
 // src/components/contents/CardView.jsx
 import React, { useState, useEffect, useMemo } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
 import { FiEdit, FiMaximize, FiMinimize } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import { useNavigate } from 'react-router-dom';
 
-import 'katex/dist/katex.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-import Mermaid from './rendering/Mermaid';
-import PlantUML from './rendering/PlantUML';
-import './Card.css'; // Use the same CSS as Card.jsx
+import './CardView.css'; // Your CSS
 
 import VersionModal from './VersionModal';
 import LanguageModal from './LanguageModal';
-import NodeModal from './NodeModal';
 
 import { useLanguagesData } from 'context_data/LanguageDataContext';
 import { useGraphData } from 'context_data/GraphDataContext';
+import CardContentRender from './rendering/CardContentRender';
 
 const CardView = ({ card }) => {
     // -------------------------------------------------------------------
@@ -112,44 +106,15 @@ const CardView = ({ card }) => {
     const allLanguages = useLanguagesData();
 
     // -------------------------------------------------------------------
-    // 6) Node selection modal
+    // 6) Node selection (disabled in this case)
     // -------------------------------------------------------------------
-    const [showNodeModal, setShowNodeModal] = useState(false);
     const mapData = useGraphData();
     const nodeList = mapData?.nodes || [];
 
     const [nodeInfo, setNodeInfo] = useState(card.node_info || null);
 
     // -------------------------------------------------------------------
-    // 7) Markdown & code block rendering
-    // -------------------------------------------------------------------
-    const MarkdownComponents = {
-        code({ node, inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || '');
-            if (match) {
-                switch (match[1]) {
-                    case 'mermaid':
-                        return <Mermaid chart={String(children).replace(/\n$/, '')} />;
-                    case 'plantuml':
-                        return <PlantUML content={String(children).replace(/\n$/, '')} />;
-                    default:
-                        return (
-                            <code className={className} {...props}>
-                                {children}
-                            </code>
-                        );
-                }
-            }
-            return (
-                <code className={className} {...props}>
-                    {children}
-                </code>
-            );
-        },
-    };
-
-    // -------------------------------------------------------------------
-    // 8) Navigation to CardDetail
+    // 7) Navigation to CardDetail
     // -------------------------------------------------------------------
     const navigate = useNavigate();
 
@@ -158,7 +123,7 @@ const CardView = ({ card }) => {
     };
 
     // -------------------------------------------------------------------
-    // 9) Early return if there's no version or no language
+    // 8) Early return if there's no version or no language
     // -------------------------------------------------------------------
     if (!currentVersionObj || !activeLang) {
         return (
@@ -211,15 +176,7 @@ const CardView = ({ card }) => {
 
                 {/* --- CARD BODY (main content) --- */}
                 <div className="card-body">
-                    <div className="card-content-container">
-                        <ReactMarkdown
-                            components={MarkdownComponents}
-                            remarkPlugins={[remarkMath]}
-                            rehypePlugins={[rehypeKatex]}
-                        >
-                            {content}
-                        </ReactMarkdown>
-                    </div>
+                    <CardContentRender content={content} isEditing={false} />
                 </div>
 
                 {/* --- CARD FOOTER (versions, language, node selection) --- */}
@@ -247,11 +204,11 @@ const CardView = ({ card }) => {
                         </button>
                     </div>
 
-                    {/* NODE */}
+                    {/* NODE (disabled) */}
                     <div>
                         <button
-                            className="btn btn-sm btn-outline-primary p-1"
-                            onClick={() => setShowNodeModal(true)}
+                            className="btn btn-sm btn-outline-secondary p-1"
+                            disabled // Disable the button
                         >
                             {nodeInfo ? (
                                 <>
@@ -261,7 +218,7 @@ const CardView = ({ card }) => {
                                     </span>
                                 </>
                             ) : (
-                                'Select Node'
+                                'Node'
                             )}
                         </button>
                     </div>
@@ -274,24 +231,19 @@ const CardView = ({ card }) => {
                 onClose={() => setShowVersionModal(false)}
                 versions={versions}
                 onSelect={handleSelectVersion}
+                isEditing={false} // Pass isEditing as false
             />
 
             {/* -- Language Modal -- */}
             <LanguageModal
                 show={showLanguageModal}
                 onClose={() => setShowLanguageModal(false)}
-                currentLanguages={[]} // Not used in view-only mode
+                currentLanguages={currentVersionObj.contents.map(
+                    (content) => content.language_id
+                )}
                 allLanguages={allLanguages}
                 onSelect={(langId) => setActiveLang(langId)}
-            />
-
-            {/* -- Node Modal -- */}
-            <NodeModal
-                show={showNodeModal}
-                onClose={() => setShowNodeModal(false)}
-                nodes={nodeList}
-                onSelect={() => { }} // No selection logic in view-only mode
-                currentNode={nodeInfo}
+                isEditing={false} // Pass isEditing as false
             />
         </>
     );

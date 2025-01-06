@@ -1,14 +1,14 @@
-// VersionModal.jsx
-
+// src/components/contents/VersionModal.js
 import React, { useState } from 'react';
 
-function VersionModal({ show, onClose, versions, onSelect, onAddVersion }) {
-    /**
-     * versions: array of version objects, e.g. [{ version: "1.0.0", contents: [...] }, ...]
-     * onSelect: function(selectedVersionString)
-     * onAddVersion: function(newVersionString)
-     */
-
+function VersionModal({
+    show,
+    onClose,
+    versions,
+    onSelect,
+    onAddVersion,
+    isEditing = false, // Add isEditing prop with default value false
+}) {
     const [searchTerm, setSearchTerm] = useState('');
     const [newVersion, setNewVersion] = useState('');
 
@@ -40,7 +40,9 @@ function VersionModal({ show, onClose, versions, onSelect, onAddVersion }) {
                 <div className="modal-content">
                     {/* Header */}
                     <div className="modal-header">
-                        <h5 className="modal-title">Select Version</h5>
+                        <h5 className="modal-title">
+                            {isEditing ? 'Select or Add Version' : 'Select Version'}
+                        </h5>
                         <button type="button" className="btn-close" onClick={onClose} />
                     </div>
 
@@ -82,26 +84,32 @@ function VersionModal({ show, onClose, versions, onSelect, onAddVersion }) {
                             </ul>
                         </div>
 
-                        {/* Divider */}
-                        <hr />
+                        {/* Conditionally render the "Add New Version" section */}
+                        {isEditing && (
+                            <>
+                                <hr />
 
-                        {/* Add New Version */}
-                        <div className="mb-3">
-                            <label className="form-label fw-bold">Create New Version:</label>
-                            <input
-                                type="text"
-                                className="form-control form-control-sm"
-                                placeholder="Enter new version (e.g. 2.0.0)"
-                                value={newVersion}
-                                onChange={(e) => setNewVersion(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            className="btn btn-sm btn-primary"
-                            onClick={handleAddVersionClick}
-                        >
-                            Add Version
-                        </button>
+                                {/* Add New Version */}
+                                <div className="mb-3">
+                                    <label className="form-label fw-bold">
+                                        Create New Version:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        placeholder="Enter new version (e.g. 2.0.0)"
+                                        value={newVersion}
+                                        onChange={(e) => setNewVersion(e.target.value)}
+                                    />
+                                </div>
+                                <button
+                                    className="btn btn-sm btn-primary"
+                                    onClick={handleAddVersionClick}
+                                >
+                                    Add Version
+                                </button>
+                            </>
+                        )}
                     </div>
 
                     {/* Footer */}

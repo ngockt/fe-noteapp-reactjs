@@ -1,20 +1,15 @@
-// LanguageModal.jsx
-
+// src/components/contents/LanguageModal.js
 import React, { useState } from 'react';
 
 function LanguageModal({
     show,
     onClose,
-    currentLanguages, // array of IDs in the active version
-    allLanguages,     // all known languages
-    onSelect,         // function(langId) for selecting an existing language
-    onAddLanguage     // function(langId) for adding a new language
+    currentLanguages,
+    allLanguages,
+    onSelect,
+    onAddLanguage,
+    isEditing = false, // Add isEditing prop with default value false
 }) {
-    /**
-     * currentLanguages: e.g. ["en", "fr"] for the active version
-     * allLanguages: e.g. [{ id: 'en', code: 'en', name: 'English' }, ...]
-     */
-
     // 1) Partition the global languages into:
     //    - currentLangObjs = languages that the active version already has
     //    - availableLangObjs = the rest
@@ -62,7 +57,9 @@ function LanguageModal({
                 <div className="modal-content">
                     {/* Header */}
                     <div className="modal-header">
-                        <h5 className="modal-title">Select or Add Language</h5>
+                        <h5 className="modal-title">
+                            {isEditing ? 'Select or Add Language' : 'Select Language'}
+                        </h5>
                         <button type="button" className="btn-close" onClick={onClose} />
                     </div>
 
@@ -83,7 +80,10 @@ function LanguageModal({
                         </div>
 
                         {/* Scrollable container for current languages */}
-                        <div style={{ maxHeight: '150px', overflowY: 'auto' }} className="mb-4">
+                        <div
+                            style={{ maxHeight: '150px', overflowY: 'auto' }}
+                            className="mb-4"
+                        >
                             {filteredCurrentLangs.length > 0 ? (
                                 <ul className="list-group">
                                     {filteredCurrentLangs.map((lang) => (
@@ -109,49 +109,54 @@ function LanguageModal({
                             )}
                         </div>
 
-                        <hr />
+                        {/* Conditionally render the "Add New Language" section */}
+                        {isEditing && (
+                            <>
+                                <hr />
 
-                        {/* SECTION B: Add New Language (available for adding) */}
-                        <h6 className="mb-2">Add New Language</h6>
+                                {/* SECTION B: Add New Language (available for adding) */}
+                                <h6 className="mb-2">Add New Language</h6>
 
-                        {/* Search bar for adding new languages */}
-                        <div className="mb-2">
-                            <input
-                                type="text"
-                                className="form-control form-control-sm"
-                                placeholder="Search available languages..."
-                                value={searchTermAdd}
-                                onChange={(e) => setSearchTermAdd(e.target.value)}
-                            />
-                        </div>
+                                {/* Search bar for adding new languages */}
+                                <div className="mb-2">
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        placeholder="Search available languages..."
+                                        value={searchTermAdd}
+                                        onChange={(e) => setSearchTermAdd(e.target.value)}
+                                    />
+                                </div>
 
-                        {/* Scrollable container for available languages */}
-                        <div style={{ maxHeight: '150px', overflowY: 'auto' }}>
-                            {filteredAvailableLangs.length > 0 ? (
-                                <ul className="list-group">
-                                    {filteredAvailableLangs.map((lang) => (
-                                        <li
-                                            key={lang.id}
-                                            className="list-group-item list-group-item-action"
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => {
-                                                onAddLanguage(lang.id);
-                                                // optional: also set it as active
-                                                // onSelect(lang.id);
-                                                onClose(); // optional auto-close
-                                            }}
-                                        >
-                                            {lang.code.toUpperCase()}
-                                            {lang.name ? ` (${lang.name})` : ''}
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p className="text-muted">
-                                    <em>No matching languages available to add.</em>
-                                </p>
-                            )}
-                        </div>
+                                {/* Scrollable container for available languages */}
+                                <div style={{ maxHeight: '150px', overflowY: 'auto' }}>
+                                    {filteredAvailableLangs.length > 0 ? (
+                                        <ul className="list-group">
+                                            {filteredAvailableLangs.map((lang) => (
+                                                <li
+                                                    key={lang.id}
+                                                    className="list-group-item list-group-item-action"
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => {
+                                                        onAddLanguage(lang.id);
+                                                        // optional: also set it as active
+                                                        // onSelect(lang.id);
+                                                        onClose(); // optional auto-close
+                                                    }}
+                                                >
+                                                    {lang.code.toUpperCase()}
+                                                    {lang.name ? ` (${lang.name})` : ''}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p className="text-muted">
+                                            <em>No matching languages available to add.</em>
+                                        </p>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     {/* Footer */}

@@ -1,9 +1,10 @@
+// src/components/contents/CardListDetail.js
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './CardListDetail.css';
+import './CardListDetail.css'; // Your CSS
 import { FiEdit } from 'react-icons/fi';
 
-// We'll use our contexts to get the list of languages and nodes
+// Contexts
 import { useLanguagesData } from 'context_data/LanguageDataContext';
 import { useGraphData } from 'context_data/GraphDataContext';
 import CardView from './CardView';
@@ -15,30 +16,26 @@ const NewCardModal = ({ show, onClose, onCreate }) => {
     const allLanguages = useLanguagesData();
     const graphData = useGraphData();
 
-    // Safe checks (you can adapt these if your data structure differs)
+    // Safe checks
     const languages = allLanguages || [];
     const nodes = graphData?.nodes || [];
 
-    // Local state for the user’s choices
+    // Local state for choices
     const [selectedLang, setSelectedLang] = useState('');
     const [selectedNode, setSelectedNode] = useState('');
 
-    // Called when user clicks "Create" in the modal
+    // Handle "Create" button in modal
     const handleCreate = () => {
-        // If either is not selected, you might want to show a warning or just prevent creation
         if (!selectedLang || !selectedNode) {
-            // For example, do nothing or show an alert
             return;
         }
 
         // Find the node object from the ID
         const foundNode = nodes.find((n) => n.id === selectedNode);
 
-        // We pass the selected language + node up to the parent
         onCreate(selectedLang, foundNode);
     };
 
-    // If `show` is false, we don’t render anything
     if (!show) return null;
 
     return (
@@ -127,7 +124,7 @@ const NewCardModal = ({ show, onClose, onCreate }) => {
 const CardListDetail = ({ cards }) => {
     const [currentCards, setCurrentCards] = useState(cards || []);
 
-    // State that determines whether the "New Card" modal is visible
+    // State for "New Card" modal
     const [showNewCardModal, setShowNewCardModal] = useState(false);
 
     useEffect(() => {
@@ -136,22 +133,14 @@ const CardListDetail = ({ cards }) => {
         }
     }, [cards]);
 
-    // Show the "New Card" modal
-    const handleOpenNewCardModal = () => {
-        setShowNewCardModal(true);
-    };
+    // Show/hide modal
+    const handleOpenNewCardModal = () => setShowNewCardModal(true);
+    const handleCloseNewCardModal = () => setShowNewCardModal(false);
 
-    // Hide the "New Card" modal
-    const handleCloseNewCardModal = () => {
-        setShowNewCardModal(false);
-    };
-
-    // Actually create the new card
-    // Called once user selects language + node in the popup and clicks "Create"
+    // Create the new card
     const handleAddCard = (language_id, nodeInfo) => {
-        const newId = Date.now(); // Unique ID for the new card
+        const newId = Date.now(); // Unique ID
 
-        // Example structure to match your Card.jsx usage:
         const newCard = {
             id: newId,
             node_info: nodeInfo,
@@ -169,22 +158,18 @@ const CardListDetail = ({ cards }) => {
             ],
         };
 
-        // Insert the new card at the top
+        // Insert at top
         setCurrentCards((prev) => [newCard, ...prev]);
-
-        // onCardSaved(newCard); // Notify the parent component about the new card
     };
 
     return (
         <div className="container mt-4">
-            {/* Our "Create New Card" modal */}
+            {/* "Create New Card" modal */}
             <NewCardModal
                 show={showNewCardModal}
                 onClose={handleCloseNewCardModal}
                 onCreate={(langId, nodeObj) => {
-                    // Create the card
                     handleAddCard(langId, nodeObj);
-                    // Close modal
                     handleCloseNewCardModal();
                 }}
             />

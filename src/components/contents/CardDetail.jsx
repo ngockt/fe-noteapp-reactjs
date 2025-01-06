@@ -1,19 +1,14 @@
+// src/components/contents/CardDetail.js
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
 import { FiEdit, FiSave, FiArrowLeft, FiUpload } from 'react-icons/fi';
 
-import 'katex/dist/katex.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import Mermaid from './rendering/Mermaid';
-import PlantUML from './rendering/PlantUML';
-import './Card.css'; // You might need to adjust this CSS file
+import './CardDetail.css'; // CSS file (see below for complete code)
 
 import VersionModal from './VersionModal';
 import LanguageModal from './LanguageModal';
@@ -23,18 +18,24 @@ import { useLanguagesData } from 'context_data/LanguageDataContext';
 import { useGraphData } from 'context_data/GraphDataContext';
 import { getRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
+import CardContentRender from './rendering/CardContentRender';
 
 const CardDetail = () => {
   const { id } = useParams();
   const cardId = id;
 
   const [card, setCard] = useState(null);
+  const [nodeInfo, setNodeInfo] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getRequest(ENDPOINTS.CARDS.DETAIL(cardId));
         setCard(response);
+        // Set the nodeInfo from the response
+        if (response.node_info) {
+          setNodeInfo(response.node_info);
+        }
       } catch (error) {
         console.error('Error fetching card data:', error);
         // Handle error appropriately
@@ -167,8 +168,6 @@ const CardDetail = () => {
   const mapData = useGraphData();
   const nodeList = mapData?.nodes || [];
 
-  const [nodeInfo, setNodeInfo] = useState(card?.node_info || null);
-
   const handleSelectNode = (node) => {
     setNodeInfo({
       id: node.id,
@@ -271,50 +270,6 @@ const CardDetail = () => {
     }
   };
 
-  const preprocessContent = (text) => {
-    text = text
-      .replace(/\\\(([\s\S]*?)\\\)/g, function (match, p1) {
-        return `$${p1}$`;
-      })
-      .replace(/\\\[([\s\S]*?)\\\]/g, function (match, p1) {
-        return `$$${p1}$$`;
-      });
-    return text;
-  };
-
-  const ImageRenderer = ({ src, alt }) => {
-    const dataURL = imageMap[src] || '';
-    return dataURL ? (
-      <img src={dataURL} alt={alt} style={{ maxWidth: '100%' }} />
-    ) : null;
-  };
-
-  const MarkdownComponents = {
-    code({ node, inline, className, children, ...props }) {
-      const match = /language-(\w+)/.exec(className || '');
-      if (match) {
-        switch (match[1]) {
-          case 'mermaid':
-            return <Mermaid chart={String(children).replace(/\n$/, '')} />;
-          case 'plantuml':
-            return <PlantUML content={String(children).replace(/\n$/, '')} />;
-          default:
-            return (
-              <code className={className} {...props}>
-                {children}
-              </code>
-            );
-        }
-      }
-      return (
-        <code className={className} {...props}>
-          {children}
-        </code>
-      );
-    },
-    img: ImageRenderer,
-  };
-
   const handleSave = () => {
     setIsEditing(false);
   };
@@ -337,8 +292,6 @@ const CardDetail = () => {
 
   const title = currentContentsMap[activeLang]?.title || '';
   const content = currentContentsMap[activeLang]?.content || '';
-
-  const processedContent = content;
 
   return (
     <div className="card-detail-page p-3">
@@ -368,24 +321,16 @@ const CardDetail = () => {
         </div>
       </div>
 
-      <div className="mt-3">
+      {/* -- Main Content -- */}
+      <div className="mt-3 card-detail-body">
         <div className="card-content-container">
-          {isEditing && content && content.trim() && (
-            <>
-              <h6 className="mt-2">Live Preview:</h6>
-              <div className="live-preview">
-                <ReactMarkdown
-                  components={MarkdownComponents}
-                  remarkPlugins={[remarkMath]}
-                  rehypePlugins={[rehypeKatex]}
-                >
-                  {preprocessContent(processedContent)}
-                </ReactMarkdown>
-              </div>
-            </>
-          )}
+          <CardContentRender
+            content={content}
+            imageMap={imageMap}
+            isEditing={isEditing}
+          />
 
-          {isEditing ? (
+          {isEditing && (
             <>
               <textarea
                 value={content || ''}
@@ -411,17 +356,10 @@ const CardDetail = () => {
                 />
               </div>
             </>
-          ) : (
-            <ReactMarkdown
-              components={MarkdownComponents}
-              remarkPlugins={[remarkMath]}
-              rehypePlugins={[rehypeKatex]}
-            >
-              {preprocessContent(processedContent)}
-            </ReactMarkdown>
           )}
         </div>
 
+        {/* -- Save/Cancel Buttons -- */}
         {isEditing && (
           <div className="d-flex gap-2 mt-3">
             <button
@@ -442,53 +380,58 @@ const CardDetail = () => {
         )}
       </div>
 
-      <div className="d-flex flex-wrap align-items-center gap-2 mt-3">
-        <div>
-          <button
-            className="btn btn-sm btn-outline-primary p-1"
-            onClick={() => setShowVersionModal(true)}
-          >
-            {activeVersion || 'Select Version'}
-          </button>
-        </div>
+      {/* -- Footer -- */}
+      <div className="card-detail-footer">
+        <div className="d-flex flex-wrap align-items-center gap-2 mt-3">
+          <div>
+            <button
+              className="btn btn-sm btn-outline-primary p-1"
+              onClick={() => setShowVersionModal(true)}
+            >
+              {activeVersion || 'Select Version'}
+            </button>
+          </div>
 
-        <div>
-          <button
-            className="btn btn-sm btn-outline-primary p-1"
-            onClick={() => setShowLanguageModal(true)}
-          >
-            {(() => {
-              const found = allLanguages.find((ld) => ld.id === activeLang);
-              return found ? found.name : 'Select Language';
-            })()}
-          </button>
-        </div>
+          <div>
+            <button
+              className="btn btn-sm btn-outline-primary p-1"
+              onClick={() => setShowLanguageModal(true)}
+            >
+              {(() => {
+                const found = allLanguages.find((ld) => ld.id === activeLang);
+                return found ? found.name : 'Select Language';
+              })()}
+            </button>
+          </div>
 
-        <div>
-          <button
-            className="btn btn-sm btn-outline-primary p-1"
-            onClick={() => setShowNodeModal(true)}
-          >
-            {nodeInfo ? (
-              <>
-                {nodeInfo.name}
-                <span className="badge text-dark ms-1">
-                  {nodeInfo.category}
-                </span>
-              </>
-            ) : (
-              'Select Node'
-            )}
-          </button>
+          <div>
+            <button
+              className="btn btn-sm btn-outline-primary p-1"
+              onClick={() => setShowNodeModal(true)}
+            >
+              {nodeInfo ? (
+                <>
+                  {nodeInfo.name}
+                  <span className="badge text-dark ms-1">
+                    {nodeInfo.category}
+                  </span>
+                </>
+              ) : (
+                'Select Node'
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* -- Modals -- */}
       <VersionModal
         show={showVersionModal}
         onClose={() => setShowVersionModal(false)}
         versions={versions}
         onSelect={handleSelectVersion}
         onAddVersion={handleAddVersion}
+        isEditing={true} // Pass isEditing as true
       />
 
       <LanguageModal
@@ -498,6 +441,7 @@ const CardDetail = () => {
         allLanguages={allLanguages}
         onSelect={(langId) => setActiveLang(langId)}
         onAddLanguage={handleAddLanguageToVersion}
+        isEditing={true} // Pass isEditing as true
       />
 
       <NodeModal
