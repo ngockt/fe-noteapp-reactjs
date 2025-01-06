@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CardList from 'components/contents/CardList';
+import CardListView from 'components/contents/CardListView';
 import ENDPOINTS from 'apis/endpoints';
 import { getRequest } from 'apis/services';
 
@@ -91,7 +91,7 @@ const ExploreDetail = () => {
                     role="tabpanel"
                     aria-labelledby="me-tab"
                 >
-                     <CardList cards={meCards} />
+                     <CardListView cards={meCards} />
                 </div>
                 <div
                     className={`tab-pane fade ${activeTab === 'group' ? 'show active' : ''}`}
@@ -99,7 +99,7 @@ const ExploreDetail = () => {
                     role="tabpanel"
                     aria-labelledby="group-tab"
                 >
-                    <CardList cards={groupCards} />
+                    <CardListView cards={groupCards} />
                 </div>
                 <div
                     className={`tab-pane fade ${activeTab === 'community' ? 'show active' : ''}`}
@@ -107,7 +107,7 @@ const ExploreDetail = () => {
                     role="tabpanel"
                     aria-labelledby="community-tab"
                 >
-                      <CardList cards={communityCards} />
+                      <CardListView cards={communityCards} />
                 </div>
             </div>
         </div>

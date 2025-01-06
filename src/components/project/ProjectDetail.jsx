@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import CardList from 'components/contents/CardList'; // Import the CardList component
+import CardListDetail from 'components/contents/CardListDetail'; // Import the CardListDetail component
 import { getRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
 
@@ -86,7 +86,7 @@ const ProjectDetail = () => {
                 <p><strong>Category:</strong> {node_info.category}</p>
             </div>
 
-            <CardList cards={cards} /> {/* Render CardList with the fetched cards */}
+            <CardListDetail cards={cards} /> {/* Render CardListDetail with the fetched cards */}
         </div>
     );
 };

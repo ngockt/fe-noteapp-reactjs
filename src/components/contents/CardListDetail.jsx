@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Card from './Card';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './CardList.css';
+import './CardListDetail.css';
 import { FiEdit } from 'react-icons/fi';
 
 // We'll use our contexts to get the list of languages and nodes
 import { useLanguagesData } from 'context_data/LanguageDataContext';
 import { useGraphData } from 'context_data/GraphDataContext';
+import CardView from './CardView';
 
 // ----------------------------------------------------------------
 // Modal for creating a new card
@@ -124,9 +124,8 @@ const NewCardModal = ({ show, onClose, onCreate }) => {
     );
 };
 
-const CardList = ({ cards }) => {
+const CardListDetail = ({ cards }) => {
     const [currentCards, setCurrentCards] = useState(cards || []);
-    const [newCardId, setNewCardId] = useState(null);
 
     // State that determines whether the "New Card" modal is visible
     const [showNewCardModal, setShowNewCardModal] = useState(false);
@@ -136,15 +135,6 @@ const CardList = ({ cards }) => {
             setCurrentCards(cards);
         }
     }, [cards]);
-
-    // Called when a card is saved inside <Card />
-    const handleSave = (updatedCard) => {
-        setCurrentCards((prevCards) =>
-            prevCards.map((card) =>
-                card.id === updatedCard.id ? updatedCard : card
-            )
-        );
-    };
 
     // Show the "New Card" modal
     const handleOpenNewCardModal = () => {
@@ -182,13 +172,7 @@ const CardList = ({ cards }) => {
         // Insert the new card at the top
         setCurrentCards((prev) => [newCard, ...prev]);
 
-        // We track the new card so that <Card /> automatically opens in Edit mode
-        setNewCardId(newId);
-    };
-
-    // Reset the "newCardId" after the card is saved or canceled
-    const handleEditorClose = () => {
-        setNewCardId(null);
+        // onCardSaved(newCard); // Notify the parent component about the new card
     };
 
     return (
@@ -218,11 +202,8 @@ const CardList = ({ cards }) => {
             <div className="row">
                 {currentCards.map((card) => (
                     <div className="col-md-4 mb-3" key={card.id}>
-                        <Card
+                        <CardView
                             card={card}
-                            onSave={handleSave}
-                            isNew={newCardId === card.id}
-                            onCloseEditor={handleEditorClose}
                         />
                     </div>
                 ))}
@@ -231,4 +212,4 @@ const CardList = ({ cards }) => {
     );
 };
 
-export default CardList;
+export default CardListDetail;

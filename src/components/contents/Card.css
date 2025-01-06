@@ -101,3 +101,12 @@
 	border-top: 1px solid #ccc;
 	background-color: #f8f9fa;
 }
+
+.card-detail-page {
+	padding: 1rem; /* Or whatever spacing you prefer */
+}
+
+.card-detail-page .card {
+	/* Remove max-width so it takes full width */
+	max-width: none;
+}

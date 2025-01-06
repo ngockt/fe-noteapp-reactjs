@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import CardList from 'components/contents/CardList'; // Import the CardList component
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import ENDPOINTS from 'apis/endpoints';
 import { getRequest } from 'apis/services';
+import CardListView from 'components/contents/CardListView';
 const DashBoardPage = () => {
     const [cards, setCards] = useState([]);
     const [activeTab, setActiveTab] = useState('Me'); // State to manage active tab
@@ -62,7 +62,7 @@ const DashBoardPage = () => {
 
             {/* Content */}
             <div className="mt-3">
-                <CardList cards={cards} />
+                <CardListView cards={cards} />
             </div>
         </div>
     );

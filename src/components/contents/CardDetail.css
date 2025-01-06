@@ -1,0 +1,23 @@
+.card-detail-page {
+    padding: 20px; /* Add some padding around the content */
+}
+
+.card-detail-page .card {
+    border: none; /* Remove the card border */
+    box-shadow: none; /* Remove the card shadow */
+}
+
+.card-detail-page .card-header {
+    background-color: transparent; /* Remove background color */
+    border-bottom: none; /* Remove border */
+}
+
+.card-detail-page .card-body {
+    padding: 0; /* Adjust padding as needed */
+}
+
+.card-detail-page .card-footer {
+    background-color: transparent; /* Remove background color */
+    border-top: none; /* Remove border */
+    padding: 0; /* Adjust padding as needed */
+}

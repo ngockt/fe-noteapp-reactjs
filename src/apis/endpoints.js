@@ -29,6 +29,7 @@ const ENDPOINTS = {
     NODE_ME: (id) => `${BASE_URL}/cards/me?node_id=${id}`,
     NODE_GROUP: (id) => `${BASE_URL}/cards/group?node_id=${id}`,
     NODE_COMMUNITY: (id) => `${BASE_URL}/cards/community?node_id=${id}`,
+    DETAIL: (id) => `${BASE_URL}/cards/detail/${id}`,
   },
   CARD_CONTENTS: {
     NONE: `${BASE_URL}/contents`,
