@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 import Mermaid from './Mermaid';
 import PlantUML from './PlantUML';
@@ -57,7 +57,7 @@ const CardContentRender = ({ content, imageMap, isEditing }) => {
     const processedContent = preprocessContent(content);
 
     return (
-        <div className="card-content-container">
+        <>
             {isEditing && content && content.trim() && (
                 <>
                     <h6 className="mt-2">Live Preview:</h6>
@@ -82,7 +82,7 @@ const CardContentRender = ({ content, imageMap, isEditing }) => {
                     {processedContent}
                 </ReactMarkdown>
             )}
-        </div>
+        </>
     );
 };
 

@@ -1,4 +1,3 @@
-// src/components/contents/CardDetail.js
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { FiEdit, FiSave, FiArrowLeft, FiUpload } from 'react-icons/fi';
@@ -323,41 +322,39 @@ const CardDetail = () => {
 
       {/* -- Main Content -- */}
       <div className="mt-3 card-detail-body">
-        <div className="card-content-container">
-          <CardContentRender
-            content={content}
-            imageMap={imageMap}
-            isEditing={isEditing}
-          />
+        <CardContentRender
+          content={content}
+          imageMap={imageMap}
+          isEditing={isEditing}
+        />
 
-          {isEditing && (
-            <>
-              <textarea
-                value={content || ''}
-                onChange={handleContentChange}
-                onPaste={handlePaste}
-                className="form-control editor-textarea"
-                rows="8"
+        {isEditing && (
+          <>
+            <textarea
+              value={content || ''}
+              onChange={handleContentChange}
+              onPaste={handlePaste}
+              className="form-control editor-textarea flex-grow-1"
+              rows="8"
+            />
+            <div className="d-flex justify-content-end mt-1">
+              <button
+                onClick={handleUploadClick}
+                className="btn btn-light btn-sm"
+                aria-label="Upload Image"
+              >
+                <FiUpload />
+              </button>
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+                onChange={handlePaste}
               />
-              <div className="d-flex justify-content-end mt-1">
-                <button
-                  onClick={handleUploadClick}
-                  className="btn btn-light btn-sm"
-                  aria-label="Upload Image"
-                >
-                  <FiUpload />
-                </button>
-                <input
-                  type="file"
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  ref={fileInputRef}
-                  onChange={handlePaste}
-                />
-              </div>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
 
         {/* -- Save/Cancel Buttons -- */}
         {isEditing && (

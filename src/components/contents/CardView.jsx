@@ -128,7 +128,7 @@ const CardView = ({ card }) => {
     if (!currentVersionObj || !activeLang) {
         return (
             <div className="card border-primary shadow">
-                <div className="card-body">
+                <div className="card-content-container">
                     <p>No versions or languages available.</p>
                 </div>
             </div>
@@ -175,7 +175,7 @@ const CardView = ({ card }) => {
                 </div>
 
                 {/* --- CARD BODY (main content) --- */}
-                <div className="card-body">
+                <div className="card-content-container">
                     <CardContentRender content={content} isEditing={false} />
                 </div>
 
