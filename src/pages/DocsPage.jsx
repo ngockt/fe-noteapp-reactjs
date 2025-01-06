@@ -1,9 +1,8 @@
-import React from "react";
 
 const DocsPage = () => {
     return (
         <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-            <h1 style={{ textAlign: "center", color: "#4CAF50" }}>Knowledge Hierarchy</h1>
+            <h1>Term & Definition</h1>
             <table
                 style={{
                     width: "100%",
@@ -100,6 +99,22 @@ const DocsPage = () => {
                         </td>
                     </tr>
                     <tr>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>Note</td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            A brief record of facts, topics, or thoughts, written down as an aid to memory, often used to supplement understanding or learning within any level of the knowledge hierarchy.
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            Can be broad or specific, depending on the context.
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            Jotting down key points from a lecture on the Laws of Thermodynamics or writing a summary of the concept of Entropy.
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            Creating concise notes summarizing the main ideas of a chapter on thermodynamic processes.
+                        </td>
+                    </tr>
+
+                    <tr>
                         <td style={{ border: "1px solid #ddd", padding: "8px" }}>Example</td>
                         <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                             A specific instance or illustration used to explain a concept or idea within any of the above levels.
@@ -123,6 +138,22 @@ const DocsPage = () => {
                         </td>
                         <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                             Solving new problems based on the examples provided earlier.
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>Quiz</td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            A set of questions designed to assess a person's knowledge on a particular subject, topic, or concept. It can be used at any level of the knowledge hierarchy to test understanding and retention.
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            Varies; can be used across all levels for assessment.
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            A multiple-choice quiz on different types of thermodynamic systems or a quiz assessing understanding of the concept of 'Sublime' in Romantic Poetry.
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                            Taking a quiz to test knowledge of various thermodynamic principles or answering questions about key themes in Romantic Poetry.
                         </td>
                     </tr>
                 </tbody>
