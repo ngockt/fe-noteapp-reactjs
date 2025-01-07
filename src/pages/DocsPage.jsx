@@ -1,5 +1,5 @@
 import React from 'react';
-import './DocsPage.css'; 
+import './DocsPage.css';
 
 const DocsPage = () => {
     const terms = [
@@ -72,9 +72,22 @@ const DocsPage = () => {
             scope: "Varies; can be used across all levels for assessment.",
             example: "A multiple-choice quiz on different types of thermodynamic systems or a quiz assessing understanding of the concept of 'Sublime' in Romantic Poetry.",
             exercise: "Taking a quiz to test knowledge of various thermodynamic principles or answering questions about key themes in Romantic Poetry."
+        },
+        {
+            term: "Node",
+            definition: "A structural element representing an entity or concept, used to model hierarchical or relational data.",
+            scope: "Represents domains, fields, branches, subjects, topics, or concepts.",
+            example: "A 'Physics' node representing a field within the domain of Science.",
+            exercise: "Creating nodes for domains, fields, and branches in a diagram."
+        },
+        {
+            term: "Edge",
+            definition: "A connection between two nodes that defines their relationship within a structured model.",
+            scope: "Represents relationships like 'contains', 'next to', or 'prerequisite to'.",
+            example: "An edge labeled 'contains' linking a 'Physics' node to an 'Astrophysics' node.",
+            exercise: "Modeling relationships between nodes like 'prerequisite to' for subject dependencies."
         }
     ];
-
 
     return (
         <div className="docs-page">
