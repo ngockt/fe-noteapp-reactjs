@@ -1,53 +1,39 @@
 .notion-page {
-	font-family: sans-serif;
-	/* padding: 20px; */
-	max-width: 900px; /* Optional: set max width of the notion page, e.g., 900px*/
-	margin: 0 auto; /*Optional: center the Notion page if max width is set*/
+	font-family: "Arial", sans-serif;
+	margin: 20px auto;
+	max-width: 800px;
+	padding: 20px;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	background-color: #ffffff;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.block-container {
-	margin-bottom: 10px;
-	position: relative;
-	width: 100%;
+.notion-header {
+	text-align: center;
+	border-bottom: 1px solid #e0e0e0;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
 }
 
-.card {
-	border: 1px solid #dee2e6; /* Add a border to the card */
-	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-	margin: 5px 0; /* Add margin to space the blocks out*/
-	transition: box-shadow 0.3s ease; /* Add transition for smooth hover */
-}
-.card:hover {
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /*Add a larger shadow on hover*/
+.notion-header h1 {
+	margin: 0;
+	font-size: 24px;
+	color: #333333;
 }
 
-.block-icons {
-	display: flex;
-	align-items: center;
-	position: absolute;
-	top: 5px;
-	right: 5px;
+.notion-header p {
+	margin: 5px 0 0;
+	color: #666666;
 }
 
-.block-icons .icon {
-	cursor: pointer;
-	font-size: 18px;
-	margin-left: 5px;
-	padding: 5px;
+.notion-content h2 {
+	margin-top: 20px;
+	font-size: 20px;
+	color: #444444;
 }
 
-.block-container .card-body {
-	padding-right: 30px;
-}
-
-.list-buttons {
-	display: flex;
-	gap: 10px;
-	align-items: center;
-}
-
-.list-buttons .icon {
-	cursor: pointer;
-	font-size: 18px;
-	padding: 5px;
+.notion-content p {
+	margin: 10px 0;
+	line-height: 1.6;
 }
