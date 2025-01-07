@@ -64,22 +64,6 @@
 	max-height: none;
 }
 
-/* The live preview block */
-.live-preview {
-	max-height: 200px;
-	overflow-y: auto;
-	border: 1px solid #ddd;
-	padding: 0.5rem;
-	margin-bottom: 1rem;
-	background-color: #fafafa;
-}
-
-/* The textarea editor with its own scroll limit */
-.editor-textarea {
-	max-height: 200px;
-	overflow-y: auto;
-}
-
 /* When in FULLSCREEN + EDITING mode => editor is 200px, preview can fill the rest */
 .fullscreen-edit-mode {
 	display: flex !important;
@@ -88,7 +72,7 @@
 	overflow: hidden;
 }
 
-.fullscreen-edit-mode .live-preview {
+.fullscreen-edit-mode .card-live-preview {
 	flex: 1;
 	max-height: none; /* remove the 200px limit */
 	margin-bottom: 1rem;
@@ -106,11 +90,48 @@
 	background-color: #f8f9fa;
 }
 
-.card-detail-page {
-	padding: 1rem; /* Or whatever spacing you prefer */
-}
-
-.card-detail-page .card {
+.card {
 	/* Remove max-width so it takes full width */
 	max-width: none;
+}
+
+.card-detail-page {
+	display: flex;
+	flex-direction: column;
+	min-height: 90vh; /* Ensure the page takes at least the full viewport height */
+}
+
+.card-detail-body {
+	flex-grow: 1; /* Allow the body to take up the available space */
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto; /* Add scroll for content overflow */
+}
+
+.card-detail-footer {
+	/* No changes needed here - the flex-grow on the body does the work */
+	margin-top: auto; /* Push the footer to the bottom */
+	padding-top: 1rem;
+}
+
+.card-content-container {
+	flex: 1;
+	overflow-y: auto;
+	margin-bottom: 1rem;
+}
+
+/* The live preview block */
+.card-live-preview {
+	max-height: 50vh;
+	overflow-y: auto;
+	border: 1px solid #ddd;
+	padding: 0.5rem;
+	margin-bottom: 1rem;
+	background-color: #fafafa;
+}
+
+/* The textarea editor with its own scroll limit */
+.editor-textarea {
+	max-height: 200px;
+	overflow-y: auto;
 }

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Mermaid from './Mermaid';
 import PlantUML from './PlantUML';
 
-const CardContentRender = ({ content, imageMap, isEditing }) => {
+const CardContentRender = ({ content, imageMap }) => {
     const preprocessContent = (text) => {
         text = text
             .replace(/\\\(([\s\S]*?)\\\)/g, function (match, p1) {
@@ -57,38 +57,19 @@ const CardContentRender = ({ content, imageMap, isEditing }) => {
     const processedContent = preprocessContent(content);
 
     return (
-        <>
-            {isEditing && content && content.trim() && (
-                <>
-                    <h6 className="mt-2">Live Preview:</h6>
-                    <div className="live-preview">
-                        <ReactMarkdown
-                            components={MarkdownComponents}
-                            remarkPlugins={[remarkMath]}
-                            rehypePlugins={[rehypeKatex]}
-                        >
-                            {processedContent}
-                        </ReactMarkdown>
-                    </div>
-                </>
-            )}
-
-            {!isEditing && (
-                <ReactMarkdown
-                    components={MarkdownComponents}
-                    remarkPlugins={[remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                >
-                    {processedContent}
-                </ReactMarkdown>
-            )}
-        </>
+        <ReactMarkdown
+            components={MarkdownComponents}
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+        >
+            {processedContent}
+        </ReactMarkdown>
     );
 };
 
-CardContentRender.propTypes = {  // Define propTypes
+CardContentRender.propTypes = {
     content: PropTypes.string,
     imageMap: PropTypes.objectOf(PropTypes.string),
-    isEditing: PropTypes.bool,
 };
+
 export default CardContentRender;

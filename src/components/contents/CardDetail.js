@@ -1,3 +1,4 @@
+// src/components/contents/CardDetail.js
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { FiEdit, FiSave, FiArrowLeft, FiUpload } from 'react-icons/fi';
@@ -7,7 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import './CardDetail.css'; // CSS file (see below for complete code)
+import './Card.css';
 
 import VersionModal from './VersionModal';
 import LanguageModal from './LanguageModal';
@@ -31,13 +32,11 @@ const CardDetail = () => {
       try {
         const response = await getRequest(ENDPOINTS.CARDS.DETAIL(cardId));
         setCard(response);
-        // Set the nodeInfo from the response
         if (response.node_info) {
           setNodeInfo(response.node_info);
         }
       } catch (error) {
         console.error('Error fetching card data:', error);
-        // Handle error appropriately
       }
     };
 
@@ -52,10 +51,8 @@ const CardDetail = () => {
     }
   }, [card]);
 
-  // Initialize activeVersion to empty string
   const [activeVersion, setActiveVersion] = useState('');
 
-  // Set activeVersion after card data is loaded
   useEffect(() => {
     if (card && card.versions && card.versions.length > 0) {
       setActiveVersion(card.versions[0].version);
@@ -195,8 +192,7 @@ const CardDetail = () => {
     );
   };
 
-  const handleContentChange = (e) => {
-    const newContent = e.target.value;
+  const handleContentChange = (newContent) => {
     setVersions((prev) =>
       prev.map((versionObj) => {
         if (versionObj.version !== activeVersion) return versionObj;
@@ -217,8 +213,6 @@ const CardDetail = () => {
   const fileInputRef = useRef(null);
 
   const handlePaste = async (e) => {
-    if (!isEditing) return;
-
     const files =
       e.clipboardData?.files ||
       (e.target?.files ? Array.from(e.target.files) : []);
@@ -237,22 +231,7 @@ const CardDetail = () => {
           setImageMap((prev) => ({ ...prev, [imageUUID]: dataURL }));
 
           const markdownRef = `![Pasted Image](${imageUUID})\n`;
-
-          setVersions((prevVersions) =>
-            prevVersions.map((versionObj) => {
-              if (versionObj.version !== activeVersion) return versionObj;
-
-              const updatedContents = versionObj.contents.map((item) => {
-                if (item.language_id === activeLang) {
-                  const updatedContent = (item.content || '') + markdownRef;
-                  return { ...item, content: updatedContent };
-                }
-                return item;
-              });
-
-              return { ...versionObj, contents: updatedContents };
-            })
-          );
+          handleContentChange((content || '') + markdownRef);
         };
 
         reader.readAsDataURL(file);
@@ -293,8 +272,8 @@ const CardDetail = () => {
   const content = currentContentsMap[activeLang]?.content || '';
 
   return (
-    <div className="card-detail-page p-3">
-      <div className="d-flex align-items-center justify-content-between">
+    <div className="card fullscreen-card p-3">
+      <div className="card-header d-flex align-items-center justify-content-between">
         <div className="card-title-container">
           {isEditing ? (
             <input
@@ -321,18 +300,21 @@ const CardDetail = () => {
       </div>
 
       {/* -- Main Content -- */}
-      <div className="mt-3 card-detail-body">
-        <CardContentRender
-          content={content}
-          imageMap={imageMap}
-          isEditing={isEditing}
-        />
+      <div className="mt-3 card-detail-body d-flex flex-column">
+        {!isEditing && (
+          <div className="flex-grow-1">
+            <CardContentRender content={content} imageMap={imageMap} />
+          </div>
+        )}
 
         {isEditing && (
           <>
+            <div className="card-live-preview flex-grow-1">
+              <CardContentRender content={content} imageMap={imageMap} />
+            </div>
             <textarea
               value={content || ''}
-              onChange={handleContentChange}
+              onChange={(e) => handleContentChange(e.target.value)}
               onPaste={handlePaste}
               className="form-control editor-textarea flex-grow-1"
               rows="8"
@@ -353,28 +335,26 @@ const CardDetail = () => {
                 onChange={handlePaste}
               />
             </div>
+            <div className="d-flex gap-2 mt-3">
+              
+              <button
+                onClick={handleSave}
+                className="btn btn-success btn-sm p-2"
+              >
+                <FiSave className="me-1" />
+                Save
+              </button>
+              <button
+                onClick={handleCancel}
+                className="btn btn-secondary btn-sm p-2"
+              >
+                <FiArrowLeft className="me-1" />
+                Cancel
+              </button>
+            </div>
           </>
         )}
 
-        {/* -- Save/Cancel Buttons -- */}
-        {isEditing && (
-          <div className="d-flex gap-2 mt-3">
-            <button
-              onClick={handleSave}
-              className="btn btn-success btn-sm p-2"
-            >
-              <FiSave className="me-1" />
-              Save
-            </button>
-            <button
-              onClick={handleCancel}
-              className="btn btn-secondary btn-sm p-2"
-            >
-              <FiArrowLeft className="me-1" />
-              Cancel
-            </button>
-          </div>
-        )}
       </div>
 
       {/* -- Footer -- */}
@@ -428,7 +408,7 @@ const CardDetail = () => {
         versions={versions}
         onSelect={handleSelectVersion}
         onAddVersion={handleAddVersion}
-        isEditing={true} // Pass isEditing as true
+        isEditing={true}
       />
 
       <LanguageModal
@@ -438,7 +418,7 @@ const CardDetail = () => {
         allLanguages={allLanguages}
         onSelect={(langId) => setActiveLang(langId)}
         onAddLanguage={handleAddLanguageToVersion}
-        isEditing={true} // Pass isEditing as true
+        isEditing={true}
       />
 
       <NodeModal

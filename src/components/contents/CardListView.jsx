@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import CardView from './CardView';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './CardListDetail.css'; // Reuse the same CSS
+import './CardList.css'; // Reuse the same CSS
 
 const CardListView = ({ cards }) => {
     const [currentCards, setCurrentCards] = useState(cards || []);

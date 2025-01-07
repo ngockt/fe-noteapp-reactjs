@@ -1,7 +1,7 @@
 // src/components/contents/CardListDetail.js
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './CardListDetail.css'; // Your CSS
+import './CardList.css'; // Your CSS
 import { FiEdit } from 'react-icons/fi';
 
 // Contexts
