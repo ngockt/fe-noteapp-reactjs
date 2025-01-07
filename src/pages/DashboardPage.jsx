@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import ENDPOINTS from 'apis/endpoints';
 import { getRequest } from 'apis/services';
-import CardListView from 'components/cards/CardListView';
+import CardListView from 'components/card/CardListView';
 const DashBoardPage = () => {
     const [cards, setCards] = useState([]);
     const [activeTab, setActiveTab] = useState('Me'); // State to manage active tab
