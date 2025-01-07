@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import CardListDetail from 'components/contents/CardListDetail'; // Import the CardListDetail component
+import CardListDetail from 'components/cards/CardListDetail'; // Import the CardListDetail component
 import { getRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
 

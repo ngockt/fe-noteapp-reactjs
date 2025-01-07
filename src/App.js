@@ -18,7 +18,7 @@ import NotionPage from 'experiments/notion-page/NotionPage';
 import PromptingAssistantPage from 'experiments/prompting-assistant/PromptingAssistantPage';
 import LatexRenderer from 'experiments/LatexRender';
 import DocsPage from 'pages/DocsPage';
-import CardDetail from 'components/contents/CardDetail';
+import CardDetail from 'components/cards/CardDetail';
 
 const App = () => {
 
