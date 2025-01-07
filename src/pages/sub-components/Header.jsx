@@ -70,33 +70,6 @@ const Header = () => {
                     >
                         Projects
                     </Nav.Link>
-
-
-                    {/* Experiments Dropdown */}
-                    <NavDropdown title="Experiments" id="experiments-dropdown" onToggle={() => setExpanded(false)} onClick={() => setExpanded(false)}>
-                        <NavDropdown.Item
-                            as={Link}
-                            to="/experiments/prompting"
-                            onClick={handleNavItemClick}
-                        >
-                            Prompting
-                        </NavDropdown.Item>
-                        <NavDropdown.Item
-                            as={Link}
-                            to="/experiments/notion-page"
-                            onClick={handleNavItemClick}
-                        >
-                            Notion Page
-                        </NavDropdown.Item>
-                        <NavDropdown.Item
-                            as={Link}
-                            to="/experiments/latex-render"
-                            onClick={handleNavItemClick}
-                        >
-                            Latex Renderer
-                        </NavDropdown.Item>
-                    </NavDropdown>
-
                     <Nav.Link
                         as={Link}
                         to="/docs"
