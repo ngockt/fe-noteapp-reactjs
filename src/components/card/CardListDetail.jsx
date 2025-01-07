@@ -51,7 +51,7 @@ const CardListDetail = ({ cards }) => {
     };
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-3">
             {/* "Create New Card" modal */}
             <NewCardModal
                 show={showNewCardModal}
@@ -62,7 +62,7 @@ const CardListDetail = ({ cards }) => {
                 }}
             />
 
-            <div className="d-flex justify-content-end mb-3">
+            <div className="d-flex justify-content-end mb-1">
                 <button
                     onClick={handleOpenNewCardModal}
                     className="btn btn-primary d-flex align-items-center"
