@@ -319,7 +319,23 @@ const CardDetail = () => {
                             className="form-control editor-textarea flex-grow-1"
                             rows="8"
                         />
-                        <div className="d-flex justify-content-end mt-1">
+                        <div className="d-flex justify-content-between mt-3">
+                            <div className="d-flex gap-2">
+                                <button
+                                    onClick={handleSave}
+                                    className="btn btn-success btn-sm p-2"
+                                >
+                                    <FiSave className="me-1" />
+                                    Save
+                                </button>
+                                <button
+                                    onClick={handleCancel}
+                                    className="btn btn-secondary btn-sm p-2"
+                                >
+                                    <FiArrowLeft className="me-1" />
+                                    Cancel
+                                </button>
+                            </div>
                             <button
                                 onClick={handleUploadClick}
                                 className="btn btn-light btn-sm"
@@ -335,23 +351,7 @@ const CardDetail = () => {
                                 onChange={handlePaste}
                             />
                         </div>
-                        <div className="d-flex gap-2 mt-3">
 
-                            <button
-                                onClick={handleSave}
-                                className="btn btn-success btn-sm p-2"
-                            >
-                                <FiSave className="me-1" />
-                                Save
-                            </button>
-                            <button
-                                onClick={handleCancel}
-                                className="btn btn-secondary btn-sm p-2"
-                            >
-                                <FiArrowLeft className="me-1" />
-                                Cancel
-                            </button>
-                        </div>
                     </>
                 )}
 
