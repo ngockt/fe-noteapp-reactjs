@@ -12,7 +12,6 @@ import VersionModal from './VersionModal';
 import LanguageModal from './LanguageModal';
 
 import { useLanguagesData } from 'context_data/LanguageDataContext';
-import { useGraphData } from 'context_data/GraphDataContext';
 import CardContentRender from './rendering/CardContentRender';
 
 const CardView = ({ card }) => {
@@ -84,12 +83,6 @@ const CardView = ({ card }) => {
 
     const [showLanguageModal, setShowLanguageModal] = useState(false);
     const allLanguages = useLanguagesData();
-
-    const mapData = useGraphData();
-    const nodeList = mapData?.nodes || [];
-
-    const [nodeInfo, setNodeInfo] = useState(card.node_info || null);
-
     const navigate = useNavigate();
 
     const handleEditClick = () => {
@@ -168,11 +161,11 @@ const CardView = ({ card }) => {
 
                     <div>
                         <button className="btn btn-sm btn-outline-secondary p-1" disabled>
-                            {nodeInfo ? (
+                            {card.node_info ? (
                                 <>
-                                    {nodeInfo.name}
+                                    {card.node_info.name}
                                     <span className="badge text-dark ms-1">
-                                        {nodeInfo.category}
+                                        {card.node_info.category}
                                     </span>
                                 </>
                             ) : (
