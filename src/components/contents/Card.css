@@ -51,7 +51,6 @@
 .card-content-container {
 	flex: 1;
 	padding: 1rem;
-
 	/* overflow-y: auto; */
 	flex-direction: column;
 	overflow: auto; /* We'll manage scrolling within content container */
@@ -64,54 +63,27 @@
 	max-height: none;
 }
 
-/* When in FULLSCREEN + EDITING mode => editor is 200px, preview can fill the rest */
-.fullscreen-edit-mode {
-	display: flex !important;
-	flex-direction: column;
-	height: 100%;
-	overflow: hidden;
-}
-
-.fullscreen-edit-mode .card-live-preview {
+.card-live-preview {
 	flex: 1;
 	max-height: none; /* remove the 200px limit */
 	margin-bottom: 1rem;
 }
 
-.fullscreen-edit-mode .editor-textarea {
+.editor-textarea {
 	flex: 0 0 auto; /* fixed size in flex layout */
 	max-height: 200px !important;
 	margin-bottom: 0;
+}
+
+.editor-textarea {
+	max-height: 200px;
+	overflow-y: auto;
 }
 
 /* The footer stays at bottom, in normal or fullscreen mode */
 .card-footer {
 	border-top: 1px solid #ccc;
 	background-color: #f8f9fa;
-}
-
-.card {
-	/* Remove max-width so it takes full width */
-	max-width: none;
-}
-
-.card-detail-page {
-	display: flex;
-	flex-direction: column;
-	min-height: 90vh; /* Ensure the page takes at least the full viewport height */
-}
-
-.card-detail-body {
-	flex-grow: 1; /* Allow the body to take up the available space */
-	display: flex;
-	flex-direction: column;
-	overflow-y: auto; /* Add scroll for content overflow */
-}
-
-.card-detail-footer {
-	/* No changes needed here - the flex-grow on the body does the work */
-	margin-top: auto; /* Push the footer to the bottom */
-	padding-top: 1rem;
 }
 
 .card-content-container {
@@ -128,10 +100,4 @@
 	padding: 0.5rem;
 	margin-bottom: 1rem;
 	background-color: #fafafa;
-}
-
-/* The textarea editor with its own scroll limit */
-.editor-textarea {
-	max-height: 200px;
-	overflow-y: auto;
 }

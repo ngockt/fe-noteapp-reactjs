@@ -114,8 +114,7 @@ const CardView = ({ card }) => {
     return (
         <>
             <div
-                className={`card border-primary shadow ${isFullScreen ? 'fullscreen-card' : ''
-                    }`}
+                className={`card border-primary shadow ${isFullScreen ? 'fullscreen-card' : ''}`}
             >
                 <div className="card-header d-flex align-items-center justify-content-between">
                     <div className="card-title-container">
