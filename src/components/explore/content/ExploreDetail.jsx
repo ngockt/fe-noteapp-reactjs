@@ -40,7 +40,7 @@ const ExploreDetail = () => {
 
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-3">
             <h3>Explore Node: {nodeId}</h3>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item" role="presentation">

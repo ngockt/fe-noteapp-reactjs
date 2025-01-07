@@ -91,7 +91,7 @@ const DocsPage = () => {
 
     return (
         <div className="docs-page">
-            <h1>Term & Definition</h1>
+            <h3>Term & Definition</h3>
             <table>
                 <thead>
                     <tr>

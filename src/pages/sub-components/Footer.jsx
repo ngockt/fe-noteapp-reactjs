@@ -1,13 +1,12 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./Footer.css"; // Optional for additional custom styles
 import { NavDropdown, Container } from "react-bootstrap"; // Bootstrap Components
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa"; // Social Media Icons
 
 const Footer = () => {
     return (
-        <footer className="bg-dark text-white py-4 mt-auto">
+        <footer className="bg-dark text-white py-2">
             <Container>
                 <div className="row align-items-center justify-content-between">
                     {/* Left Section */}

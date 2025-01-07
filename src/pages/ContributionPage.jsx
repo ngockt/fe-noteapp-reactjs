@@ -2,7 +2,7 @@ import React from 'react';
 
 const ContributionPage = () => {
   return (
-    <div className="container mt-4">
+    <div className="container mt-3">
       <h2 className="mb-4">Contribution Page</h2>
       
       {/* Bootstrap Tabs */}

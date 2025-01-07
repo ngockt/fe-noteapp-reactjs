@@ -77,7 +77,7 @@ const ProjectDetail = () => {
     const { node_info, cards } = project;
 
     return (
-        <div className="container py-4">
+        <div className="container py-3">
             {/* Header Section */}
             <div className="d-flex justify-content-between align-items-center">
                 <div>

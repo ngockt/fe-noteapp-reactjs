@@ -14,7 +14,7 @@ const CardListView = ({ cards }) => {
     }, [cards]);
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-3">
             <div className="row">
                 {currentCards.map((card) => (
                     <div className="col-md-4 mb-3" key={card.id}>

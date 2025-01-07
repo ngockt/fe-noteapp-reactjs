@@ -48,7 +48,7 @@ const SignUpPage = () => {
 
     return (
         <div className="signup-page-container">
-            <h1 className="signup-title">Create a New Account</h1>
+            <h3 className="signup-title">Create a New Account</h3>
             <form className="signup-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="name">Name</label>

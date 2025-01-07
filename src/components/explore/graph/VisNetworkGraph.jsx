@@ -218,7 +218,7 @@ const VisNetworkGraph = ({ data, selectedNode }) => {
 
     return (
         <div>
-            <div ref={networkRef} style={{ height: '84vh', width: '100%' }} className='border rounded'></div>
+            <div ref={networkRef} style={{ height: '73.3vh', width: '100%' }} className='border rounded'></div>
         </div>
     );
 };

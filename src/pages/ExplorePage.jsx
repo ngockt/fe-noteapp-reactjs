@@ -22,32 +22,31 @@ const Explore = () => {
     if (!mapData) return <div>Loading...</div>; // Gracefully handle loading state
 
     return (
-        <div className="container mt-2 mx-0" style={{ height: '100vh', display: 'flex', flexDirection: 'column', maxWidth: '100%', margin: '0 auto' }}>
+        <div className="container mt-2 mx-0" style={{ height: '87vh', display: 'flex', flexDirection: 'column', maxWidth: '100%', margin: '0 auto' }}>
             {/* Fixed Search Bar */}
             <div style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'white', paddingBottom: '0px' }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h1 className="mb-0">Explore Community Contents</h1>
+                    <h3 className="mb-0">Explore Contents</h3>
 
-                    <div>
-                        <fieldset className="btn-group" aria-label="View Toggle">
-                            <button
-                                type="button"
-                                className={`btn ${isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
-                                onClick={() => setIsPageView(true)}
-                                aria-pressed={isPageView}
-                            >
-                                Classic
-                            </button>
-                            <button
-                                type="button"
-                                className={`btn ${!isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
-                                onClick={() => setIsPageView(false)}
-                                aria-pressed={!isPageView}
-                            >
-                                Graph
-                            </button>
-                        </fieldset>
-                    </div>
+                    <fieldset className="btn-group btn-group-sm" aria-label="View Toggle" role='group'>
+                        <button
+                            type="button"
+                            className={`btn ${isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
+                            onClick={() => setIsPageView(true)}
+                            aria-pressed={isPageView}
+                        >
+                            Classic
+                        </button>
+                        <button
+                            type="button"
+                            className={`btn ${!isPageView ? 'btn-primary' : 'btn-outline-primary'}`}
+                            onClick={() => setIsPageView(false)}
+                            aria-pressed={!isPageView}
+                        >
+                            Graph
+                        </button>
+                    </fieldset>
+
                 </div>
 
                 {/* Search Bar */}

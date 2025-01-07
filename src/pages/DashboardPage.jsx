@@ -31,7 +31,7 @@ const DashBoardPage = () => {
     }, [activeTab]); // Refetch data when activeTab changes
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-3">
             {/* Bootstrap Tabs */}
             <ul className="nav nav-tabs">
                 <li className="nav-item">
