@@ -1,12 +1,10 @@
-/* Base card layout */
 .card {
 	position: relative;
-	max-width: 800px;
+	max-width: 500px;
 	margin: 1rem auto; /* center on page */
 	border: 1px solid #007bff; /* example border color to emphasize it's primary */
 }
 
-/* Fullscreen override */
 .fullscreen-card {
 	position: fixed;
 	top: 0;
@@ -22,11 +20,29 @@
 	flex-direction: column; /* allows body & footer to stack */
 }
 
-/* Card header (title + icons in the same row) */
+.card-content-container {
+	flex: 1;
+	padding: 1rem;
+	/* overflow-y: auto; */
+	flex-direction: column;
+	overflow: auto; /* We'll manage scrolling within content container */
+	margin-bottom: 1rem;
+	max-height: 500px;
+}
+
+.fullscreen-card .card-content-container {
+	max-height: none;
+}
+
 .card-header {
 	border-bottom: 1px solid #ccc;
 	background-color: #f8f9fa; /* typical bootstrap-like header color */
 	padding: 0.75rem 1rem;
+}
+
+.card-footer {
+	border-top: 1px solid #ccc;
+	background-color: #f8f9fa;
 }
 
 .card-title-container {
@@ -38,66 +54,17 @@
 	margin-left: 0.25rem;
 }
 
-/* Card body just needs vertical stacking for content */
-.card-body {
-	padding: 1rem;
-	flex: 1; /* In fullscreen, let the body grow/shrink */
-	display: flex;
-	flex-direction: column;
-	overflow: hidden; /* We'll manage scrolling within content container */
-}
-
-/* The main content container inside the body */
-.card-content-container {
-	flex: 1;
-	padding: 1rem;
-	/* overflow-y: auto; */
-	flex-direction: column;
-	overflow: auto; /* We'll manage scrolling within content container */
-	margin-bottom: 1rem;
-	max-height: 500px;
-}
-
-/* Fullscreen remove height cap */
-.fullscreen-card .card-content-container {
-	max-height: none;
-}
-
 .card-live-preview {
-	flex: 1;
-	max-height: none; /* remove the 200px limit */
-	margin-bottom: 1rem;
-}
-
-.editor-textarea {
-	flex: 0 0 auto; /* fixed size in flex layout */
-	max-height: 200px !important;
-	margin-bottom: 0;
-}
-
-.editor-textarea {
-	max-height: 200px;
-	overflow-y: auto;
-}
-
-/* The footer stays at bottom, in normal or fullscreen mode */
-.card-footer {
-	border-top: 1px solid #ccc;
-	background-color: #f8f9fa;
-}
-
-.card-content-container {
-	flex: 1;
-	overflow-y: auto;
-	margin-bottom: 1rem;
-}
-
-/* The live preview block */
-.card-live-preview {
-	max-height: 50vh;
+	max-height: 65vh;
 	overflow-y: auto;
 	border: 1px solid #ddd;
 	padding: 0.5rem;
 	margin-bottom: 1rem;
-	background-color: #fafafa;
+}
+
+.card-editor {
+	flex: 0 0 auto; /* fixed size in flex layout */
+	max-height: 20vh !important;
+	margin-bottom: 0;
+	overflow-y: auto;
 }

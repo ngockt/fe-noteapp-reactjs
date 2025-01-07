@@ -280,7 +280,7 @@ const CardDetail = () => {
                             type="text"
                             value={title}
                             onChange={handleTitleChange}
-                            className="form-control form-control-sm"
+                            className="form-control form-control-md"
                             placeholder="Enter title"
                         />
                     ) : (
@@ -316,7 +316,7 @@ const CardDetail = () => {
                             value={content || ''}
                             onChange={(e) => handleContentChange(e.target.value)}
                             onPaste={handlePaste}
-                            className="form-control editor-textarea flex-grow-1"
+                            className="form-control card-editor flex-grow-1"
                             rows="8"
                         />
                         <div className="d-flex justify-content-between mt-3">
