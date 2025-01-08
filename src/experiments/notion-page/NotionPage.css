@@ -1,39 +1,5 @@
 .notion-page {
 	font-family: "Arial", sans-serif;
-	margin: 20px auto;
-	max-width: 800px;
-	padding: 20px;
-	border: 1px solid #e0e0e0;
 	border-radius: 8px;
 	background-color: #ffffff;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.notion-header {
-	text-align: center;
-	border-bottom: 1px solid #e0e0e0;
-	padding-bottom: 10px;
-	margin-bottom: 20px;
-}
-
-.notion-header h1 {
-	margin: 0;
-	font-size: 24px;
-	color: #333333;
-}
-
-.notion-header p {
-	margin: 5px 0 0;
-	color: #666666;
-}
-
-.notion-content h2 {
-	margin-top: 20px;
-	font-size: 20px;
-	color: #444444;
-}
-
-.notion-content p {
-	margin: 10px 0;
-	line-height: 1.6;
 }

@@ -1,0 +1,25 @@
+.text-input {
+	width: 100%;
+	/* border: none; */
+	outline: none;
+	resize: none; /* Disable manual resizing */
+	font-size: 16px;
+	padding: 5px;
+	line-height: 1.5;
+	overflow: hidden; /* Hide scrollbar */
+	white-space: pre-wrap; /* Preserve formatting */
+	border-radius: 4px;
+	font-family: inherit;
+}
+
+.text-display {
+	padding: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	border-radius: 4px;
+	line-height: 1.5;
+	white-space: pre-wrap; /* Preserves indentation */
+}
+.text-display:hover {
+	background-color: #f0f0f0;
+}
