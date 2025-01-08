@@ -3,3 +3,36 @@
 	border-radius: 8px;
 	background-color: #ffffff;
 }
+
+.block-container {
+	position: relative;
+	/* padding: 10px 0; */
+}
+
+.hover-menu {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* Center the menu */
+	display: flex;
+	gap: 10px;
+	background: white;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 5px 10px;
+	z-index: 10;
+}
+
+.hover-menu button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 12px;
+	padding: 5px 10px;
+}
+
+.hover-menu button:hover {
+	background: #f0f0f0;
+	border-radius: 4px;
+}

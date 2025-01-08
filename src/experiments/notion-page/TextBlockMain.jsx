@@ -38,9 +38,9 @@ const TextBlockMain = forwardRef(
             if (onBlur) onBlur(); // Notify parent
         };
 
-        // Handle Enter key
+        // // Handle Enter key
         const handleKeyPress = (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            if (e.key === 'Enter' && e.ctrlKey) {
                 e.preventDefault();
                 handleSave();
             }

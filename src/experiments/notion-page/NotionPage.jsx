@@ -1,39 +1,49 @@
 import React, { useState, useRef, useEffect } from 'react';
-import TextBlockMain from './TextBlockMain'; // Supports editing and saving
-import { parseTextBlocks } from './TextBlockParse'; // Parse blocks into content and type
+import { v4 as uuidv4 } from 'uuid'; // Import UUID for unique IDs
+import TextBlockMain from './TextBlockMain';
+import { parseTextBlocks } from './TextBlockParse';
 import { getRequest } from 'apis/services';
 import './NotionPage.css';
 import ENDPOINTS from 'apis/endpoints';
 
 const NotionPage = () => {
-  const [noteContent, setNoteContent] = useState(''); // Raw content
-  const [blocks, setBlocks] = useState([]); // Parsed blocks
-  const [editingIndex, setEditingIndex] = useState(null); // Track which block is being edited
-  const [isEditing, setIsEditing] = useState(false); // Editing state
+  const [blocks, setBlocks] = useState([]); // Use blocks directly with UUIDs
+  const [editingId, setEditingId] = useState(null); // Track the editing block's ID
+  const [hoveredId, setHoveredId] = useState(null); // Track hovered block ID
   const newBlockRef = useRef(null); // Ref for focusing new blocks
 
   // Fetch and parse content
   useEffect(() => {
     getRequest(ENDPOINTS.CARDS.DETAIL('c65a1197-7a05-4519-84d2-309d3514785c'))
       .then((data) => {
-        const content = data.versions[0].contents[0].content || ''; // Fallback to empty string
-        setNoteContent(content); // Store raw content
-        const parsedBlocks = parseTextBlocks(noteContent); // Parse blocks into content + type
-        console.log("", parsedBlocks);
-        setBlocks(parsedBlocks); // Update parsed blocks
+        const content = data.versions[0].contents[0].content || '';
+        const parsedBlocks = parseTextBlocks(content).map((block) => ({
+          ...block,
+          id: uuidv4(), // Assign a unique ID to each block
+        }));
+        setBlocks(parsedBlocks); // Update blocks with UUIDs
       })
       .catch((error) => {
         console.error('Error fetching card data:', error);
-        setNoteContent('Empty section'); // Graceful fallback
         setBlocks([]); // Default to empty blocks
       });
-  }, [noteContent]); // Run only once on component mount
+  }, []); // Fetch on component mount
 
-  // Add a new empty block
-  const addNewBlock = () => {
-    if (isEditing) return; // Prevent adding if editing is active
-    setBlocks((prevBlocks) => [...prevBlocks, { type: 'markdown', content: '' }]); // Add empty markdown block
-    setEditingIndex(blocks.length); // Focus on new block
+  // Add a new block
+  const addNewBlock = (id, position = 'below') => {
+    const newBlock = { id: uuidv4(), type: 'markdown', content: '' };
+    const index = blocks.findIndex((block) => block.id === id);
+    const updatedBlocks = [...blocks];
+
+    // Insert new block based on position
+    if (position === 'above') {
+      updatedBlocks.splice(index, 0, newBlock);
+    } else {
+      updatedBlocks.splice(index + 1, 0, newBlock);
+    }
+
+    setBlocks(updatedBlocks);
+    setEditingId(newBlock.id); // Focus on new block
 
     setTimeout(() => {
       if (newBlockRef.current) {
@@ -42,39 +52,59 @@ const NotionPage = () => {
     }, 0);
   };
 
-  // Save a block's content and type
-  const saveBlock = (index, content, type = 'markdown') => {
-    const updatedBlocks = [...blocks];
-    if (content.trim() === '') {
-      updatedBlocks.splice(index, 1); // Remove block if empty
-    } else {
-      updatedBlocks[index] = { content, type }; // Update block content and type
-    }
+  // Delete a block
+  const deleteBlock = (id) => {
+    const updatedBlocks = blocks.filter((block) => block.id !== id);
     setBlocks(updatedBlocks);
-    setEditingIndex(null); // Exit edit mode
-    setIsEditing(false); // Mark editing as false
   };
 
+  // Save block content
+  const saveBlock = (id, content, type = 'markdown') => {
+    const updatedBlocks = blocks.map((block) =>
+      block.id === id ? { ...block, content, type } : block
+    );
+
+    // Remove block if content is empty
+    const filteredBlocks = updatedBlocks.filter(
+      (block) => block.content.trim() !== ''
+    );
+
+    setBlocks(filteredBlocks);
+    setEditingId(null);
+  };
 
   return (
     <div className="notion-page">
-      {blocks.map((block, index) => (
-        <TextBlockMain
-          key={index}
-          initialContent={block.content} // Pass content
-          initialType={block.type} // Pass type
-          isEditing={editingIndex === index}
-          onSave={(content, type) => saveBlock(index, content, type)}
-          onFocus={() => setIsEditing(true)}
-          onBlur={() => setIsEditing(false)}
-          ref={index === blocks.length - 1 ? newBlockRef : null}
-        />
+      {blocks.map((block) => (
+        <div
+          key={block.id}
+          className="block-container"
+          onMouseEnter={() => setHoveredId(block.id)}
+          onMouseLeave={() => setHoveredId(null)}
+        >
+          {/* Hover Menu - Centered */}
+          {hoveredId === block.id && (
+            <div className="hover-menu">
+              <button onClick={() => addNewBlock(block.id, 'above')}>+ Above</button>
+              <button onClick={() => addNewBlock(block.id, 'below')}>+ Below</button>
+              <button onClick={() => deleteBlock(block.id)}>🗑️ Delete</button>
+            </div>
+          )}
+
+          {/* Block Content */}
+          <TextBlockMain
+            initialContent={block.content}
+            initialType={block.type}
+            isEditing={editingId === block.id}
+            onSave={(content, type) => saveBlock(block.id, content, type)}
+            onFocus={() => setEditingId(block.id)}
+            onBlur={() => setEditingId(null)}
+            ref={editingId === block.id ? newBlockRef : null}
+          />
+        </div>
       ))}
-      {/* Empty space for adding a new block */}
-      <div
-        style={{ height: '50px', cursor: 'text' }}
-        onClick={addNewBlock}
-      ></div>
+
+      {/* Add new block placeholder */}
     </div>
   );
 };
