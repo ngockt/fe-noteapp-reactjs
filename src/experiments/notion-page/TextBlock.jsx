@@ -1,63 +1,95 @@
-import React, { useState, useEffect, useRef } from 'react';
-import ContentRender from './ContentRender'; // Import the renderer
-import './TextBlock.css'; // Custom styles
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import ContentRender from './ContentRender';
+import './TextBlock.css';
 
-const TextBlock = ({ initialText }) => {
-    const [isEditing, setIsEditing] = useState(false);
+// Use forwardRef to handle refs properly
+const TextBlock = forwardRef(({
+    initialText,
+    isEditing: initialEditing = false,
+    onSave,
+    onFocus,
+    onBlur // New prop to handle blur
+}, ref) => {
+    const [isEditing, setIsEditing] = useState(initialEditing);
     const [text, setText] = useState(initialText);
-    const textareaRef = useRef(null); // Reference for textarea
+    const textareaRef = useRef(null);
 
-    // Automatically resize textarea height to match content
+    // Auto-resize textarea height
     const adjustTextareaHeight = () => {
         const textarea = textareaRef.current;
         if (textarea) {
-            textarea.style.height = 'auto'; // Reset height to auto
-            textarea.style.height = `${textarea.scrollHeight}px`; // Set to scrollHeight
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
         }
     };
 
-    // Trigger resize when text changes
+    // Resize when text changes or entering edit mode
     useEffect(() => {
         if (isEditing) {
             adjustTextareaHeight();
         }
     }, [text, isEditing]);
 
+    // Focus the textarea when entering edit mode
+    useEffect(() => {
+        if (isEditing && textareaRef.current) {
+            textareaRef.current.focus();
+            if (onFocus) onFocus(); // Notify parent that editing has started
+        }
+    }, [isEditing]);
+
+    // Handle entering edit mode
     const handleTextClick = () => {
         setIsEditing(true);
+        if (onFocus) onFocus(); // Notify parent when focused
     };
 
+    // Handle text change
     const handleInputChange = (e) => {
         setText(e.target.value);
-        adjustTextareaHeight(); // Adjust height on input
+        adjustTextareaHeight();
     };
 
-    const handleInputBlur = () => {
-        setIsEditing(false);
+    // Handle save action
+    const handleSave = () => {
+        const trimmedText = text.trim();
+        onSave(trimmedText); // Save changes or remove block if empty
+        setIsEditing(false); // Exit edit mode
+        if (onBlur) onBlur(); // Notify parent that editing has ended
     };
 
+    // Handle Enter key to save
     const handleKeyPress = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
-            setIsEditing(false);
+            e.preventDefault();
+            handleSave();
         }
     };
 
     return isEditing ? (
+        // Edit Mode
         <textarea
-            ref={textareaRef} // Reference to textarea
+            ref={(el) => {
+                textareaRef.current = el; // Store in local ref
+                if (typeof ref === 'function') ref(el); // Forward ref
+                else if (ref) ref.current = el;
+            }}
             value={text}
             onChange={handleInputChange}
-            onBlur={handleInputBlur}
+            onBlur={handleSave} // Save on blur
             onKeyDown={handleKeyPress}
             autoFocus
             className="text-input"
         />
     ) : (
+        // Display Mode
         <div onClick={handleTextClick} className="text-display">
-            {/* Render the ContentRender component */}
             <ContentRender content={text} />
         </div>
     );
-};
+});
+
+// Add display name for debugging
+TextBlock.displayName = 'TextBlock';
 
 export default TextBlock;

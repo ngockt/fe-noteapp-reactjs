@@ -1,7 +1,8 @@
-import React from 'react';
-import TextBlock from './TextBlock';
+import React, { useState, useRef } from 'react';
+import TextBlock from './TextBlock'; // Assuming TextBlock supports editing and saving
 import './NotionPage.css';
 
+// Sample initial content
 const sampleContent = `
 # Notion Style Page
 A simple React component inspired by Notion.
@@ -18,15 +19,9 @@ This is an example of a text block. You can write and organize your ideas here.
 - Build a to-do app
 - Add drag-and-drop functionality
 - Create custom themes for the page
-  - Step 1
-  - Step 2
-  - Step 3
-
-Here is some math: $E=mc^2$ and $$\\int_0^1 x^2 \\, dx$$
-Here is some math: $E=mc^2$ and \\[\\int_0^1 x^2 \\, dx\\]
 `;
 
-// Function to group related lines into blocks
+// Parse the sample content into blocks
 const parseBlocks = (content) => {
   const lines = content.trim().split('\n');
   const blocks = [];
@@ -34,17 +29,15 @@ const parseBlocks = (content) => {
 
   lines.forEach((line) => {
     if (line.trim() === '') {
-      // Empty line denotes the end of a block
       if (currentBlock.length > 0) {
-        blocks.push(currentBlock.join('\n')); // Merge lines into a single block
+        blocks.push(currentBlock.join('\n'));
         currentBlock = [];
       }
     } else {
-      currentBlock.push(line); // Add line to the current block
+      currentBlock.push(line);
     }
   });
 
-  // Push the last block if it exists
   if (currentBlock.length > 0) {
     blocks.push(currentBlock.join('\n'));
   }
@@ -53,13 +46,71 @@ const parseBlocks = (content) => {
 };
 
 const NotionPage = () => {
-  const blocks = parseBlocks(sampleContent);
+  // State for text blocks
+  const [blocks, setBlocks] = useState(parseBlocks(sampleContent));
+  const [editingIndex, setEditingIndex] = useState(null); // Track which block is being edited
+  const [isEditing, setIsEditing] = useState(false); // Track if any block is being edited
+  const newBlockRef = useRef(null); // Ref for focusing new blocks
+
+  // Add a new empty block and switch to edit mode
+  const addNewBlock = () => {
+    if (isEditing) return; // Don't create a new block if editing is active
+
+    setBlocks((prevBlocks) => [...prevBlocks, '']); // Add an empty block
+    setEditingIndex(blocks.length); // Set the last block to edit mode
+
+    // Focus the new block after rendering
+    setTimeout(() => {
+      if (newBlockRef.current) {
+        newBlockRef.current.focus();
+      }
+    }, 0);
+  };
+
+  // Save a block's content and remove it if empty
+  const saveBlock = (index, text) => {
+    const updatedBlocks = [...blocks];
+    if (text.trim() === '') {
+      // Remove block if empty
+      updatedBlocks.splice(index, 1);
+    } else {
+      // Update the block with new content
+      updatedBlocks[index] = text;
+    }
+    setBlocks(updatedBlocks);
+    setEditingIndex(null); // Exit edit mode
+    setIsEditing(false); // Mark editing as false
+  };
+
+  // Handle click outside to add a new block
+  const handlePageClick = (e) => {
+    if (e.target === e.currentTarget && !isEditing) {
+      addNewBlock();
+    }
+  };
 
   return (
-    <div className="notion-page">
+    <div className="notion-page" onClick={handlePageClick}>
       {blocks.map((block, index) => (
-        <TextBlock key={index} initialText={block} />
+        <TextBlock
+          key={index}
+          initialText={block}
+          isEditing={editingIndex === index} // Pass edit mode status
+          onSave={(text) => saveBlock(index, text)} // Save block content
+          onFocus={() => setIsEditing(true)} // Track editing state
+          onBlur={() => setIsEditing(false)} // Reset editing state on blur
+          ref={index === blocks.length - 1 ? newBlockRef : null} // Attach ref to last block
+        />
       ))}
+
+      {/* Clickable empty space at the end */}
+      <div
+        style={{
+          height: '100px',
+          cursor: 'text',
+        }}
+        onClick={addNewBlock}
+      ></div>
     </div>
   );
 };
