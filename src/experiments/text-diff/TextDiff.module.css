@@ -1,0 +1,38 @@
+/* Container styles */
+.container {
+	padding: 20px;
+	font-family: Arial, sans-serif;
+}
+
+.title {
+	font-size: 20px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+/* Editor container */
+.editorContainer {
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	overflow: hidden;
+	margin-top: 10px;
+}
+
+/* Monaco Editor overrides */
+.monaco-editor {
+	border: 1px solid #ddd !important;
+	border-radius: 5px !important;
+}
+
+/* Customize differences */
+.monaco-diff-editor .modified {
+	background-color: #d4f7d4 !important; /* Light green for modified text */
+}
+
+.monaco-diff-editor .added {
+	background-color: #d4edda !important; /* Green for added lines */
+}
+
+.monaco-diff-editor .removed {
+	background-color: #f8d7da !important; /* Red for removed lines */
+}

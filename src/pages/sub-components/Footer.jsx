@@ -35,11 +35,14 @@ const Footer = () => {
                             id="experiments-dropdown"
                             className="d-inline-block mx-2 text-white"
                         >
-                            <NavDropdown.Item as={Link} to="/experiments/prompting">
-                                Prompting
+                            <NavDropdown.Item as={Link} to="/experiments/text-diff">
+                                Text Diff
                             </NavDropdown.Item>
                             <NavDropdown.Item as={Link} to="/experiments/notion-page">
                                 Notion Page
+                            </NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to="/experiments/prompting">
+                                Prompting
                             </NavDropdown.Item>
                             <NavDropdown.Item as={Link} to="/experiments/latex-render">
                                 Latex Renderer

@@ -19,6 +19,7 @@ import PromptingAssistantPage from 'experiments/prompting-assistant/PromptingAss
 import LatexRenderer from 'experiments/LatexRender';
 import DocsPage from 'pages/DocsPage';
 import CardDetail from 'components/card/CardDetail';
+import TextDiff from 'experiments/text-diff/TextDiff';
 
 const App = () => {
 
@@ -46,6 +47,7 @@ const App = () => {
             <Route path="/experiments/notion-page" element={<NotionPage />} />
             <Route path="/experiments/prompting" element={<PromptingAssistantPage />} />
             <Route path="/experiments/latex-render" element={<LatexRenderer />} />
+            <Route path="/experiments/text-diff" element={<TextDiff />} />
           </Routes>
         </div>
         <Footer />
