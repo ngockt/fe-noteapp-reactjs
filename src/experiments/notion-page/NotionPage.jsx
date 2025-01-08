@@ -21,6 +21,9 @@ This is an example of a text block. You can write and organize your ideas here.
   - Step 1
   - Step 2
   - Step 3
+
+Here is some math: $E=mc^2$ and $$\\int_0^1 x^2 \\, dx$$
+Here is some math: $E=mc^2$ and \\[\\int_0^1 x^2 \\, dx\\]
 `;
 
 // Function to group related lines into blocks

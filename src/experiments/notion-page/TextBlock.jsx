@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Markdown from 'markdown-to-jsx';
-import './TextBlock.css';
+import ContentRender from './ContentRender'; // Import the renderer
+import './TextBlock.css'; // Custom styles
 
 const TextBlock = ({ initialText }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -54,7 +54,8 @@ const TextBlock = ({ initialText }) => {
         />
     ) : (
         <div onClick={handleTextClick} className="text-display">
-            <Markdown>{text}</Markdown>
+            {/* Render the ContentRender component */}
+            <ContentRender content={text} />
         </div>
     );
 };
