@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
-import TextBlockRender from './TexBlockRender';
+import TextBlockRender from './TextBlockRender';
 import './TextBlock.css';
 
 // Use forwardRef to handle refs properly
