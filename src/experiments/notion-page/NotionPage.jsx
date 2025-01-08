@@ -19,6 +19,7 @@ const NotionPage = () => {
         const content = data.versions[0].contents[0].content || ''; // Fallback to empty string
         setNoteContent(content); // Store raw content
         const parsedBlocks = parseTextBlocks(noteContent); // Parse blocks into content + type
+        console.log("", parsedBlocks);
         setBlocks(parsedBlocks); // Update parsed blocks
       })
       .catch((error) => {
@@ -26,7 +27,7 @@ const NotionPage = () => {
         setNoteContent('Empty section'); // Graceful fallback
         setBlocks([]); // Default to empty blocks
       });
-  }, []); // Run only once on component mount
+  }, [noteContent]); // Run only once on component mount
 
   // Add a new empty block
   const addNewBlock = () => {
