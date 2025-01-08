@@ -21,21 +21,23 @@ export const parseTextBlocks = (content) => {
     // Process the matched block inside ```
     let codeBlock = match[1].trim();
     if (codeBlock) { // Ignore empty code blocks
-      let type = 'markdown'; // Default type
+      let type = 'markdown'; // Default type is 'code'
 
       if (codeBlock.startsWith('mermaid')) {
         type = 'mermaid';
+        codeBlock = codeBlock.replace(/^mermaid/, '').trim(); // Remove 'mermaid' keyword
       } else if (codeBlock.startsWith('plantuml')) {
         type = 'plantuml';
+        codeBlock = codeBlock.replace(/^plantuml/, '').trim(); // Remove 'plantuml' keyword
       } else {
-        type = 'code'; // Treat as markdown by default
-        codeBlock = `\n${codeBlock}`
+        // Wrap other code blocks inside triple backticks
+        codeBlock = `\`\`\`\n${codeBlock}\n\`\`\``;
       }
 
       // Add block with type and content
       blocks.push({
         type,
-        content: `\`\`\`${codeBlock}\n\`\`\``
+        content: codeBlock
       });
     }
 
