@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import TextBlockMain from './TextBlockMain'; // Assuming TextBlockMain supports editing and saving
+import { parseTextBlocks } from './TextBlockParse'; // Import parseBlocks function
 import './NotionPage.css';
 
 // Sample initial content
@@ -21,33 +22,9 @@ This is an example of a text block. You can write and organize your ideas here.
 - Create custom themes for the page
 `;
 
-// Parse the sample content into blocks
-const parseBlocks = (content) => {
-  const lines = content.trim().split('\n');
-  const blocks = [];
-  let currentBlock = [];
-
-  lines.forEach((line) => {
-    if (line.trim() === '') {
-      if (currentBlock.length > 0) {
-        blocks.push(currentBlock.join('\n'));
-        currentBlock = [];
-      }
-    } else {
-      currentBlock.push(line);
-    }
-  });
-
-  if (currentBlock.length > 0) {
-    blocks.push(currentBlock.join('\n'));
-  }
-
-  return blocks;
-};
-
 const NotionPage = () => {
   // State for text blocks
-  const [blocks, setBlocks] = useState(parseBlocks(sampleContent));
+  const [blocks, setBlocks] = useState(parseTextBlocks(sampleContent)); // Using parseBlocks
   const [editingIndex, setEditingIndex] = useState(null); // Track which block is being edited
   const [isEditing, setIsEditing] = useState(false); // Track if any block is being edited
   const newBlockRef = useRef(null); // Ref for focusing new blocks
