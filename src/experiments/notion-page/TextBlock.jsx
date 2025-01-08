@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
 import ContentRender from './ContentRender';
 import './TextBlock.css';
 
@@ -7,12 +7,17 @@ const TextBlock = forwardRef(({
     initialText,
     isEditing: initialEditing = false,
     onSave,
-    onFocus,
+    onFocus: parentOnFocus,
     onBlur // New prop to handle blur
 }, ref) => {
     const [isEditing, setIsEditing] = useState(initialEditing);
     const [text, setText] = useState(initialText);
     const textareaRef = useRef(null);
+
+    // Memoize the onFocus callback to avoid re-renders
+    const onFocus = useCallback(() => {
+        if (parentOnFocus) parentOnFocus();
+    }, [parentOnFocus]);
 
     // Auto-resize textarea height
     const adjustTextareaHeight = () => {
@@ -34,14 +39,14 @@ const TextBlock = forwardRef(({
     useEffect(() => {
         if (isEditing && textareaRef.current) {
             textareaRef.current.focus();
-            if (onFocus) onFocus(); // Notify parent that editing has started
+            onFocus(); // Notify parent that editing has started
         }
-    }, [isEditing]);
+    }, [isEditing, onFocus]); // Added onFocus as a dependency
 
     // Handle entering edit mode
     const handleTextClick = () => {
         setIsEditing(true);
-        if (onFocus) onFocus(); // Notify parent when focused
+        onFocus(); // Notify parent when focused
     };
 
     // Handle text change
