@@ -1,40 +1,40 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import TextBlockMain from './TextBlockMain'; // Assuming TextBlockMain supports editing and saving
 import { parseTextBlocks } from './TextBlockParse'; // Import parseBlocks function
+import { getRequest } from 'apis/services';
 import './NotionPage.css';
-
-// Sample initial content
-const sampleContent = `
-# Notion Style Page
-A simple React component inspired by Notion.
-
-## 📝 Notes
-This is an example of a text block. You can write and organize your ideas here.
-
-## 📋 Tasks
-- Task 1: Set up React environment ✅
-- Task 2: Create NotionPage.jsx component
-- Task 3: Add inline editing functionality
-
-## 💡 Ideas
-- Build a to-do app
-- Add drag-and-drop functionality
-- Create custom themes for the page
-`;
+import ENDPOINTS from 'apis/endpoints';
 
 const NotionPage = () => {
   // State for text blocks
-  const [blocks, setBlocks] = useState(parseTextBlocks(sampleContent)); // Using parseBlocks
-  const [editingIndex, setEditingIndex] = useState(null); // Track which block is being edited
-  const [isEditing, setIsEditing] = useState(false); // Track if any block is being edited
+  const [noteContent, setNoteContent] = useState('');
+  const [blocks, setBlocks] = useState([]); // Parsed text blocks
+  const [editingIndex, setEditingIndex] = useState(null); // Track editing index
+  const [isEditing, setIsEditing] = useState(false); // Editing state
   const newBlockRef = useRef(null); // Ref for focusing new blocks
+
+  // Fetch data and parse content
+  useEffect(() => {
+    getRequest(ENDPOINTS.CARDS.DETAIL('c65a1197-7a05-4519-84d2-309d3514785c'))
+      .then((data) => {
+        const content = data.versions[0].contents[0].content || ''; // Fallback to empty string
+        setNoteContent(content); // Set raw content
+        const parsedBlocks = parseTextBlocks(noteContent); // Parse blocks
+        setBlocks(parsedBlocks); // Set parsed blocks
+      })
+      .catch((error) => {
+        console.error('Error fetching card data:', error);
+        setNoteContent('Empty section'); // Graceful fallback
+        setBlocks([]); // Default to empty blocks
+      });
+  }, [noteContent]); // Empty dependency array ensures this runs only once
 
   // Add a new empty block and switch to edit mode
   const addNewBlock = () => {
-    if (isEditing) return; // Don't create a new block if editing is active
+    if (isEditing) return; // Prevent adding if editing is active
 
-    setBlocks((prevBlocks) => [...prevBlocks, '']); // Add an empty block
-    setEditingIndex(blocks.length); // Set the last block to edit mode
+    setBlocks((prevBlocks) => [...prevBlocks, '']); // Add empty block
+    setEditingIndex(blocks.length); // Focus on the new block
 
     // Focus the new block after rendering
     setTimeout(() => {
@@ -51,7 +51,7 @@ const NotionPage = () => {
       // Remove block if empty
       updatedBlocks.splice(index, 1);
     } else {
-      // Update the block with new content
+      // Update block content
       updatedBlocks[index] = text;
     }
     setBlocks(updatedBlocks);
@@ -61,9 +61,15 @@ const NotionPage = () => {
 
   // Handle click outside to add a new block
   const handlePageClick = (e) => {
-    if (e.target === e.currentTarget && !isEditing) {
-      addNewBlock();
-    }
+    // Check if the click happened directly on the page (not inside a block or input field)
+    const isClickOutside = e.target === e.currentTarget;
+
+    // Prevent adding a new block if:
+    // 1. Editing is active, or
+    // 2. The click is inside a block (e.target is not the notion-page div)
+    if (isEditing || !isClickOutside) return;
+
+    addNewBlock(); // Add a new block only when clicking outside
   };
 
   return (
@@ -71,7 +77,7 @@ const NotionPage = () => {
       {blocks.map((block, index) => (
         <TextBlockMain
           key={index}
-          initialText={block}
+          initialText={block.content}
           isEditing={editingIndex === index} // Pass edit mode status
           onSave={(text) => saveBlock(index, text)} // Save block content
           onFocus={() => setIsEditing(true)} // Track editing state
