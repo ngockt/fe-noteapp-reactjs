@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
-import ContentRender from './ContentRender';
+import TextBlockRender from './TexBlockRender';
 import './TextBlock.css';
 
 // Use forwardRef to handle refs properly
-const TextBlock = forwardRef(({
+const TextBlockMain = forwardRef(({
     initialText,
     isEditing: initialEditing = false,
     onSave,
@@ -89,12 +89,12 @@ const TextBlock = forwardRef(({
     ) : (
         // Display Mode
         <div onClick={handleTextClick} className="text-display">
-            <ContentRender content={text} />
+            <TextBlockRender content={text} />
         </div>
     );
 });
 
 // Add display name for debugging
-TextBlock.displayName = 'TextBlock';
+TextBlockMain.displayName = 'TextBlockMain';
 
-export default TextBlock;
+export default TextBlockMain;

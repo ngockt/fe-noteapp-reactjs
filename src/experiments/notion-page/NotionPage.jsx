@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import TextBlock from './TextBlock'; // Assuming TextBlock supports editing and saving
+import TextBlockMain from './TextBlockMain'; // Assuming TextBlockMain supports editing and saving
 import './NotionPage.css';
 
 // Sample initial content
@@ -92,7 +92,7 @@ const NotionPage = () => {
   return (
     <div className="notion-page" onClick={handlePageClick}>
       {blocks.map((block, index) => (
-        <TextBlock
+        <TextBlockMain
           key={index}
           initialText={block}
           isEditing={editingIndex === index} // Pass edit mode status

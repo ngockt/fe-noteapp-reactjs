@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import Mermaid from 'components/card/rendering/Mermaid';
 import PlantUML from 'components/card/rendering/PlantUML';
 
-const ContentRender = ({ content }) => {
+const TextBlockRender = ({ content }) => {
     // Pre-process content to handle \( \) and \[ \] math delimiters
     const preprocessContent = (text) => {
         text = text
@@ -59,8 +59,8 @@ const ContentRender = ({ content }) => {
     );
 };
 
-ContentRender.propTypes = {
+TextBlockRender.propTypes = {
     content: PropTypes.string.isRequired,
 };
 
-export default ContentRender;
+export default TextBlockRender;
