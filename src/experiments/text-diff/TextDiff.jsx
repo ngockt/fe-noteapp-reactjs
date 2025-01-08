@@ -1,40 +1,47 @@
 import React, { useState } from 'react';
-import { DiffEditor } from '@monaco-editor/react'; // Import Monaco Editor
+import { DiffEditor } from '@monaco-editor/react'; // Monaco Diff Editor
 import styles from './TextDiff.module.css'; // Import CSS module
 
 const TextDiff = () => {
-    // State to manage original and modified text
-    const originalText = 'This is the original text. Modify the text on the right to see the differences in real-time.';
-    const [modifiedText, setModifiedText] = useState('');
+  // States for original and modified text
+  const [originalText, setOriginalText] = useState(
+    'This is the original text.\nModify this text to see changes in real-time.'
+  );
+  const [modifiedText, setModifiedText] = useState(
+    'This is the original text.\nMake some edits here to test the diff.'
+  );
 
-    return (
-        <div className={styles.container}>
-            <h2 className={styles.title}>Monaco Editor - Real-Time Diff Tool</h2>
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>VS Code-Like Diff Editor</h2>
 
-            <div className={styles.editorContainer}>
-                {/* Diff Editor for side-by-side comparison */}
-                <DiffEditor
-                    height="80vh"
-                    language="plaintext" // Use plaintext for simple text comparison
-                    original={originalText} // Original text
-                    modified={modifiedText} // Modified text
-                    onChange={(value) => setModifiedText(value)} // Update modified text dynamically
-                    options={{
-                        renderSideBySide: true, // Enable split view
-                        readOnly: false, // Allow editing both sides
-                        lineNumbers: 'on', // Show line numbers
-                        minimap: { enabled: false }, // Disable minimap
-                        scrollBeyondLastLine: false, // Prevent scrolling past the last line
-                        fontSize: 14, // Font size
-                        wordWrap: 'on', // Enable word wrap
-                        diffWordWrap: 'on', // Wrap long words in diff
-                        automaticLayout: true, // Adjust layout automatically
-                        theme: 'vs-light', // Theme: 'vs-dark', 'vs-light', etc.
-                    }}
-                />
-            </div>
-        </div>
-    );
+      <div className={styles.editorContainer}>
+        {/* Monaco Diff Editor */}
+        <DiffEditor
+          height="80vh"
+          language="python" // Change language for syntax highlighting
+          original={originalText} // Original text (left side)
+          modified={modifiedText} // Modified text (right side)
+          onChange={(value) => setModifiedText(value)} // Real-time updates
+          options={{
+            renderSideBySide: true, // Side-by-side diff view
+            readOnly: false, // Editable
+            lineNumbers: 'on', // Show line numbers
+            minimap: { enabled: false }, // Disable minimap
+            scrollBeyondLastLine: false, // Prevent scrolling beyond last line
+            fontSize: 14, // Font size
+            wordWrap: 'on', // Word wrap for long lines
+            diffWordWrap: 'on', // Word wrap for differences
+            automaticLayout: true, // Auto-resize editor
+            renderIndicators: true, // Show change indicators
+            renderOverviewRuler: false, // Hide overview ruler
+            highlightActiveIndentGuide: true, // Highlight indent guides
+            originalEditable: true, // Allow editing original text (optional)
+          }}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default TextDiff;

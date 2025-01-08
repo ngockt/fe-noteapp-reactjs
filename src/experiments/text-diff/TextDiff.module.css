@@ -18,21 +18,21 @@
 	margin-top: 10px;
 }
 
-/* Monaco Editor overrides */
+/* Monaco Editor custom styles */
 .monaco-editor {
 	border: 1px solid #ddd !important;
 	border-radius: 5px !important;
 }
 
-/* Customize differences */
+/* Diff highlights (optional custom styling) */
 .monaco-diff-editor .modified {
-	background-color: #d4f7d4 !important; /* Light green for modified text */
+	background-color: #d4f7d4 !important; /* Green for modified */
 }
 
 .monaco-diff-editor .added {
-	background-color: #d4edda !important; /* Green for added lines */
+	background-color: #d4edda !important; /* Light green for added */
 }
 
 .monaco-diff-editor .removed {
-	background-color: #f8d7da !important; /* Red for removed lines */
+	background-color: #f8d7da !important; /* Light red for removed */
 }
