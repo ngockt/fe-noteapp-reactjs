@@ -1,5 +1,5 @@
 import React from 'react';
-import EditableText from './TextBlock';
+import TextBlock from './TextBlock';
 import './NotionPage.css';
 
 const sampleContent = `
@@ -55,7 +55,7 @@ const NotionPage = () => {
   return (
     <div className="notion-page">
       {blocks.map((block, index) => (
-        <EditableText key={index} initialText={block} />
+        <TextBlock key={index} initialText={block} />
       ))}
     </div>
   );

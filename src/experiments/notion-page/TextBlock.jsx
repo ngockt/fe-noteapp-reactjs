@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Markdown from 'markdown-to-jsx';
 import './TextBlock.css';
 
-const EditableText = ({ initialText }) => {
+const TextBlock = ({ initialText }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState(initialText);
     const textareaRef = useRef(null); // Reference for textarea
@@ -59,4 +59,4 @@ const EditableText = ({ initialText }) => {
     );
 };
 
-export default EditableText;
+export default TextBlock;
