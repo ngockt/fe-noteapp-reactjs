@@ -9,6 +9,16 @@ import PlantUML from 'components/card/rendering/PlantUML';
 
 // TextBlockRender Component
 const TextBlockRender = ({ content, type }) => {
+    const extractContent = (block) => {
+        // Match triple backticks and optional type
+        const regex = /^```(\w+)?\n([\s\S]*?)\n```$/;
+        const match = block.match(regex);
+
+        if (match) {
+            return match[2].trim(); // Return only the content inside the block
+        }
+        return block.trim(); // Return original block if no match
+    };
     const preprocessContent = (text) => {
         text = text
             .replace(/\\\(([\s\S]*?)\\\)/g, function (match, p1) {
@@ -21,16 +31,17 @@ const TextBlockRender = ({ content, type }) => {
     };
     // Render Mermaid diagrams
     if (type === 'mermaid') {
-        return <Mermaid chart={content} />;
+        
+        return <Mermaid chart={extractContent(content)} />;
     }
 
     // Render PlantUML diagrams
     if (type === 'plantuml') {
-        return <PlantUML content={content} />;
+        return <PlantUML content={extractContent(content)} />;
     }
 
     // Render Markdown content with math support
-    if (type === 'markdown') {
+    if (type === 'markdown' || type === "code") {
         return (
             <ReactMarkdown
                 components={{
