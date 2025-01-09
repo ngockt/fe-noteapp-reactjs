@@ -83,7 +83,7 @@ const NotionPage = () => {
           onMouseLeave={() => setHoveredId(null)}
         >
           {/* Hover Menu - Centered */}
-          {hoveredId === block.id && (
+          {hoveredId === block.id && editingId !== block.id && (
             <div className="hover-menu">
               <button onClick={() => addNewBlock(block.id, 'above')}>+ Above</button>
               <button onClick={() => addNewBlock(block.id, 'below')}>+ Below</button>
