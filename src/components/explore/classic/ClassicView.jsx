@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ClassicView = ({ data, selectedNode }) => {
     const [hierarchy, setHierarchy] = useState([]);

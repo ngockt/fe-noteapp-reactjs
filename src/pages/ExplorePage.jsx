@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import VisNetworkGraph from 'components/explore/graph/VisNetworkGraph';
 import ClassicView from 'components/explore/classic/ClassicView';
 import SearchBar from 'components/search/ExploreSearchBar'; // Import the new SearchBar component
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useGraphData } from 'context_data/GraphDataContext';
 
 const Explore = () => {

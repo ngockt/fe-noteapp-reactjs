@@ -1,6 +1,5 @@
 // src/components/contents/CardListDetail.js
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './CardList.css'; // Your CSS
 
 // Contexts

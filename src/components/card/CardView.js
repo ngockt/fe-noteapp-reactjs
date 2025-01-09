@@ -3,7 +3,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { FiEdit, FiMaximize, FiMinimize } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import './Card.css';

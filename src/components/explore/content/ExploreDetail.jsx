@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import CardListView from 'components/card/CardListView';
 import ENDPOINTS from 'apis/endpoints';
 import { getRequest } from 'apis/services';

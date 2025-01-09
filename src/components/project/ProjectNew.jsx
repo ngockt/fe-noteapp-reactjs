@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { postRequest } from 'apis/services';
 import ENDPOINTS from 'apis/endpoints';
 import { useGraphData } from 'context_data/GraphDataContext';

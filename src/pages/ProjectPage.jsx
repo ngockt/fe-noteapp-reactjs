@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import ProjectOverview from 'components/project/ProjectOverview';
 import ProjectNew from 'components/project/ProjectNew';
 import { getRequest } from 'apis/services';

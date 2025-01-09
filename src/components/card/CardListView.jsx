@@ -1,7 +1,6 @@
 // src/components/contents/CardListView.jsx
 import React, { useState, useEffect } from 'react';
 import CardView from './CardView';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './CardList.css'; // Reuse the same CSS
 
 const CardListView = ({ cards }) => {

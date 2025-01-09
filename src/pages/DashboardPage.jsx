@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import React, { useState, useEffect } from 'react'; // Import Bootstrap CSS
 import ENDPOINTS from 'apis/endpoints';
 import { getRequest } from 'apis/services';
 import CardListView from 'components/card/CardListView';

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
 import getVisProperties from './VisNetworkGraph.properties';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const VisNetworkGraph = ({ data, selectedNode }) => {
