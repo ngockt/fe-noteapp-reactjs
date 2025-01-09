@@ -56,14 +56,6 @@ const Header = () => {
                     </Nav.Link>
                     <Nav.Link
                         as={Link}
-                        to="/contribution"
-                        active={location.pathname === "/contribution"}
-                        onClick={handleNavItemClick}
-                    >
-                        Contribution
-                    </Nav.Link>
-                    <Nav.Link
-                        as={Link}
                         to="/projects"
                         active={location.pathname === "/projects"}
                         onClick={handleNavItemClick}
@@ -72,11 +64,20 @@ const Header = () => {
                     </Nav.Link>
                     <Nav.Link
                         as={Link}
+                        to="/contribution"
+                        active={location.pathname === "/contribution"}
+                        onClick={handleNavItemClick}
+                    >
+                        Contribution
+                    </Nav.Link>
+
+                    <Nav.Link
+                        as={Link}
                         to="/docs"
                         active={location.pathname === "/about"}
                         onClick={handleNavItemClick}
                     >
-                        Docs
+                        Documents
                     </Nav.Link>
 
                     <Nav.Link

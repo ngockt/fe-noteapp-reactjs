@@ -1,53 +1,49 @@
 /* DocsPage.css */
 .docs-page {
-    font-family: sans-serif; /* A clean, readable font */
-    line-height: 1.6;       /* Improves readability */
-    padding: 20px;          /* Adds some spacing around the content */
-    max-width: 90vw;      /* Prevents lines from getting too long */
-    margin: 0 auto;        /* Centers the content on the page */
-  }
-  
-  .docs-page h1 {
-    font-size: 2em;        /* Makes the heading stand out */
-    margin-bottom: 20px;   /* Adds space below the heading */
-  }
-  
-  .docs-page table {
-    width: 100%;
-    border-collapse: collapse; /* Makes the table borders look nicer */
-    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow */
-    overflow-x: auto; /* Handles horizontal overflow on smaller screens */
-  }
-  
-  
-  .docs-page th,
-  .docs-page td {
-    padding: 12px 15px;   /* Adds more padding to cells */
-    text-align: left;    /* Aligns text to the left */
-    border-bottom: 1px solid #eee; /* Creates subtle lines between rows */
-  }
-  
-  .docs-page th {
-    background-color: #f5f5f5; /* Light gray background for header cells */
-    font-weight: bold;
-  }
-  
-  /* Optional: Zebra striping for table rows */
-  .docs-page tbody tr:nth-child(even) {
-    background-color: #f9f9f9; 
-  }
-  
-  
-  /* Responsive design (for smaller screens) */
-  @media (max-width: 600px) {
-    .docs-page table {
-      font-size: 0.9em; /* Decreases font size slightly */
-    }
-  
-    .docs-page th,
-    .docs-page td {
-      padding: 10px 12px;  /* Reduces padding on smaller screens */
-    }
-  }
-  
-  
+	font-family: sans-serif; /* A clean, readable font */
+	line-height: 1.6; /* Improves readability */
+	padding: 20px; /* Adds some spacing around the content */
+	max-width: 90vw; /* Prevents lines from getting too long */
+	margin: 0 auto; /* Centers the content on the page */
+}
+
+.docs-page h1 {
+	font-size: 2em; /* Makes the heading stand out */
+	margin-bottom: 20px; /* Adds space below the heading */
+}
+
+.docs-page table {
+	width: 100%;
+	border-collapse: collapse; /* Makes the table borders look nicer */
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+	overflow-x: auto; /* Handles horizontal overflow on smaller screens */
+}
+
+.docs-page th,
+.docs-page td {
+	padding: 12px 15px; /* Adds more padding to cells */
+	text-align: left; /* Aligns text to the left */
+	border-bottom: 1px solid #eee; /* Creates subtle lines between rows */
+}
+
+.docs-page th {
+	background-color: #f5f5f5; /* Light gray background for header cells */
+	font-weight: bold;
+}
+
+/* Optional: Zebra striping for table rows */
+.docs-page tbody tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+
+/* Responsive design (for smaller screens) */
+@media (max-width: 600px) {
+	.docs-page table {
+		font-size: 0.9em; /* Decreases font size slightly */
+	}
+
+	.docs-page th,
+	.docs-page td {
+		padding: 10px 12px; /* Reduces padding on smaller screens */
+	}
+}

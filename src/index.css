@@ -12,3 +12,11 @@ details summary:hover {
 .modal-content {
 	z-index: 1000;
 }
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	overflow-x: hidden; /* Prevent horizontal scroll */
+}
