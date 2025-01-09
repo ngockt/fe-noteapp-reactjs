@@ -9,7 +9,7 @@ import ENDPOINTS from 'apis/endpoints';
 const NotionPage = () => {
   const [blocks, setBlocks] = useState([]); // Use blocks directly with UUIDs
   const [editingId, setEditingId] = useState(null); // Track the editing block's ID
-  const [hoveredId, setHoveredId] = useState(null); // Track hovered block ID
+  const [menuBlock, setMenuBlock] = useState({ id: null, x: 0, y: 0 }); // Menu block state
   const newBlockRef = useRef(null); // Ref for focusing new blocks
 
   // Fetch and parse content
@@ -56,6 +56,7 @@ const NotionPage = () => {
   const deleteBlock = (id) => {
     const updatedBlocks = blocks.filter((block) => block.id !== id);
     setBlocks(updatedBlocks);
+    setMenuBlock({ id: null, x: 0, y: 0 }); // Hide menu
   };
 
   // Save block content
@@ -73,24 +74,32 @@ const NotionPage = () => {
     setEditingId(null);
   };
 
+  // Handle context menu (right-click)
+  const handleContextMenu = (e, blockId) => {
+    e.preventDefault(); // Prevent the default right-click menu
+    setMenuBlock({ id: blockId, x: e.pageX, y: e.pageY });
+  };
+
+  // Hide menu when clicking elsewhere
+  const handleClickOutside = () => {
+    setMenuBlock({ id: null, x: 0, y: 0 });
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="notion-page">
       {blocks.map((block) => (
         <div
           key={block.id}
           className="block-container"
-          onMouseEnter={() => setHoveredId(block.id)}
-          onMouseLeave={() => setHoveredId(null)}
+          onContextMenu={(e) => handleContextMenu(e, block.id)} // Right-click to show menu
         >
-          {/* Hover Menu - Centered */}
-          {hoveredId === block.id && editingId !== block.id && (
-            <div className="hover-menu">
-              <button onClick={() => addNewBlock(block.id, 'above')}>+ Above</button>
-              <button onClick={() => addNewBlock(block.id, 'below')}>+ Below</button>
-              <button onClick={() => deleteBlock(block.id)}>🗑️ Delete</button>
-            </div>
-          )}
-
           {/* Block Content */}
           <TextBlockMain
             initialContent={block.content}
@@ -104,7 +113,17 @@ const NotionPage = () => {
         </div>
       ))}
 
-      {/* Add new block placeholder */}
+      {/* Context Menu */}
+      {menuBlock.id && (
+        <div
+          className="menu-block-options"
+          style={{ top: menuBlock.y, left: menuBlock.x, position: 'absolute' }}
+        >
+          <button onClick={() => addNewBlock(menuBlock.id, 'above')}>+ Above</button>
+          <button onClick={() => addNewBlock(menuBlock.id, 'below')}>+ Below</button>
+          <button onClick={() => deleteBlock(menuBlock.id)}>🗑️ Delete</button>
+        </div>
+      )}
     </div>
   );
 };

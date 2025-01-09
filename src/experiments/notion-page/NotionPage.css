@@ -9,13 +9,21 @@
 	/* padding: 10px 0; */
 }
 
-.hover-menu {
+.menu-block-options button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 12px;
+	padding: 5px 10px;
+}
+
+.menu-block-options button:hover {
+	background: #f0f0f0;
+	border-radius: 4px;
+}
+
+.menu-block-options {
 	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%); /* Center the menu */
-	display: flex;
-	gap: 10px;
 	background: white;
 	border: 1px solid #ddd;
 	border-radius: 8px;
@@ -24,15 +32,17 @@
 	z-index: 10;
 }
 
-.hover-menu button {
+.menu-block-options button {
+	display: block;
+	width: 100%;
 	background: none;
 	border: none;
 	cursor: pointer;
-	font-size: 12px;
-	padding: 5px 10px;
+	padding: 5px;
+	text-align: left;
 }
 
-.hover-menu button:hover {
+.menu-block-options button:hover {
 	background: #f0f0f0;
 	border-radius: 4px;
 }
