@@ -63,7 +63,7 @@ const TextBlockMain = forwardRef(
             />
         ) : (
             // Display mode using TextBlockRender
-            <div onClick={() => setIsEditing(true)} className="text-display">
+            <div onDoubleClick={() => setIsEditing(true)} className="text-display">
                 <TextBlockRender content={content} type={type} />
             </div>
         );
